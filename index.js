@@ -61,7 +61,7 @@ function parse_table(table_text) {
  * @returns {Boolean}
  */
 function is_section_line_child(depth, line) {
-    const hashes = line.match(/^\#+/g)?.[0] || "";
+    const hashes = line.match(/^\#+/g)?.[0] || ""; // Get the hashes at the start of the line
 
     if (!hashes)
         return true;
@@ -105,46 +105,47 @@ function parse_section_recursive(text) {
 
         const hashes = line.match(/^\#+/g)?.[0] || "";
 
-        if (line.startsWith("> ")) {
+        if (line.startsWith("> ")) { // Check for bubbled "notes".
             const note_lines = [];
-            while (i < lines.length && lines[i].startsWith("> ")) {
+            while (i < lines.length && lines[i].startsWith("> ")) { // Capture all lines until the end of the note
                 note_lines.push(lines[i].substr(2));
                 i++;
             }
             const note_text = note_lines.join("\n");
             parsed.notes.push(note_text);
             i--;
-        } else if (line.includes("```")) {
+        } else if (line.includes("```")) { // Check if the line is the start of a code block
             const code_lines = [];
             code_lines.push(lines[i]);
             i++;
-            while (i < lines.length && !lines[i].includes("```")) {
+            while (i < lines.length && !lines[i].includes("```")) { // Capture all lines until the end of the code block
                 code_lines.push(lines[i]);
                 i++;
             }
             code_lines.push(lines[i]);
             const code_text = code_lines.join("\n");
             parsed.code.push(code_text);
-        } else if (line.startsWith("|")) {
+        } else if (line.startsWith("|")) { // Check if the line is part of a table
             const table_lines = [];
-            while (i < lines.length && lines[i].startsWith("|")) {
+            while (i < lines.length && lines[i].startsWith("|")) { // Capture all lines until the end of the table
                 table_lines.push(lines[i]);
                 i++;
             }
-            if (!table_lines[1] || !table_lines[1].startsWith("| -")) {
-                parsed.body += lines[i] + "\n";
+            if (!table_lines[1] || !table_lines[1].startsWith("| -")) { // Check if the table was actually not a table at all (prank)
+                parsed.body += table_lines[0] + "\n";
+                parsed.body += table_lines[1] + "\n";
                 continue;
             }
             const table_text = table_lines.join("\n");
             parsed.tables.push(parse_table(table_text));
             i--;
-        } else if (hashes.length > depth.length) {
+        } else if (hashes.length > depth.length) { // Check if the line is a child section
             const child_lines = [];
             child_lines.push(lines[i]);
             i++;
             let in_code = false;
-            while (i < lines.length && (is_section_line_child(hashes, lines[i]) || in_code)) {
-                if (lines[i].includes("```")) {
+            while (i < lines.length && (is_section_line_child(hashes, lines[i]) || in_code)) { // Repeat until the child section reaches another higher up section
+                if (lines[i].includes("```")) { // Check for code blocks in case those code blocks contain # as part of a comment (python moment)
                     in_code = !in_code;
                 }
                 child_lines.push(lines[i]);
@@ -208,7 +209,7 @@ function split_endpoint(endpoint) {
             continue;
         }
 
-        if (char === "{") {
+        if (char === "{") { // Sometimes the parameters has slashes inside of them which can confuse the normal .split("") function
             in_param = true;
         } else if (char === "}") {
             in_param = false;
@@ -241,7 +242,7 @@ function parse_endpoint_parts(endpoint) {
 
         if (part[0] === "{") {
             const trimmed = part.substr(1, part.length - 2);
-            const [ param_name ] = trimmed.split("#");
+            const [ param_name ] = trimmed.split("#"); // Remove the link at the end of the parameter, and just keep the parameter name/identifier.
             const serialized = param_name.replace(/\./g, "");
             parsed.push({ type: "param", name: serialized });
         } else {
@@ -265,6 +266,8 @@ function parse_endpoint_parts(endpoint) {
  * @returns {ParsedRequest}
  */
 function parse_raw_request(request_text) {
+    // Create Message % POST /channels/{channel.id#DOCS_RESOURCES_CHANNEL/channel-object}/messages
+
     const [ endpoint_name, full_request ] = request_text.split(" % ");
     const [ verb, endpoint ] = full_request.split(" ");
 
@@ -290,7 +293,7 @@ function parse_raw_request(request_text) {
  */
 function recursive_find_request_sections(requests, sections) {
     for (const section of sections) {
-        if (section.title.includes(" % ")) {
+        if (section.title.includes(" % ")) { // % indicates that the section is a request
             requests.push(section);
         }
         recursive_find_request_sections(requests, section.children);
@@ -355,17 +358,17 @@ const custom_types = {
 };
 
 function replace_discord_type(type) {
-    if (type.startsWith("array of")) {
+    if (type.startsWith("array of")) { // Check if the type is an array
         const partial = type.startsWith("array of partial");
         
         if (type.endsWith("objects")) {
-            type = type.substr(0, type.length - 7);
+            type = type.substr(0, type.length - 7); // Remove the "objects" ending
         }
 
         if (partial) {
-            type = type.substr(15);
+            type = type.substr(15); // Remove the "array of partial" start
         } else {
-            type = type.substr(8);
+            type = type.substr(8); // Remove the "array of" start
         }
 
         const replaced = replace_discord_type(type);
@@ -382,7 +385,7 @@ function replace_discord_type(type) {
     const custom = custom_types[type];
     if (custom) {
         if (!declare_types[type]) {
-            declare_types[type] = custom;
+            declare_types[type] = custom; // Mark as needing to be declared.
         }
         return capitalize(type);
     }
@@ -540,7 +543,6 @@ function serialize_request(request, section) {
             section
         ));
     }
-
     console.log(`${!NO_PARAM_TYPES ? `type DeclareEndpoint<
 ${INDENT}JSONParams extends Record<string, any> = {},
 ${INDENT}QueryParams extends Record<string, any> = {}
@@ -558,6 +560,4 @@ ${output.map(endpoint => endpoint
 ).join(",\n")}
 }`.trim()
     );
-    
-    // console.log(util.inspect(sections, false, 20, false));
 })();
