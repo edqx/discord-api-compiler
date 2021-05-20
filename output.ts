@@ -21,6 +21,7 @@ type Binary = string
 type FileContent = string
 type ISO8601Timestamp = string
 type ImageData = string
+type GuildFeatureString = string
 
 /**
  * https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype
@@ -2475,7 +2476,7 @@ export const ApiEndpoint = {
         /**
          * Enabled guild features.
          */
-        features: any[];
+        features: GuildFeatureString[];
         /**
          * The description for the guild, if the guild is discoverable.
          */

@@ -420,7 +420,7 @@ const custom_types = {
     "Binary": "string",
     "FileContent": "string",
     "ImageData": "string",
-    "GuildFeature": "string"
+    "GuildFeatureString": "string"
 };
 
 function replace_discord_type(sections, type) {
