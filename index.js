@@ -684,11 +684,15 @@ ${INDENT}ResponseType extends Record<string, any> = {}
 
 export type ExtractJSONParams<
 ${INDENT}T extends DeclareEndpoint<unknown, unknown>
-> = T extends DeclareEndpoint<infer X, any> ? X : never
+> = T extends DeclareEndpoint<infer X, any, any> ? X : never
 
 export type ExtractQueryParams<
 ${INDENT}T extends DeclareEndpoint<unknown, unknown>
-> = T extends DeclareEndpoint<any, infer X> ? X: never` : ``}
+> = T extends DeclareEndpoint<any, infer X, any> ? X: never
+
+export type ExtractResponseType<
+${INDENT}T extends DeclareEndpoint<unknown, unknown>
+> = T extends DeclareEndpoint<any, any, infer X> ? X: never` : ``}
 
 ${Object.entries(declare_types).map(([ discordType, declareType ]) => {
     return `${EXPORT_TYPES ? "export " : ""}type ${capitalize(discordType)} = ${declareType};`;
