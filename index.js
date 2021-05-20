@@ -14,9 +14,11 @@ const NAMESPACE = args.namespace || "ApiEndpoint";
 const ENCODE_URI = args["encode-uri"];
 const NO_LINKS = args["no-links"];
 const NO_TYPES = args["no-types"];
-const NO_PARAM_TYPES = args["no-param-types"] || NO_TYPES;
+const NO_RETURN_TYPES = args["no-return-types"] || NO_TYPES;
+const NO_REQUEST_TYPES = args["no-request-types"] || NO_TYPES;
 const NO_COMMENTS = args["no-comments"];
 const NO_EXAMPLES = args["no-examples"] || NO_COMMENTS;
+const EXPORT_TYPES = args["export-types"];
 
 /**
  * Splits a markdown table row by each column to access the values of each cell.
@@ -121,7 +123,7 @@ function parse_section_recursive(file, text) {
             const note_text = note_lines.join("\n");
             parsed.notes.push(note_text);
             i--;
-        } else if (line.includes("```")) { // Check if the line is the start of a code block
+        } else if (line.startsWith("```")) { // Check if the line is the start of a code block
             const code_lines = [];
             code_lines.push(lines[i]);
             i++;
@@ -138,7 +140,7 @@ function parse_section_recursive(file, text) {
                 table_lines.push(lines[i]);
                 i++;
             }
-            if (!table_lines[1] || !table_lines[1].startsWith("| -")) { // Check if the table was actually not a table at all (prank)
+            if (!table_lines[1] || /\| *-/.test(!table_lines[1])) { // Check if the table was actually not a table at all (prank)
                 parsed.body += table_lines[0] + "\n";
                 parsed.body += table_lines[1] + "\n";
                 continue;
@@ -289,17 +291,61 @@ function parse_raw_request(request_text) {
 }
 
 /**
+ * Recursively search markdown sections and their children for those that match a filter.
+ * @param {Array<ParsedSection>} arr The array to collect sections. 
+ * @param {Array<ParsedSection>} sections The sections to search through. 
+ * @param {(section: ParsedSection) => Boolean} fn The filter to use for searching.
+ */
+function recursive_find_sections(arr, sections, fn) {
+    for (const section of sections) {
+        if (fn(section)) {
+            arr.push(section);
+        }
+        recursive_find_sections(arr, section.children, fn);
+    }
+}
+
+/**
  * Recursively search markdown sections and their children for those that describe a REST request.
  * @param {Array<ParsedSection>} requests The array to collect request sections.
  * @param {Array<ParsedSection>} sections The sections to search.
  */
 function recursive_find_request_sections(requests, sections) {
-    for (const section of sections) {
-        if (section.title.includes(" % ")) { // % indicates that the section is a request
-            requests.push(section);
-        }
-        recursive_find_request_sections(requests, section.children);
-    }
+    recursive_find_sections(requests, sections, section => section.title.includes(" % "));
+}
+
+function find_link_to_section(sections, link) {
+    const url = link.match(/(?<=\().+?(?=\))/g);
+
+    if (!url)
+        return null;
+
+    const [ namespace, header ] = url[0].split("/");
+
+    const namespace_path_parts = namespace.split("_");
+    namespace_path_parts.shift(); // Remove "#DOCS" prefix
+
+    const namespace_path = namespace_path_parts.join(path.sep).toLowerCase();
+
+    const found = [];
+    recursive_find_sections(found, sections, section => {
+        const dirname = path.dirname(section.file);
+        const last = path.basename(section.file, ".md");
+
+        const full = dirname === "."
+            ? last
+            : dirname + path.sep + last;
+
+        if (full.toLowerCase() !== namespace_path)
+            return false;
+
+        if (header !== section.title.toLowerCase().replace(/ /g, "-"))
+            return false;
+
+        return true;
+    });
+
+    return found;
 }
 
 /**
@@ -348,6 +394,7 @@ function format_comment(comment) {
 const note_types = ["warn", "info", "danger"];
 
 const declare_types = {};
+const declare_structures = {};
 
 const known_types = {
     "string": "string"
@@ -359,36 +406,58 @@ const custom_types = {
     "float": "number"
 };
 
-function replace_discord_type(type) {
-    if (type.startsWith("array of")) { // Check if the type is an array
-        const partial = type.startsWith("array of partial");
-        
-        if (type.endsWith("objects")) {
-            type = type.substr(0, type.length - 7); // Remove the "objects" ending
-        }
+function replace_discord_type(sections, type) {
+    const is_nullable = type.startsWith("?");
 
-        if (partial) {
-            type = type.substr(15); // Remove the "array of partial" start
-        } else {
-            type = type.substr(8); // Remove the "array of" start
-        }
-
-        const replaced = replace_discord_type(type);
-
-        return (partial
-            ? "Partial<" + replaced + ">"
-            : replaced)
-            + "[]";
+    if (is_nullable) {
+        type = type.substr(1);
+        return replace_discord_type(sections, type) + "|null";
+    }
+    
+    if (type.endsWith(" objects")) {
+        type = type.substr(0, type.length - 8);
+    }
+    
+    if (type.endsWith(" object")) {
+        type = type.substr(0, type.length - 7);
     }
 
+    const is_array = type.startsWith("array of ");
+
+    if (is_array) {
+        type = type.substr(8);
+        return "(" + replace_discord_type(sections, type) + ")[]";
+    }
+
+    const is_partial = type.startsWith("partial ");
+
+    if (is_partial) {
+        type = type.substr(7);
+    }
+    
     if (known_types[type])
         return known_types[type];
 
+    const returns_object = type
+            ? find_link_to_section(sections, type)?.[0]?.children?.[0]
+            : null;
+
+    const code_friendly_returns_object_name = returns_object
+        ? make_code_friendly(returns_object.title)
+        : null;
+
+    const returns_table = returns_object?.tables?.[0];
+
+    if (returns_table && returns_table?.[0]?.field) {
+        if (!declare_structures[code_friendly_returns_object_name]) {
+            declare_structures[code_friendly_returns_object_name] = returns_table;
+        }
+        return code_friendly_returns_object_name;
+    }
+
     const custom = custom_types[type];
     if (custom) {
-        if (!declare_types[type]) {
-            declare_types[type] = custom; // Mark as needing to be declared.
-        }
+        declare_types[type] = custom; // Mark as needing to be declared.
         return capitalize(type);
     }
 
@@ -416,7 +485,7 @@ function sentence_case(str) {
 /**
  * @param {ParsedTable=} table
  */
-function create_typescript_interface_from_table(table) {
+function create_typescript_interface_from_table(sections, table) {
     if (!table)
         return "{}";
 
@@ -443,7 +512,7 @@ function create_typescript_interface_from_table(table) {
                 (NO_COMMENTS ? "" : "/**\n * "
                 + sentence_case(description)
                 + "\n */\n")
-                + field + ": " + replace_discord_type(row.type) + ";",
+                + field.replace(/\\\*/g, "") + ": " + replace_discord_type(sections, row.type) + ";",
                 
                 INDENT
             );
@@ -451,20 +520,43 @@ function create_typescript_interface_from_table(table) {
         + "\n}";
 }
 
+function make_code_friendly(name) {
+    return name
+        .split(" ")
+        .map(word => word.split("/")[0])
+        .join("")
+        .replace(/\W/g, "");;
+}
+
 /**
  * Convert a documented request into a typescript endpoint definition.
+ * @param {Array<ParsedSection>} sections Every other parsed section (used for links).
  * @param {ParsedRequest} request The request to serialise. 
  * @param {ParsedSection} section The section of the request to serialise. 
  * @returns {String} The serialised request.
  */
-function serialize_request(request, section) {
-    const code_friendly_name = request.name
-        .split(" ")
-        .map(word => word.split("/")[0])
-        .join("")
-        .replace(/\W/g, "");
+function serialize_request(sections, request, section) {
+    const code_friendly_name = make_code_friendly(request.name);
         
     const examples = section.children.filter(child => child.title.includes("Example"));
+
+    const returns = /returns( an?)? (.+) object/gi.exec(section.body);
+
+    const returns_object = NO_RETURN_TYPES
+        ? null
+        : returns
+            ? find_link_to_section(sections, returns[2])?.[0]?.children?.[0]
+            : null;
+
+    const code_friendly_returns_object_name = returns_object
+        ? make_code_friendly(returns_object.title)
+        : null;
+
+    const returns_table = returns_object?.tables?.[0];
+
+    if (returns_table) {
+        declare_structures[code_friendly_returns_object_name] = returns_table;
+    }
 
     const description = format_comment(
         removeMarkdown(
@@ -501,7 +593,7 @@ function serialize_request(request, section) {
                     : "";  
             }),
         ...(NO_EXAMPLES ? [] : examples.map(example =>
-            "@example\n * "
+            "@example\n * //" + example.title + "\n * "
                 + prepend_comment_lines(example.code[0])
         ))
     ]
@@ -510,6 +602,8 @@ function serialize_request(request, section) {
 
     const parameters = section.children.find(child => child.title.includes("JSON"))?.tables?.[0];
     const query = section.children.find(child => child.title.includes("Query String"))?.tables?.[0];
+
+    const response_body = NO_RETURN_TYPES ? null : section.children.find(child => child.title.includes("Response"))?.tables?.[0];
 
     return (NO_COMMENTS ? "" : (comment ? "/**\n * " + comment + "\n */\n" : ""))
         + code_friendly_name + ": "
@@ -528,12 +622,21 @@ function serialize_request(request, section) {
                     : "${" + part.name + "}"
                 : part.name
         ).join("/") + "`)"
-        + (NO_PARAM_TYPES
+        + (NO_REQUEST_TYPES
             ? ""
             : " as DeclareEndpoint<"
-                + create_typescript_interface_from_table(parameters)
+                + create_typescript_interface_from_table(sections, parameters)
                 + ", "
-                + create_typescript_interface_from_table(query)
+                + create_typescript_interface_from_table(sections, query)
+                + ", "
+                + (
+                    code_friendly_returns_object_name ||
+                    (response_body
+                        ? create_typescript_interface_from_table(sections, response_body)
+                        : null
+                    ) ||
+                    "{}"
+                )
                 + ">"
         );
 }
@@ -559,17 +662,46 @@ function serialize_request(request, section) {
 
     for (const section of request_sections) {
         output.push(serialize_request(
+            sections,
             parse_raw_request(section.title),
             section
         ));
     }
-    console.log(`${!NO_PARAM_TYPES ? `type DeclareEndpoint<
+
+    let before = Object.keys(declare_structures).length;
+    Object.entries(declare_structures).map(([ discordType, structureTable ]) => {
+        return `interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
+    }).join("\n")
+    let after = Object.keys(declare_structures).length;
+
+    while (after > before) {
+        before = after;
+        Object.entries(declare_structures).map(([ discordType, structureTable ]) => {
+            return `interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
+        }).join("\n")
+        after = Object.keys(declare_structures).length;
+    }
+
+    console.log(`${!NO_REQUEST_TYPES ? `type DeclareEndpoint<
 ${INDENT}JSONParams extends Record<string, any> = {},
-${INDENT}QueryParams extends Record<string, any> = {}
-> = (...args: string[]) => string;` : ``}
+${INDENT}QueryParams extends Record<string, any> = {},
+${INDENT}ResponseType extends Record<string, any> = {}
+> = (...args: string[]) => string;
+
+export type ExtractJSONParams<
+${INDENT}T extends DeclareEndpoint<unknown, unknown>
+> = T extends DeclareEndpoint<infer X, any> ? X : never
+
+export type ExtractQueryParams<
+${INDENT}T extends DeclareEndpoint<unknown, unknown>
+> = T extends DeclareEndpoint<any, infer X> ? X: never` : ``}
 
 ${Object.entries(declare_types).map(([ discordType, declareType ]) => {
-    return `type ${capitalize(discordType)} = ${declareType};`;
+    return `${EXPORT_TYPES ? "export " : ""}type ${capitalize(discordType)} = ${declareType};`;
+}).join("\n")}
+
+${Object.entries(declare_structures).map(([ discordType, structureTable ]) => {
+    return `${EXPORT_TYPES ? "export " : ""}interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
 }).join("\n")}
 
 export const ${NAMESPACE} = {
@@ -580,4 +712,6 @@ ${output.map(endpoint => endpoint
 ).join(",\n")}
 }`.trim()
     );
+
+    // console.log(require("util").inspect(sections, false, 25, false));
 })();
