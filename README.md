@@ -29,4 +29,4 @@ You can also pass some CLI options to change the behaviour of the compiler.
 | `--no-request-types` | Disable typings for json/query parameters                            |                |
 | `--no-comments`      | Disable jsdoc comments                                               |                |
 | `--no-examples`      | Disable example requests and responses                               |                |
-| `--no-interfaces`    | Disable all data tsructure interfaces and replace with `any`         |                |
+| `--no-structures`    | Disable all data structure interfaces and replace with `any`         |                |

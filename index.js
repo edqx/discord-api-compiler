@@ -18,7 +18,7 @@ const NO_RETURN_TYPES = args["no-return-types"] || NO_TYPES;
 const NO_REQUEST_TYPES = args["no-request-types"] || NO_TYPES;
 const NO_COMMENTS = args["no-comments"];
 const NO_EXAMPLES = args["no-examples"] || NO_COMMENTS;
-const NO_INTERFACES = args["no-interfaces"] || NO_TYPES;
+const NO_STRUCTURES = args["no-structures"] || NO_TYPES;
 const EXPORT_TYPES = args["export-types"];
 
 /**
@@ -404,7 +404,8 @@ const known_types = {
 const custom_types = {
     "snowflake": "string",
     "integer": "number",
-    "float": "number"
+    "float": "number",
+    "ISO8601timestamp": "string"
 };
 
 function replace_discord_type(sections, type) {
@@ -442,28 +443,34 @@ function replace_discord_type(sections, type) {
     if (known_types[type])
         return known_types[type];
         
-    const custom = custom_types[type];
+    const replaced = type.replace(/ /g, "");
+    const custom = custom_types[replaced];
     if (custom) {
-        declare_types[type] = custom; // Mark as needing to be declared.
-        return capitalize(type);
+        declare_types[replaced] = custom; // Mark as needing to be declared.
+        return capitalize(replaced);
     }
 
-    if (NO_INTERFACES)
+    if (NO_STRUCTURES)
         return "any";
 
     const returns_object = type
-            ? find_link_to_section(sections, type)?.[0]?.children?.[0]
+            ? find_link_to_section(sections, type)?.[0]
             : null;
 
-    const code_friendly_returns_object_name = returns_object
-        ? make_code_friendly(returns_object.title)
+    const returns_structure = returns_object?.children?.[0];
+
+    const code_friendly_returns_object_name = returns_structure
+        ? make_code_friendly(returns_structure.title)
         : null;
 
-    const returns_table = returns_object?.tables?.[0];
+    const returns_table = returns_structure?.tables?.[0];
 
     if (returns_table && returns_table?.[0]?.field) {
         if (!declare_structures[code_friendly_returns_object_name]) {
-            declare_structures[code_friendly_returns_object_name] = returns_table;
+            declare_structures[code_friendly_returns_object_name] = {
+                table: returns_table,
+                section: returns_object
+            };
         }
         return code_friendly_returns_object_name;
     }
@@ -535,41 +542,21 @@ function make_code_friendly(name) {
         .replace(/\W/g, "");;
 }
 
-/**
- * Convert a documented request into a typescript endpoint definition.
- * @param {Array<ParsedSection>} sections Every other parsed section (used for links).
- * @param {ParsedRequest} request The request to serialise. 
- * @param {ParsedSection} section The section of the request to serialise. 
- * @returns {String} The serialised request.
- */
-function serialize_request(sections, request, section) {
-    const code_friendly_name = make_code_friendly(request.name);
-        
-    const examples = section.children.filter(child => child.title.includes("Example"));
+function create_comment(description, section) {
+    if (NO_COMMENTS)
+        return "";
 
-    const returns = /returns( an?)? ((.+) object(s?))/gi.exec(section.body);
-    const return_type_name = returns?.[2]
-        ? replace_discord_type(sections, returns[2])
-        : null;
-
-    const description = format_comment(
-        removeMarkdown(
-            section.body
-                .split("\n")
-                .filter(ln => !ln.endsWith("format:"))
-                .join("\n")
-        )
-    ).trim();
-    
     const url_path = section.file
         .split(path.sep)
         .join(path.posix.sep)
         .toLowerCase()
         .split(".")[0]
         .replace(/_/g, "-");
+        
+    const link = "https://discord.com/developers/docs/" + url_path + "#" + section.title.toLowerCase().replace(/ /g, "-");
 
-    const link = "https://discord.com/developers/docs/" + url_path + "#" + request.name.toLowerCase().replace(/ /g, "-");
-
+    const examples = section.children.filter(child => child.title.includes("Example"));
+    
     const comment_parts = [
         ...(NO_LINKS ? [] : [ link ]),
         ...(description ? [ description ] : []),
@@ -587,19 +574,48 @@ function serialize_request(sections, request, section) {
                     : "";  
             }),
         ...(NO_EXAMPLES ? [] : examples.map(example =>
-            "@example\n * // " + example.title + "\n * "
+            "@example\n * "
                 + prepend_comment_lines(example.code[0])
         ))
-    ]
-
+    ];
+    
     const comment = comment_parts.join("\n * \n * ");
+
+    return comment ? "/**\n * " + comment + "\n */\n" : "";
+}
+
+/**
+ * Convert a documented request into a typescript endpoint definition.
+ * @param {Array<ParsedSection>} sections Every other parsed section (used for links).
+ * @param {ParsedRequest} request The request to serialise. 
+ * @param {ParsedSection} section The section of the request to serialise. 
+ * @returns {String} The serialised request.
+ */
+function serialize_request(sections, request, section) {
+    const code_friendly_name = make_code_friendly(request.name);
+
+    const returns = /returns( an?)? ((.+) object(s?))/gi.exec(section.body);
+    const return_type_name = returns?.[2]
+        ? replace_discord_type(sections, returns[2])
+        : null;
+
+    const description = format_comment(
+        removeMarkdown(
+            section.body
+                .split("\n")
+                .filter(ln => !ln.endsWith("format:"))
+                .join("\n")
+        )
+    ).trim();
+    
+    section.title = request.name;
 
     const parameters = section.children.find(child => child.title.includes("JSON"))?.tables?.[0];
     const query = section.children.find(child => child.title.includes("Query String"))?.tables?.[0];
 
     const response_body = NO_RETURN_TYPES ? null : section.children.find(child => child.title.includes("Response"))?.tables?.[0];
 
-    return (NO_COMMENTS ? "" : (comment ? "/**\n * " + comment + "\n */\n" : ""))
+    return create_comment(description, section)
         + code_friendly_name + ": "
         + "(("
         + request.endpoint.
@@ -663,20 +679,21 @@ function serialize_request(sections, request, section) {
     }
 
     let before = Object.keys(declare_structures).length;
-    Object.entries(declare_structures).map(([ discordType, structureTable ]) => {
-        return `interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
-    }).join("\n")
+    Object.entries(declare_structures).forEach(([ , { table: structureTable } ]) => {
+        create_typescript_interface_from_table(sections, structureTable);
+    });
     let after = Object.keys(declare_structures).length;
 
     while (after > before) {
         before = after;
-        Object.entries(declare_structures).map(([ discordType, structureTable ]) => {
-            return `interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
-        }).join("\n")
+        Object.entries(declare_structures).forEach(([ , { table: structureTable } ]) => {
+            create_typescript_interface_from_table(sections, structureTable);
+        });
         after = Object.keys(declare_structures).length;
     }
 
-    console.log(`${!NO_REQUEST_TYPES ? `type DeclareEndpoint<
+    const parts = [
+        ...(NO_REQUEST_TYPES ? [] : [`type DeclareEndpoint<
 ${INDENT}JSONParams extends Record<string, any> = {},
 ${INDENT}QueryParams extends Record<string, any> = {},
 ${INDENT}ResponseType extends Record<string, any> = {}
@@ -692,24 +709,25 @@ ${INDENT}T extends DeclareEndpoint<unknown, unknown>
 
 export type ExtractResponseType<
 ${INDENT}T extends DeclareEndpoint<unknown, unknown>
-> = T extends DeclareEndpoint<any, any, infer X> ? X: never` : ``}
-
-${Object.entries(declare_types).map(([ discordType, declareType ]) => {
-    return `${EXPORT_TYPES ? "export " : ""}type ${capitalize(discordType)} = ${declareType};`;
-}).join("\n")}
-
-${Object.entries(declare_structures).map(([ discordType, structureTable ]) => {
-    return `${EXPORT_TYPES ? "export " : ""}interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
-}).join("\n\n")}
-
-export const ${NAMESPACE} = {
+> = T extends DeclareEndpoint<any, any, infer X> ? X: never`]
+        ),
+        Object.entries(declare_types).map(([ discordType, declareType ]) => {
+            return `${EXPORT_TYPES ? "export " : ""}type ${capitalize(discordType)} = ${declareType};`;
+        }).join("\n").trim(),
+        Object.entries(declare_structures).map(([ discordType, { table: structureTable, section } ]) => {
+            return `${create_comment("", section)}
+${EXPORT_TYPES ? "export " : ""}interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
+        }).join("\n\n").trim(),
+        `export const ${NAMESPACE} = {
 ${output.map(endpoint => endpoint
     .split("\n")
     .map(ln => INDENT + ln)
     .join("\n")
 ).join(",\n")}
-}`.trim()
-    );
+}`
+    ].filter(_ => _);
+
+    console.log(parts.join("\n\n"));
 
     // console.log(require("util").inspect(sections, false, 25, false));
 })();
