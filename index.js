@@ -9,6 +9,8 @@ const INDENT = args.indent === "tabs"
     ? "\t"
     : " ".repeat(args.indent || 4);
 
+const NAMESPACE = args.namespace || "ApiEndpoint";
+
 const NO_LINKS = args["no-links"];
 const NO_TYPES = args["no-types"];
 const NO_PARAM_TYPES = args["no-param-types"] || NO_TYPES;
@@ -567,7 +569,7 @@ ${Object.entries(declare_types).map(([ discordType, declareType ]) => {
     return `type ${capitalize(discordType)} = ${declareType};`;
 }).join("\n")}
 
-export const ApiEndpoints = {
+export const ${NAMESPACE} = {
 ${output.map(endpoint => endpoint
     .split("\n")
     .map(ln => INDENT + ln)
