@@ -10,10 +10,12 @@ const INDENT = args.indent === "tabs"
     : " ".repeat(args.indent || 4);
 
 const NAMESPACE = args.namespace || "ApiEndpoint";
+const PREPEND = args.prepend || "";
 
 const ENCODE_URI = args["encode-uri"];
 const NO_LINKS = args["no-links"];
 const NO_TYPES = args["no-types"];
+const NO_INLINE_TYPES = args["no-inline-types"];;
 const NO_RETURN_TYPES = args["no-return-types"] || NO_TYPES;
 const NO_REQUEST_TYPES = args["no-request-types"] || NO_TYPES;
 const NO_COMMENTS = args["no-comments"];
@@ -337,9 +339,9 @@ function find_link_to_section(sections, link) {
             ? last
             : dirname + path.sep + last;
 
-        if (full.toLowerCase() !== namespace_path)
+        if (full.replace(/_/g, path.sep).toLowerCase() !== namespace_path)
             return false;
-
+            
         if (header !== section.title.toLowerCase().replace(/ /g, "-"))
             return false;
 
@@ -398,7 +400,9 @@ const declare_types = {};
 const declare_structures = {};
 
 const known_types = {
-    "string": "string"
+    "string": "string",
+    "strings": "string",
+    "boolean": "boolean"
 };
 
 const custom_types = {
@@ -427,7 +431,7 @@ function replace_discord_type(sections, type) {
     const is_array = type.startsWith("array of ");
 
     if (is_array) {
-        type = type.substr(8);
+        type = type.substr(9);
         const replaced = replace_discord_type(sections, type);
         return replaced.includes("|")
             ? "(" + replaced + ")[]"
@@ -440,24 +444,25 @@ function replace_discord_type(sections, type) {
         type = type.substr(7);
     }
     
-    if (known_types[type])
-        return known_types[type];
+    const trimmed = type.replace(/\(.+?\)/g, "").trim();
+    if (known_types[trimmed])
+        return known_types[trimmed];
         
     const replaced = type.replace(/ /g, "");
     const custom = custom_types[replaced];
     if (custom) {
         declare_types[replaced] = custom; // Mark as needing to be declared.
-        return capitalize(replaced);
+        return PREPEND + capitalize(replaced);
     }
 
     if (NO_STRUCTURES)
         return "any";
 
     const returns_object = type
-            ? find_link_to_section(sections, type)?.[0]
-            : null;
+        ? find_link_to_section(sections, type)?.[0]
+        : null;
 
-    const returns_structure = returns_object?.children?.[0];
+    const returns_structure = returns_object?.children?.[0] || returns_object;
 
     const code_friendly_returns_object_name = returns_structure
         ? make_code_friendly(returns_structure.title)
@@ -466,13 +471,11 @@ function replace_discord_type(sections, type) {
     const returns_table = returns_structure?.tables?.[0];
 
     if (returns_table && returns_table?.[0]?.field) {
-        if (!declare_structures[code_friendly_returns_object_name]) {
-            declare_structures[code_friendly_returns_object_name] = {
-                table: returns_table,
-                section: returns_object
-            };
-        }
-        return code_friendly_returns_object_name;
+        declare_structures[code_friendly_returns_object_name] = {
+            table: returns_table,
+            section: returns_object
+        };
+        return PREPEND + code_friendly_returns_object_name;
     }
 
     return "any";
@@ -594,8 +597,8 @@ function create_comment(description, section) {
 function serialize_request(sections, request, section) {
     const code_friendly_name = make_code_friendly(request.name);
 
-    const returns = /returns( an?)? ((.+) object(s?))/gi.exec(section.body);
-    const return_type_name = returns?.[2]
+    const returns = /returns(`\d+` and )?( an?)? ((.+) object(s?))/gi.exec(section.body);
+    let return_type_name = returns?.[2]
         ? replace_discord_type(sections, returns[2])
         : null;
 
@@ -610,45 +613,98 @@ function serialize_request(sections, request, section) {
     
     section.title = request.name;
 
-    const parameters = section.children.find(child => child.title.includes("JSON"))?.tables?.[0];
-    const query = section.children.find(child => child.title.includes("Query String"))?.tables?.[0];
+    const parameters_table = section.children.find(child => child.title.includes("JSON"))?.tables?.[0];
+    let parameters_type_name = null;
+    const query_table = section.children.find(child => child.title.includes("Query String"))?.tables?.[0];
+    let query_type_name = null;
 
-    const response_body = NO_RETURN_TYPES ? null : section.children.find(child => child.title.includes("Response"))?.tables?.[0];
+    const response_table = NO_RETURN_TYPES
+        ? null
+        : section.children
+            .find(child =>
+                child.title
+                .includes("Response")
+            )?.tables?.[0];
 
-    return create_comment(description, section)
-        + code_friendly_name + ": "
-        + "(("
-        + request.endpoint.
-            filter(part =>
-                part.type === "param"   
+    if (NO_INLINE_TYPES && !return_type_name && response_table) {
+        const interface_name = code_friendly_name + "Response";
+        declare_structures[interface_name] = {
+            table: response_table,
+            section: null
+        };
+        return_type_name = interface_name;
+    }
+
+    if (NO_INLINE_TYPES && parameters_table) {
+        const interface_name = code_friendly_name + "Request";
+        declare_structures[interface_name] = {
+            table: parameters_table,
+            section: null
+        };
+        parameters_type_name = interface_name;
+    }
+
+    if (NO_INLINE_TYPES && query_table) {
+        const interface_name = code_friendly_name + "Query";
+        declare_structures[interface_name] = {
+            table: parameters_table,
+            section: null
+        };
+        query_type_name = interface_name;
+    }
+
+    let result = "";
+
+    result += create_comment(description, section);
+    result += code_friendly_name + ": ";
+    result += NO_REQUEST_TYPES ? "(" : "((";
+    result += request.endpoint.
+        filter(part =>
+            part.type === "param"   
+        )
+        .map(part => part.name + (NO_TYPES ? "" : ": string"))
+        .join(", ");
+
+    result += ") => `/";
+
+    result += request.endpoint.map(part =>
+        part.type === "param"
+            ? ENCODE_URI
+                ? "${encodeURIComponent(" + part.name + ")}"
+                : "${" + part.name + "}"
+            : part.name
+        ).join("/") + "`";
+
+    result += NO_REQUEST_TYPES
+        ? ""
+        : ") as DeclareEndpoint<"
+            + (
+                parameters_type_name ||
+                (parameters_table
+                    ? create_typescript_interface_from_table(sections, parameters_table)
+                    : null
+                ) ||
+                "{}"
+            ) + ", "
+            + (
+                query_type_name ||
+                (query_table
+                    ? create_typescript_interface_from_table(sections, query_table)
+                    : null
+                ) ||
+                "{}"
+            ) + ", "
+            + (
+                return_type_name ||
+                (response_table
+                    ? create_typescript_interface_from_table(sections, response_table)
+                    : null
+                ) ||
+                "{}"
             )
-            .map(part => part.name + (NO_TYPES ? "" : ": string"))
-            .join(", ")
-        + ") => `/"
-        + request.endpoint.map(part =>
-            part.type === "param"
-                ? ENCODE_URI
-                    ? "${encodeURIComponent(" + part.name + ")}"
-                    : "${" + part.name + "}"
-                : part.name
-        ).join("/") + "`)"
-        + (NO_REQUEST_TYPES
-            ? ""
-            : " as DeclareEndpoint<"
-                + create_typescript_interface_from_table(sections, parameters)
-                + ", "
-                + create_typescript_interface_from_table(sections, query)
-                + ", "
-                + (
-                    return_type_name ||
-                    (response_body
-                        ? create_typescript_interface_from_table(sections, response_body)
-                        : null
-                    ) ||
-                    "{}"
-                )
-                + ">"
-        );
+            + ">";
+
+    return result;
 }
 
 (async () => {
@@ -700,24 +756,46 @@ ${INDENT}ResponseType extends Record<string, any> = {}
 > = (...args: string[]) => string;
 
 export type ExtractJSONParams<
-${INDENT}T extends DeclareEndpoint<unknown, unknown>
+${INDENT}T extends DeclareEndpoint<unknown, unknown, unknown>
 > = T extends DeclareEndpoint<infer X, any, any> ? X : never
 
 export type ExtractQueryParams<
-${INDENT}T extends DeclareEndpoint<unknown, unknown>
+${INDENT}T extends DeclareEndpoint<unknown, unknown, unknown>
 > = T extends DeclareEndpoint<any, infer X, any> ? X: never
 
 export type ExtractResponseType<
-${INDENT}T extends DeclareEndpoint<unknown, unknown>
+${INDENT}T extends DeclareEndpoint<unknown, unknown, unknown>
 > = T extends DeclareEndpoint<any, any, infer X> ? X: never`]
         ),
         Object.entries(declare_types).map(([ discordType, declareType ]) => {
-            return `${EXPORT_TYPES ? "export " : ""}type ${capitalize(discordType)} = ${declareType};`;
+            let result = "";
+
+            if (EXPORT_TYPES) {
+                result += "export ";
+            }
+
+            result += "type " + PREPEND + capitalize(discordType);
+            result += "= " + declareType;
+
+            return result;
         }).join("\n").trim(),
         Object.entries(declare_structures).map(([ discordType, { table: structureTable, section } ]) => {
-            return `${create_comment("", section)}${EXPORT_TYPES ? "export " : ""}interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
+            let result = "";
+
+            if (section) {
+                result += create_comment("", section);
+            }
+
+            if (EXPORT_TYPES) {
+                result += "export ";
+            }
+
+            result += "interface " + PREPEND + capitalize(discordType) + " ";
+            result += create_typescript_interface_from_table(sections, structureTable);
+
+            return result;
         }).join("\n\n").trim(),
-        `export const ${NAMESPACE} = {
+        `export const ${PREPEND}${NAMESPACE} = {
 ${output.map(endpoint => endpoint
     .split("\n")
     .map(ln => INDENT + ln)

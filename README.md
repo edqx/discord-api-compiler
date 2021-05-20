@@ -21,6 +21,7 @@ You can also pass some CLI options to change the behaviour of the compiler.
 | -------------------- | -------------------------------------------------------------------- | -------------- |
 | `--indent`           | The size of indentation, set to `tabs` to use tabs instead of spaces | `4`            |
 | `--namespace`        | The name of the object containing endpoints                          | `ApiEndpoints` |
+| `--prepend`          | Prepend every type and interface with a custom string                | `""`           |
 | `--encode-uri`       | Use `encodeURIComponent` in parameters                               |                |
 | `--export-types`     | Export all basic types and structure interfaces                      |                |
 | `--no-links`         | Disable discord api links                                            |                |
@@ -30,3 +31,4 @@ You can also pass some CLI options to change the behaviour of the compiler.
 | `--no-comments`      | Disable jsdoc comments                                               |                |
 | `--no-examples`      | Disable example requests and responses                               |                |
 | `--no-structures`    | Disable all data structure interfaces and replace with `any`         |                |
+| `--no-inline-types`  | Disable all inline object types and instead use separate interfaces  |                |
