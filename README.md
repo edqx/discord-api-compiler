@@ -18,9 +18,9 @@ You can also pass some CLI options to change the behaviour of the compiler.
 | ------------------ | -------------------------------------------------------------------- | -------------- |
 | `--indent`         | The size of indentation, set to `tabs` to use tabs instead of spaces | `4`            |
 | `--namespace`      | The name of the object containing endpoints                          | `ApiEndpoints` |
-| `--encode-uri`     | Use `encodeURIComponent` in parameters                               | `false`        |
-| `--no-links`       | Disable discord api links                                            | `false`        |
-| `--no-types`       | Disable typescript typings                                           | `false`        |
-| `--no-param-types` | Disable typings for json/query parameters                            | `false`        |
-| `--no-comments`    | Disable jsdoc comments                                               | `false`        |
-| `--no-examples`    | Disable example requests and responses                               | `false`        |
+| `--encode-uri`     | Use `encodeURIComponent` in parameters                               |                |
+| `--no-links`       | Disable discord api links                                            |                |
+| `--no-types`       | Disable typescript typings                                           |                |
+| `--no-param-types` | Disable typings for json/query parameters                            |                |
+| `--no-comments`    | Disable jsdoc comments                                               |                |
+| `--no-examples`    | Disable example requests and responses                               |                |
