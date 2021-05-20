@@ -18,6 +18,7 @@ const NO_RETURN_TYPES = args["no-return-types"] || NO_TYPES;
 const NO_REQUEST_TYPES = args["no-request-types"] || NO_TYPES;
 const NO_COMMENTS = args["no-comments"];
 const NO_EXAMPLES = args["no-examples"] || NO_COMMENTS;
+const NO_INTERFACES = args["no-interfaces"] || NO_TYPES;
 const EXPORT_TYPES = args["export-types"];
 
 /**
@@ -437,6 +438,15 @@ function replace_discord_type(sections, type) {
     
     if (known_types[type])
         return known_types[type];
+        
+    const custom = custom_types[type];
+    if (custom) {
+        declare_types[type] = custom; // Mark as needing to be declared.
+        return capitalize(type);
+    }
+
+    if (NO_INTERFACES)
+        return "any";
 
     const returns_object = type
             ? find_link_to_section(sections, type)?.[0]?.children?.[0]
@@ -453,12 +463,6 @@ function replace_discord_type(sections, type) {
             declare_structures[code_friendly_returns_object_name] = returns_table;
         }
         return code_friendly_returns_object_name;
-    }
-
-    const custom = custom_types[type];
-    if (custom) {
-        declare_types[type] = custom; // Mark as needing to be declared.
-        return capitalize(type);
     }
 
     return "any";
@@ -540,23 +544,10 @@ function serialize_request(sections, request, section) {
         
     const examples = section.children.filter(child => child.title.includes("Example"));
 
-    const returns = /returns( an?)? (.+) object/gi.exec(section.body);
-
-    const returns_object = NO_RETURN_TYPES
-        ? null
-        : returns
-            ? find_link_to_section(sections, returns[2])?.[0]?.children?.[0]
-            : null;
-
-    const code_friendly_returns_object_name = returns_object
-        ? make_code_friendly(returns_object.title)
+    const returns = /returns( an?)? ((.+) object(s?))/gi.exec(section.body);
+    const type_name = returns?.[2]
+        ? replace_discord_type(sections, returns[2])
         : null;
-
-    const returns_table = returns_object?.tables?.[0];
-
-    if (returns_table) {
-        declare_structures[code_friendly_returns_object_name] = returns_table;
-    }
 
     const description = format_comment(
         removeMarkdown(
@@ -630,7 +621,7 @@ function serialize_request(sections, request, section) {
                 + create_typescript_interface_from_table(sections, query)
                 + ", "
                 + (
-                    code_friendly_returns_object_name ||
+                    type_name ||
                     (response_body
                         ? create_typescript_interface_from_table(sections, response_body)
                         : null
