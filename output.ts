@@ -16,9 +16,34 @@ export type ExtractResponseType<
     T extends DeclareEndpoint<unknown, unknown, unknown>
 > = T extends DeclareEndpoint<any, any, infer X> ? X: never
 
-type Snowflake= string
-type Integer= number
-type ISO8601timestamp= string
+type Snowflake = string
+type Binary = string
+type FileContent = string
+type ISO8601Timestamp = string
+type ImageData = string
+
+/**
+ * https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype
+ */
+enum ApplicationCommandOptionType {
+    SUB_COMMAND = 1,
+    SUB_COMMAND_GROUP = 2,
+    STRING = 3,
+    INTEGER = 4,
+    BOOLEAN = 5,
+    USER = 6,
+    CHANNEL = 7,
+    ROLE = 8,
+    MENTIONABLE = 9
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash-commands#applicationcommandpermissiontype
+ */
+enum ApplicationCommandPermissionType {
+    ROLE = 1,
+    USER = 2
+}
 
 /**
  * https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption
@@ -29,7 +54,7 @@ interface ApplicationCommandOption {
     /**
      * Value of ApplicationCommandOptionType.
      */
-    type: any;
+    type: ApplicationCommandOptionType;
     /**
      * 1-32 lowercase character name matching ^[\w-]{1,32}$.
      */
@@ -64,7 +89,7 @@ interface ApplicationCommandPermissions {
     /**
      * Role or user.
      */
-    type: any;
+    type: ApplicationCommandPermissionType;
     /**
      * True to allow, false, to disallow.
      */
@@ -94,39 +119,85 @@ interface EmbedStructure {
     /**
      * Timestamp of embed content.
      */
-    timestamp?: ISO8601timestamp;
+    timestamp?: ISO8601Timestamp;
     /**
      * Color code of the embed.
      */
-    color?: Integer;
+    color?: number;
     /**
      * Footer information.
      */
-    footer?: any;
+    footer?: EmbedFooterStructure;
     /**
      * Image information.
      */
-    image?: any;
+    image?: EmbedImageStructure;
     /**
      * Thumbnail information.
      */
-    thumbnail?: any;
+    thumbnail?: EmbedThumbnailStructure;
     /**
      * Video information.
      */
-    video?: any;
+    video?: EmbedVideoStructure;
     /**
      * Provider information.
      */
-    provider?: any;
+    provider?: EmbedProviderStructure;
     /**
      * Author information.
      */
-    author?: any;
+    author?: EmbedAuthorStructure;
     /**
      * Fields information.
      */
-    fields?: any[];
+    fields?: EmbedFieldStructure[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#allowed-mentions-object
+ */
+interface AllowedMentionsStructure {
+    /**
+     * An array of allowed mention types to parse from the content.
+     */
+    parse: any[];
+    /**
+     * Array of role_ids to mention (Max size of 100).
+     */
+    roles: Snowflake[];
+    /**
+     * Array of user_ids to mention (Max size of 100).
+     */
+    users: Snowflake[];
+    /**
+     * For replies, whether to mention the author of the message being replied to (default
+     * false).
+     */
+    replied_user: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#message-reference-structure
+ */
+interface MessageReferenceStructure {
+    /**
+     * Id of the originating message.
+     */
+    message_id?: Snowflake;
+    /**
+     * Id of the originating message's channel.
+     */
+    channel_id?: Snowflake;
+    /**
+     * Id of the originating message's guild.
+     */
+    guild_id?: Snowflake;
+    /**
+     * When sending, whether to error if the referenced message doesn't exist instead of
+     * sending as a normal (non-reply) message, default true.
+     */
+    fail_if_not_exists?: boolean;
 }
 
 /**
@@ -148,7 +219,7 @@ interface AttachmentStructure {
     /**
      * Size of file in bytes.
      */
-    size: Integer;
+    size: number;
     /**
      * Source url of file.
      */
@@ -160,11 +231,11 @@ interface AttachmentStructure {
     /**
      * Height of file (if image).
      */
-    height?: Integer|null;
+    height?: number|null;
     /**
      * Width of file (if image).
      */
-    width?: Integer|null;
+    width?: number|null;
 }
 
 /**
@@ -322,7 +393,7 @@ interface ChannelStructure {
     /**
      * The type of channel.
      */
-    type: Integer;
+    type: number;
     /**
      * The id of the guild (may be missing for some channel objects received over gateway
      * guild dispatches).
@@ -331,7 +402,7 @@ interface ChannelStructure {
     /**
      * Sorting position of the channel.
      */
-    position?: Integer;
+    position?: number;
     /**
      * Explicit permission overwrites for members and roles.
      */
@@ -356,16 +427,16 @@ interface ChannelStructure {
     /**
      * The bitrate (in bits) of the voice channel.
      */
-    bitrate?: Integer;
+    bitrate?: number;
     /**
      * The user limit of the voice channel.
      */
-    user_limit?: Integer;
+    user_limit?: number;
     /**
      * Amount of seconds a user has to wait before sending another message (0-21600); bots,
      * as well as users with the permission managemessages or managechannel, are unaffected.
      */
-    rate_limit_per_user?: Integer;
+    rate_limit_per_user?: number;
     /**
      * The recipients of the DM.
      */
@@ -392,7 +463,7 @@ interface ChannelStructure {
      * When the last pinned message was pinned. This may be null in events such as GUILD_CREATE
      * when a message is not pinned.
      */
-    last_pin_timestamp?: ISO8601timestamp|null;
+    last_pin_timestamp?: ISO8601Timestamp|null;
     /**
      * Voice region id for the voice channel, automatic when set to null.
      */
@@ -400,15 +471,15 @@ interface ChannelStructure {
     /**
      * The camera video quality mode of the voice channel, 1 when not present.
      */
-    video_quality_mode?: Integer;
+    video_quality_mode?: number;
     /**
      * An approximate count of messages in a thread, stops counting at 50.
      */
-    message_count?: Integer;
+    message_count?: number;
     /**
      * An approximate count of users in a thread, stops counting at 50.
      */
-    member_count?: Integer;
+    member_count?: number;
     /**
      * Thread-specific fields not needed by other channels.
      */
@@ -435,11 +506,11 @@ interface ThreadMemberStructure {
     /**
      * The time the current user last joined the thread.
      */
-    join_timestamp: ISO8601timestamp;
+    join_timestamp: ISO8601Timestamp;
     /**
      * Any user-thread settings, currently only used for notifications.
      */
-    flags: Integer;
+    flags: number;
 }
 
 /**
@@ -471,7 +542,7 @@ interface RoleStructure {
     /**
      * Integer representation of hexadecimal color code.
      */
-    color: Integer;
+    color: number;
     /**
      * If this role is pinned in the user listing.
      */
@@ -479,7 +550,7 @@ interface RoleStructure {
     /**
      * Position of this role.
      */
-    position: Integer;
+    position: number;
     /**
      * Permission bit set.
      */
@@ -495,7 +566,7 @@ interface RoleStructure {
     /**
      * The tags this role has.
      */
-    tags?: any;
+    tags?: RoleTagsStructure;
 }
 
 /**
@@ -509,7 +580,7 @@ interface OverwriteStructure {
     /**
      * Either 0 (role) or 1 (member).
      */
-    type: any;
+    type: number;
     /**
      * Permission bit set.
      */
@@ -527,19 +598,19 @@ interface SessionStartLimitStructure {
     /**
      * The total number of session starts the current user is allowed.
      */
-    total: Integer;
+    total: number;
     /**
      * The remaining number of session starts the current user is allowed.
      */
-    remaining: Integer;
+    remaining: number;
     /**
      * The number of milliseconds after which the limit resets.
      */
-    reset_after: Integer;
+    reset_after: number;
     /**
      * The number of identify requests allowed per 5 seconds.
      */
-    max_concurrency: Integer;
+    max_concurrency: number;
 }
 
 /**
@@ -665,7 +736,7 @@ interface ApplicationStructure {
     /**
      * The application's public flags.
      */
-    flags: Integer;
+    flags: number;
 }
 
 /**
@@ -731,15 +802,15 @@ interface UserStructure {
     /**
      * The flags on a user's account.
      */
-    flags?: Integer;
+    flags?: number;
     /**
      * The type of Nitro subscription on a user's account.
      */
-    premium_type?: Integer;
+    premium_type?: number;
     /**
      * The public flags on a user's account.
      */
-    public_flags?: Integer;
+    public_flags?: number;
 }
 
 /**
@@ -754,6 +825,144 @@ interface ApplicationCommandOptionChoice {
      * Value of the choice, up to 100 characters if string.
      */
     value: any;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-footer-structure
+ */
+interface EmbedFooterStructure {
+    /**
+     * Footer text.
+     */
+    text: string;
+    /**
+     * Url of footer icon (only supports http(s) and attachments).
+     */
+    icon_url?: string;
+    /**
+     * A proxied url of footer icon.
+     */
+    proxy_icon_url?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-image-structure
+ */
+interface EmbedImageStructure {
+    /**
+     * Source url of image (only supports http(s) and attachments).
+     */
+    url?: string;
+    /**
+     * A proxied url of the image.
+     */
+    proxy_url?: string;
+    /**
+     * Height of image.
+     */
+    height?: number;
+    /**
+     * Width of image.
+     */
+    width?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-thumbnail-structure
+ */
+interface EmbedThumbnailStructure {
+    /**
+     * Source url of thumbnail (only supports http(s) and attachments).
+     */
+    url?: string;
+    /**
+     * A proxied url of the thumbnail.
+     */
+    proxy_url?: string;
+    /**
+     * Height of thumbnail.
+     */
+    height?: number;
+    /**
+     * Width of thumbnail.
+     */
+    width?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-video-structure
+ */
+interface EmbedVideoStructure {
+    /**
+     * Source url of video.
+     */
+    url?: string;
+    /**
+     * A proxied url of the video.
+     */
+    proxy_url?: string;
+    /**
+     * Height of video.
+     */
+    height?: number;
+    /**
+     * Width of video.
+     */
+    width?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-provider-structure
+ */
+interface EmbedProviderStructure {
+    /**
+     * Name of provider.
+     */
+    name?: string;
+    /**
+     * Url of provider.
+     */
+    url?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-author-structure
+ */
+interface EmbedAuthorStructure {
+    /**
+     * Name of author.
+     */
+    name?: string;
+    /**
+     * Url of author.
+     */
+    url?: string;
+    /**
+     * Url of author icon (only supports http(s) and attachments).
+     */
+    icon_url?: string;
+    /**
+     * A proxied url of author icon.
+     */
+    proxy_icon_url?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-field-structure
+ */
+interface EmbedFieldStructure {
+    /**
+     * Name of the field.
+     */
+    name: string;
+    /**
+     * Value of the field.
+     */
+    value: any;
+    /**
+     * Whether or not this field should display inline.
+     */
+    inline?: boolean;
 }
 
 /**
@@ -772,16 +981,34 @@ interface ThreadMetadataStructure {
      * Duration in minutes to automatically archive the thread after recent activity, can
      * be set to: 60, 1440, 4320, 10080.
      */
-    auto_archive_duration: Integer;
+    auto_archive_duration: number;
     /**
      * Timestamp when the thread's archive status was last changed, used for calculating
      * recent activity.
      */
-    archive_timestamp: ISO8601timestamp;
+    archive_timestamp: ISO8601Timestamp;
     /**
      * When a thread is locked, only users with MANAGE_THREADS can unarchive it.
      */
     locked?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/permissions#role-tags-structure
+ */
+interface RoleTagsStructure {
+    /**
+     * The id of the bot this role belongs to.
+     */
+    bot_id?: Snowflake;
+    /**
+     * The id of the integration this role belongs to.
+     */
+    integration_id?: Snowflake;
+    /**
+     * Whether this is the guild's premium subscriber role.
+     */
+    premium_subscriber?: null;
 }
 
 export const ApiEndpoint = {
@@ -1261,7 +1488,7 @@ export const ApiEndpoint = {
         /**
          * The type of audit log event.
          */
-        action_type: Integer;
+        action_type: number;
         /**
          * Filter the log before a certain entry id.
          */
@@ -1269,7 +1496,7 @@ export const ApiEndpoint = {
         /**
          * How many entries are returned (default 50, minimum 1, maximum 100).
          */
-        limit: Integer;
+        limit: number;
     }, any>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-channel
@@ -1292,7 +1519,7 @@ export const ApiEndpoint = {
         /**
          * Base64 encoded icon.
          */
-        icon: any;
+        icon: Binary;
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete/close-channel
@@ -1341,7 +1568,7 @@ export const ApiEndpoint = {
         /**
          * Max number of messages to return (1-100).
          */
-        limit: Integer;
+        limit: number;
     }, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-channel-message
@@ -1403,7 +1630,7 @@ export const ApiEndpoint = {
         /**
          * The contents of the file being sent.
          */
-        file: any;
+        file: FileContent;
         /**
          * Embedded rich content.
          */
@@ -1415,11 +1642,11 @@ export const ApiEndpoint = {
         /**
          * Allowed mentions for the message.
          */
-        allowed_mentions: any;
+        allowed_mentions: AllowedMentionsStructure;
         /**
          * Include to make your message a reply.
          */
-        message_reference: any;
+        message_reference: MessageReferenceStructure;
     }, {}, any>,
     /**
      * https://discord.com/developers/docs/resources/channel#crosspost-message
@@ -1479,7 +1706,7 @@ export const ApiEndpoint = {
         /**
          * Max number of users to return (1-100).
          */
-        limit: Integer;
+        limit: number;
     }, any>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete-all-reactions
@@ -1542,11 +1769,11 @@ export const ApiEndpoint = {
         /**
          * Edit the flags of a message (only SUPPRESS_EMBEDS can currently be set/unset).
          */
-        flags: Integer;
+        flags: number;
         /**
          * The contents of the file being sent/edited.
          */
-        file: any;
+        file: FileContent;
         /**
          * JSON encoded body of non-file params (multipart/form-data only).
          */
@@ -1554,7 +1781,7 @@ export const ApiEndpoint = {
         /**
          * Allowed mentions for the message.
          */
-        allowed_mentions: any;
+        allowed_mentions: AllowedMentionsStructure;
         /**
          * Attached files to keep.
          */
@@ -1587,7 +1814,7 @@ export const ApiEndpoint = {
         /**
          * An array of message ids to delete (2-100).
          */
-        messages: any[];
+        messages: Snowflake[];
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#edit-channel-permissions
@@ -1610,7 +1837,7 @@ export const ApiEndpoint = {
         /**
          * 0 for a role or 1 for a member.
          */
-        type: Integer;
+        type: number;
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-channel-invites
@@ -1633,11 +1860,11 @@ export const ApiEndpoint = {
          * Duration of invite in seconds before expiry, or 0 for never. between 0 and 604800
          * (7 days).
          */
-        max_age: Integer;
+        max_age: number;
         /**
          * Max number of uses or 0 for unlimited. between 0 and 100.
          */
-        max_uses: Integer;
+        max_uses: number;
         /**
          * Whether this invite only grants temporary membership.
          */
@@ -1650,7 +1877,7 @@ export const ApiEndpoint = {
         /**
          * The type of target for this voice channel invite.
          */
-        target_type: Integer;
+        target_type: number;
         /**
          * The id of the user whose stream to display for this invite, required if target_type
          * is 1, the user must be streaming in the channel.
@@ -1755,7 +1982,7 @@ export const ApiEndpoint = {
          * Duration in minutes to automatically archive the thread after recent activity, can
          * be set to: 60, 1440, 4320, 10080.
          */
-        auto_archive_duration: Integer;
+        auto_archive_duration: number;
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#start-thread-without-message
@@ -1773,7 +2000,7 @@ export const ApiEndpoint = {
          * Duration in minutes to automatically archive the thread after recent activity, can
          * be set to: 60, 1440, 4320, 10080.
          */
-        auto_archive_duration: Integer;
+        auto_archive_duration: number;
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#join-thread
@@ -1848,11 +2075,11 @@ export const ApiEndpoint = {
         /**
          * Returns threads before this timestamp.
          */
-        before?: ISO8601timestamp;
+        before?: ISO8601Timestamp;
         /**
          * Optional maximum number of threads to return.
          */
-        limit?: Integer;
+        limit?: number;
     }, {
         /**
          * The public, archived threads.
@@ -1879,11 +2106,11 @@ export const ApiEndpoint = {
         /**
          * Returns threads before this timestamp.
          */
-        before?: ISO8601timestamp;
+        before?: ISO8601Timestamp;
         /**
          * Optional maximum number of threads to return.
          */
-        limit?: Integer;
+        limit?: number;
     }, {
         /**
          * The private, archived threads.
@@ -1914,7 +2141,7 @@ export const ApiEndpoint = {
         /**
          * Optional maximum number of threads to return.
          */
-        limit?: Integer;
+        limit?: number;
     }, {
         /**
          * The private, archived threads the current user has joined.
@@ -1960,11 +2187,11 @@ export const ApiEndpoint = {
         /**
          * The 128x128 emoji image.
          */
-        image: any;
+        image: ImageData;
         /**
          * Roles allowed to use this emoji.
          */
-        roles: any[];
+        roles: Snowflake[];
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/emoji#modify-guild-emoji
@@ -1982,7 +2209,7 @@ export const ApiEndpoint = {
         /**
          * Roles allowed to use this emoji.
          */
-        roles: any[]|null;
+        roles: Snowflake[]|null;
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/emoji#delete-guild-emoji
@@ -2034,19 +2261,19 @@ export const ApiEndpoint = {
         /**
          * Base64 128x128 image for the guild icon.
          */
-        icon?: any;
+        icon?: ImageData;
         /**
          * Verification level.
          */
-        verification_level?: Integer;
+        verification_level?: number;
         /**
          * Default message notification level.
          */
-        default_message_notifications?: Integer;
+        default_message_notifications?: number;
         /**
          * Explicit content filter level.
          */
-        explicit_content_filter?: Integer;
+        explicit_content_filter?: number;
         /**
          * New guild roles.
          */
@@ -2062,7 +2289,7 @@ export const ApiEndpoint = {
         /**
          * Afk timeout in seconds.
          */
-        afk_timeout?: Integer;
+        afk_timeout?: number;
         /**
          * The id of the channel where guild notices such as welcome messages and boost events
          * are posted.
@@ -2071,7 +2298,7 @@ export const ApiEndpoint = {
         /**
          * System channel flags.
          */
-        system_channel_flags?: Integer;
+        system_channel_flags?: number;
     }, {}, any>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild
@@ -2181,15 +2408,15 @@ export const ApiEndpoint = {
         /**
          * Verification level.
          */
-        verification_level: Integer|null;
+        verification_level: number|null;
         /**
          * Default message notification level.
          */
-        default_message_notifications: Integer|null;
+        default_message_notifications: number|null;
         /**
          * Explicit content filter level.
          */
-        explicit_content_filter: Integer|null;
+        explicit_content_filter: number|null;
         /**
          * Id for afk channel.
          */
@@ -2197,12 +2424,12 @@ export const ApiEndpoint = {
         /**
          * Afk timeout in seconds.
          */
-        afk_timeout: Integer;
+        afk_timeout: number;
         /**
          * Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when
          * the server has the ANIMATED_ICON feature).
          */
-        icon: any|null;
+        icon: ImageData|null;
         /**
          * User id to transfer guild ownership to (must be owner).
          */
@@ -2211,17 +2438,17 @@ export const ApiEndpoint = {
          * Base64 16:9 png/jpeg image for the guild splash (when the server has the INVITE_SPLASH
          * feature).
          */
-        splash: any|null;
+        splash: ImageData|null;
         /**
          * Base64 16:9 png/jpeg image for the guild discovery splash (when the server has the
          * DISCOVERABLE feature).
          */
-        discovery_splash: any|null;
+        discovery_splash: ImageData|null;
         /**
          * Base64 16:9 png/jpeg image for the guild banner (when the server has the BANNER
          * feature).
          */
-        banner: any|null;
+        banner: ImageData|null;
         /**
          * The id of the channel where guild notices such as welcome messages and boost events
          * are posted.
@@ -2230,7 +2457,7 @@ export const ApiEndpoint = {
         /**
          * System channel flags.
          */
-        system_channel_flags: Integer;
+        system_channel_flags: number;
         /**
          * The id of the channel where Community guilds display rules and/or guidelines.
          */
@@ -2286,7 +2513,7 @@ export const ApiEndpoint = {
         /**
          * The type of channel.
          */
-        type: Integer;
+        type: number;
         /**
          * Channel topic (0-1024 characters).
          */
@@ -2294,20 +2521,20 @@ export const ApiEndpoint = {
         /**
          * The bitrate (in bits) of the voice channel (voice only).
          */
-        bitrate: Integer;
+        bitrate: number;
         /**
          * The user limit of the voice channel (voice only).
          */
-        user_limit: Integer;
+        user_limit: number;
         /**
          * Amount of seconds a user has to wait before sending another message (0-21600); bots,
          * as well as users with the permission managemessages or managechannel, are unaffected.
          */
-        rate_limit_per_user: Integer;
+        rate_limit_per_user: number;
         /**
          * Sorting position of the channel.
          */
-        position: Integer;
+        position: number;
         /**
          * The channel's permission overwrites.
          */
@@ -2339,7 +2566,7 @@ export const ApiEndpoint = {
         /**
          * Sorting position of the channel.
          */
-        position: Integer|null;
+        position: number|null;
         /**
          * Syncs the permission overwrites with the new parent, if moving to a new category.
          */
@@ -2369,7 +2596,7 @@ export const ApiEndpoint = {
         /**
          * Max number of members to return (1-1000).
          */
-        limit: Integer;
+        limit: number;
         /**
          * The highest user id in the previous page.
          */
@@ -2391,7 +2618,7 @@ export const ApiEndpoint = {
         /**
          * Max number of members to return (1-1000).
          */
-        limit: Integer;
+        limit: number;
     }, any>,
     /**
      * https://discord.com/developers/docs/resources/guild#add-guild-member
@@ -2428,7 +2655,7 @@ export const ApiEndpoint = {
          * 
          * Requires MANAGE_ROLES.
          */
-        roles: any[];
+        roles: Snowflake[];
         /**
          * Whether the user is muted in voice channels
          * 
@@ -2465,7 +2692,7 @@ export const ApiEndpoint = {
          * 
          * Requires MANAGE_ROLES.
          */
-        roles: any[];
+        roles: Snowflake[];
         /**
          * Whether the user is muted in voice channels. Will throw a 400 if the user is not
          * in a voice channel
@@ -2550,7 +2777,7 @@ export const ApiEndpoint = {
         /**
          * Number of days to delete messages for (0-7).
          */
-        delete_message_days?: Integer;
+        delete_message_days?: number;
         /**
          * Reason for the ban.
          */
@@ -2588,7 +2815,7 @@ export const ApiEndpoint = {
         /**
          * RGB color value.
          */
-        color: Integer;
+        color: number;
         /**
          * Whether the role should be displayed separately in the sidebar.
          */
@@ -2613,7 +2840,7 @@ export const ApiEndpoint = {
         /**
          * Sorting position of the role.
          */
-        position?: Integer|null;
+        position?: number|null;
     }, {}, any>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-role
@@ -2635,7 +2862,7 @@ export const ApiEndpoint = {
         /**
          * RGB color value.
          */
-        color: Integer;
+        color: number;
         /**
          * Whether the role should be displayed separately in the sidebar.
          */
@@ -2667,7 +2894,7 @@ export const ApiEndpoint = {
         /**
          * Number of days to count prune for (1-30).
          */
-        days: Integer;
+        days: number;
         /**
          * Role(s) to include.
          */
@@ -2694,7 +2921,7 @@ export const ApiEndpoint = {
         /**
          * Number of days to prune (1-30).
          */
-        days: Integer;
+        days: number;
         /**
          * Whether 'pruned' is returned, discouraged for large guilds.
          */
@@ -2702,7 +2929,7 @@ export const ApiEndpoint = {
         /**
          * Role(s) to include.
          */
-        include_roles: any[];
+        include_roles: Snowflake[];
         /**
          * Reason for the prune.
          */
@@ -2850,7 +3077,7 @@ export const ApiEndpoint = {
         /**
          * Sets the user's request to speak.
          */
-        request_to_speak_timestamp?: ISO8601timestamp|null;
+        request_to_speak_timestamp?: ISO8601Timestamp|null;
     }, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#update-user-voice-state
@@ -2889,7 +3116,7 @@ export const ApiEndpoint = {
         /**
          * Base64 128x128 image for the guild icon.
          */
-        icon?: any;
+        icon?: ImageData;
     }, {}, any>,
     /**
      * https://discord.com/developers/docs/resources/guild-template#get-guild-templates
@@ -3011,115 +3238,6 @@ export const ApiEndpoint = {
      */
     DeleteStageInstance: ((channelid: string) => `/stage-instances/${channelid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
-     * https://discord.com/developers/docs/resources/user#get-current-user
-     * 
-     * Returns the user object of the requester's account. For OAuth2, this requires the
-     * identify scope, which will return the object without an email, and optionally the
-     * email scope, which returns the object with an email.
-     */
-    GetCurrentUser: (() => `/users/@me`) as DeclareEndpoint<{}, {}, {}>,
-    /**
-     * https://discord.com/developers/docs/resources/user#get-user
-     * 
-     * Returns a user object for a given user ID.
-     */
-    GetUser: ((userid: string) => `/users/${userid}`) as DeclareEndpoint<{}, {}, any>,
-    /**
-     * https://discord.com/developers/docs/resources/user#modify-current-user
-     * 
-     * Modify the requester's user account settings. Returns a user object on success.
-     * 
-     * All parameters to this endpoint are optional.
-     */
-    ModifyCurrentUser: (() => `/users/@me`) as DeclareEndpoint<{
-        /**
-         * User's username, if changed may cause the user's discriminator to be randomized.
-         */
-        username: string;
-        /**
-         * If passed, modifies the user's avatar.
-         */
-        avatar: any|null;
-    }, {}, any>,
-    /**
-     * https://discord.com/developers/docs/resources/user#get-current-user-guilds
-     * 
-     * Returns a list of partial guild objects the current user is a member of. Requires
-     * the guilds OAuth2 scope.
-     * 
-     * @example
-     * ```json
-     * {
-     *   "id": "80351110224678912",
-     *   "name": "1337 Krew",
-     *   "icon": "8342729096ea3675442027381ff50dfe",
-     *   "owner": true,
-     *   "permissions": "36953089",
-     *   "features": ["COMMUNITY", "NEWS"]
-     * }
-     * ```
-     */
-    GetCurrentUserGuilds: (() => `/users/@me/guilds`) as DeclareEndpoint<{}, {
-        /**
-         * Get guilds before this guild ID.
-         */
-        before: Snowflake;
-        /**
-         * Get guilds after this guild ID.
-         */
-        after: Snowflake;
-        /**
-         * Max number of guilds to return (1-200).
-         */
-        limit: Integer;
-    }, any>,
-    /**
-     * https://discord.com/developers/docs/resources/user#leave-guild
-     * 
-     * Leave a guild. Returns a 204 empty response on success.
-     */
-    LeaveGuild: ((guildid: string) => `/users/@me/guilds/${guildid}`) as DeclareEndpoint<{}, {}, {}>,
-    /**
-     * https://discord.com/developers/docs/resources/user#create-dm
-     * 
-     * Create a new DM channel with a user. Returns a DM channel object.
-     * 
-     * You should not use this endpoint to DM everyone in a server about something. DMs
-     * should generally be initiated by a user action. If you open a significant amount
-     * of DMs too quickly, your bot may be rate limited or blocked from opening new ones.
-     */
-    CreateDM: (() => `/users/@me/channels`) as DeclareEndpoint<{
-        /**
-         * The recipient to open a DM channel with.
-         */
-        recipient_id: Snowflake;
-    }, {}, any>,
-    /**
-     * https://discord.com/developers/docs/resources/user#create-group-dm
-     * 
-     * Create a new group DM channel with multiple users. Returns a DM channel object.
-     * This endpoint was intended to be used with the now-deprecated GameBridge SDK. DMs
-     * created with this endpoint will not be shown in the Discord client
-     * 
-     * This endpoint is limited to 10 active group DMs.
-     */
-    CreateGroupDM: (() => `/users/@me/channels`) as DeclareEndpoint<{
-        /**
-         * Access tokens of users that have granted your app the gdm.join scope.
-         */
-        access_tokens: string[];
-        /**
-         * A dictionary of user ids to their respective nicknames.
-         */
-        nicks: any;
-    }, {}, any>,
-    /**
-     * https://discord.com/developers/docs/resources/user#get-user-connections
-     * 
-     * Returns a list of connection objects. Requires the connections OAuth2 scope.
-     */
-    GetUserConnections: (() => `/users/@me/connections`) as DeclareEndpoint<{}, {}, any>,
-    /**
      * https://discord.com/developers/docs/resources/voice#list-voice-regions
      * 
      * Returns an array of voice region objects that can be used when creating servers.
@@ -3142,7 +3260,7 @@ export const ApiEndpoint = {
         /**
          * Image for the default webhook avatar.
          */
-        avatar: any|null;
+        avatar: ImageData|null;
     }, {}, any>,
     /**
      * https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
@@ -3185,7 +3303,7 @@ export const ApiEndpoint = {
         /**
          * Image for the default webhook avatar.
          */
-        avatar: any|null;
+        avatar: ImageData|null;
         /**
          * The new channel id this webhook should be moved to.
          */
@@ -3247,7 +3365,7 @@ export const ApiEndpoint = {
         /**
          * The contents of the file being sent.
          */
-        file: any;
+        file: FileContent;
         /**
          * Embedded rich content.
          */
@@ -3259,7 +3377,7 @@ export const ApiEndpoint = {
         /**
          * Allowed mentions for the message.
          */
-        allowed_mentions: any;
+        allowed_mentions: AllowedMentionsStructure;
     }, {
         /**
          * Waits for server confirmation of message send before response, and returns the created
@@ -3337,7 +3455,7 @@ export const ApiEndpoint = {
         /**
          * The contents of the file being sent/edited.
          */
-        file: any;
+        file: FileContent;
         /**
          * JSON encoded body of non-file params (multipart/form-data only).
          */
@@ -3345,19 +3463,12 @@ export const ApiEndpoint = {
         /**
          * Allowed mentions for the message.
          */
-        allowed_mentions: any;
+        allowed_mentions: AllowedMentionsStructure;
         /**
          * Attached files to keep.
          */
         attachments: AttachmentStructure[];
     }, {}, any>,
-    /**
-     * https://discord.com/developers/docs/resources/webhook#delete-webhook-message
-     * 
-     * Deletes a message that was created by the webhook. Returns a 204 NO CONTENT response
-     * on success.
-     */
-    DeleteWebhookMessage: ((webhookid: string, webhooktoken: string, messageid: string) => `/webhooks/${webhookid}/${webhooktoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/topics/gateway#get-gateway
      * 
@@ -3408,7 +3519,7 @@ export const ApiEndpoint = {
         /**
          * The recommended number of shards to use when connecting.
          */
-        shards: Integer;
+        shards: number;
         /**
          * Information on the current session start limit.
          */
@@ -3421,7 +3532,7 @@ export const ApiEndpoint = {
         /**
          * The recommended number of shards to use when connecting.
          */
-        shards: Integer;
+        shards: number;
         /**
          * Information on the current session start limit.
          */
@@ -3480,7 +3591,7 @@ export const ApiEndpoint = {
         /**
          * When the access token expires.
          */
-        expires: ISO8601timestamp;
+        expires: ISO8601Timestamp;
         /**
          * The user who has authorized, if the user has authorized with the identify scope.
          */

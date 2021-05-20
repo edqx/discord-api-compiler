@@ -102,17 +102,34 @@ function is_section_line_child(depth, line) {
  * @param {String} text The markdown to parse including the section header.
  * @returns {ParsedSection} The parsed section.
  */
-function parse_section_recursive(file, text) {
+function parse_section_recursive(file, text, parent) {
     const parsed = {};
     const lines = text.split("\n");
 
+    const header = lines.shift();
+
     parsed.body = "";
-    parsed.title = lines.shift()?.replace(/^#+/g, "");
+    parsed.title = header?.replace(/^#+ /g, "");
     parsed.tables = [];
     parsed.children = [];
     parsed.code = [];
     
-    const depth = parsed.title.match(/^\#+/g)?.[0] || "";
+    const file_part = [
+        "#DOCS",
+        ...file.split(".")[0].split(path.sep)
+    ].join("_").toUpperCase();
+
+    let hash_part = "";
+
+    if (parent?.hashes === 3) {
+        hash_part += parent.link.split("/")[1] + "-";
+    }
+
+    hash_part += parsed.title.toLowerCase().replace(/ /g, "-");
+    parsed.link = file_part + "/" + hash_part;
+    
+    const depth = header.match(/^\#+/g)?.[0] || "";
+    parsed.hashes = depth.length;
     
     parsed.notes = [""];
     for (let i = 0; i < lines.length; i++) {
@@ -167,7 +184,7 @@ function parse_section_recursive(file, text) {
                 i++;
             }
             const child_text = child_lines.join("\n");
-            parsed.children.push(parse_section_recursive(file, child_text));
+            parsed.children.push(parse_section_recursive(file, child_text, parsed));
             i--;
         } else {
             parsed.body += lines[i] + "\n";
@@ -177,8 +194,10 @@ function parse_section_recursive(file, text) {
 
     return {
         file,
+        link: parsed.link,
         body: parsed.body.trim(),
         title: parsed.title.trim(),
+        hashes: parsed.hashes,
         tables: parsed.tables,
         children: parsed.children,
         notes: parsed.notes,
@@ -326,26 +345,9 @@ function find_link_to_section(sections, link) {
     if (!url)
         return null;
 
-    const [ namespace, header ] = url[0].split("/");
-
-    const namespace_path_parts = namespace.split("_");
-    namespace_path_parts.shift(); // Remove "#DOCS" prefix
-
-    const namespace_path = namespace_path_parts.join(path.sep).toLowerCase();
-
     const found = [];
     recursive_find_sections(found, sections, section => {
-        const dirname = path.dirname(section.file);
-        const last = path.basename(section.file, ".md");
-
-        const full = dirname === "."
-            ? last
-            : dirname + path.sep + last;
-
-        if (full.replace(/_/g, path.sep).toLowerCase() !== namespace_path)
-            return false;
-            
-        if (header !== section.title.toLowerCase().replace(/ /g, "-"))
+        if (section.link !== url[0])
             return false;
 
         return true;
@@ -400,19 +402,25 @@ function format_comment(comment) {
 const note_types = ["warn", "info", "danger"];
 
 const declare_types = {};
+const declare_enums = {};
 const declare_structures = {};
 
 const known_types = {
     "string": "string",
-    "strings": "string",
-    "boolean": "boolean"
+    "boolean": "boolean",
+    "int": "number",
+    "integer": "number",
+    "float": "number",
+    "null": "null"
 };
 
 const custom_types = {
-    "snowflake": "string",
-    "integer": "number",
-    "float": "number",
-    "ISO8601timestamp": "string"
+    "Snowflake": "string",
+    "ISO8601Timestamp": "string",
+    "Binary": "string",
+    "FileContent": "string",
+    "ImageData": "string",
+    "GuildFeature": "string"
 };
 
 function replace_discord_type(sections, type) {
@@ -421,6 +429,10 @@ function replace_discord_type(sections, type) {
     if (is_nullable) {
         type = type.substr(1);
         return replace_discord_type(sections, type) + "|null";
+    }
+
+    if (type.endsWith("s")) {
+        type = type.substr(0, type.length - 1);
     }
     
     if (type.endsWith(" objects")) {
@@ -432,9 +444,12 @@ function replace_discord_type(sections, type) {
     }
 
     const is_array = type.startsWith("array of ");
+    const is_list = type.startsWith("list of ");
 
-    if (is_array) {
-        type = type.substr(9);
+    if (is_array) type = type.substr(9);
+    if (is_list) type = type.substr(8);
+
+    if (is_array || is_list) {
         const replaced = replace_discord_type(sections, type);
         return replaced.includes("|")
             ? "(" + replaced + ")[]"
@@ -450,13 +465,6 @@ function replace_discord_type(sections, type) {
     const trimmed = type.replace(/\(.+?\)/g, "").trim();
     if (known_types[trimmed])
         return known_types[trimmed];
-        
-    const replaced = type.replace(/ /g, "");
-    const custom = custom_types[replaced];
-    if (custom) {
-        declare_types[replaced] = custom; // Mark as needing to be declared.
-        return PREPEND + capitalize(replaced);
-    }
 
     if (NO_STRUCTURES)
         return "any";
@@ -465,7 +473,12 @@ function replace_discord_type(sections, type) {
         ? find_link_to_section(sections, type)?.[0]
         : null;
 
-    const returns_structure = returns_object?.children?.[0] || returns_object;
+    const returns_structure = returns_object?.children
+        ?.find(child =>
+            child?.title
+                ?.includes?.("Structure")
+            ) 
+        || returns_object;
 
     const code_friendly_returns_object_name = returns_structure
         ? make_code_friendly(returns_structure.title)
@@ -481,6 +494,21 @@ function replace_discord_type(sections, type) {
         return PREPEND + code_friendly_returns_object_name;
     }
 
+    if (returns_table && returns_table?.[0]?.name && returns_table?.[0]?.value) {
+        declare_enums[code_friendly_returns_object_name] = {
+            table: returns_table,
+            section: returns_object
+        };
+        return PREPEND + code_friendly_returns_object_name;
+    }
+    
+    const replaced = capitalize(removeMarkdown(type)).replace(/ /g, "");
+    const custom = custom_types[replaced];
+    if (custom) {
+        declare_types[replaced] = custom; // Mark as needing to be declared.
+        return PREPEND + replaced;
+    }
+
     return "any";
 }
 
@@ -489,8 +517,7 @@ function replace_discord_type(sections, type) {
  * @param {String} str
  */
 function capitalize(str) {
-    return str[0].toUpperCase()
-        + str.substr(1);
+    return str.replace(/\b\w/g, x => x.toUpperCase());
 }
 
 /**
@@ -498,7 +525,8 @@ function capitalize(str) {
  * @param {String} str
  */
 function sentence_case(str) {
-    return capitalize(str)
+    return str[0].toUpperCase()
+        + str.substr(1)
         + (str.endsWith(".") ? "" : ".");
 }
 
@@ -520,19 +548,23 @@ function create_typescript_interface_from_table(sections, table) {
                 stripped += "\n\nRequires " + row.permission;
             }
 
+            if (row.description.startsWith("value of ")) {
+                row.type = row.description.substr(9);
+            }
+
             const description = format_comment(
                 stripped
             ).trim();
 
             const field = row.field.includes("?")
-                ? row.field.replace(/\?/g, "") + "?"
+                ? row.field.replace(/(\?)|((\\)?\*)/g, "").trim() + "?"
                 : row.field;
 
             return INDENT + prepend_comment_lines(
                 (NO_COMMENTS ? "" : "/**\n * "
                 + sentence_case(description)
                 + "\n */\n")
-                + field.replace(/\\\*/g, "").trim() + ": " + replace_discord_type(sections, row.type) + ";",
+                + field.trim() + ": " + replace_discord_type(sections, row.type) + ";",
                 
                 INDENT
             );
@@ -778,11 +810,31 @@ ${INDENT}T extends DeclareEndpoint<unknown, unknown, unknown>
                     result += "export ";
                 }
     
-                result += "type " + PREPEND + capitalize(discordType);
-                result += "= " + declareType;
+                result += "type " + PREPEND + discordType;
+                result += " = " + declareType;
     
                 return result;
             }).join("\n").trim(),
+            Object.entries(declare_enums).map(([ discordType, { table: structureTable, section } ]) => {
+                let result = "";
+    
+                if (section) {
+                    result += create_comment("", section);
+                }
+    
+                if (EXPORT_TYPES) {
+                    result += "export ";
+                }
+    
+                result += "enum " + PREPEND + capitalize(discordType) + " {\n";
+                result += structureTable
+                    .map(row =>
+                        INDENT + row.name + " = " + row.value
+                    ).join(",\n");
+                result += "\n}";
+    
+                return result;
+            }).join("\n\n").trim(),
             Object.entries(declare_structures).map(([ discordType, { table: structureTable, section } ]) => {
                 let result = "";
     
