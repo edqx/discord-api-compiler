@@ -1,7 +1,10 @@
 Parses the documentation for the [discord api](https://github.com/discord/discord-api-docs) and
 compiles it into several different typescript types formats.
 
-Currently only compiles API endpoints with full description, json & query string parameter typings, examples and warnings.
+Can compile API endpoints with full description, json & query string parameter typings, examples and warnings.
+
+As it compiles endpoints, it also compiles used structures and interfaces. See [`output.ts`](https://github.com/edqx/discord-api-compiler/blob/master/output.ts)
+for an example default output.
 
 ## Installation
 Run `git clone https://github.com/edqx/discord-api-compiler --recurse-submodules` to install the

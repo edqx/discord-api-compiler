@@ -702,7 +702,7 @@ ${Object.entries(declare_types).map(([ discordType, declareType ]) => {
 
 ${Object.entries(declare_structures).map(([ discordType, structureTable ]) => {
     return `${EXPORT_TYPES ? "export " : ""}interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
-}).join("\n")}
+}).join("\n\n")}
 
 export const ${NAMESPACE} = {
 ${output.map(endpoint => endpoint
