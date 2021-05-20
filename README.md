@@ -14,10 +14,10 @@ Run `node index > output.ts` to see the output of the compiler.
 
 You can also pass some CLI options to change the behaviour of the compiler.
 
-|  Argument          |                            Description                            | Default |
-| ------------------ | ----------------------------------------------------------------- | ------- |
-| `--indent`         | The size of indentation, use `tabs` to use tabs instead of spaces | `4`     |
-| `--no-types`       | Disable typescript typings                                        | `false` |
-| `--no-param-types` | Disable typings for json/query parameters                         | `false` |
-| `--no-comments`    | Disable jsdoc comments                                            | `false` |
-| `--no-examples`    | Disable example requests and responses                            | `false` |
+|  Argument          |                              Description                             | Default |
+| ------------------ | -------------------------------------------------------------------- | ------- |
+| `--indent`         | The size of indentation, set to `tabs` to use tabs instead of spaces | `4`     |
+| `--no-types`       | Disable typescript typings                                           | `false` |
+| `--no-param-types` | Disable typings for json/query parameters                            | `false` |
+| `--no-comments`    | Disable jsdoc comments                                               | `false` |
+| `--no-examples`    | Disable example requests and responses                               | `false` |
