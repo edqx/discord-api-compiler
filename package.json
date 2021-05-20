@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "larg": "^0.0.4",
+    "mkdirp": "^1.0.4",
     "remove-markdown": "^0.3.0"
   }
 }

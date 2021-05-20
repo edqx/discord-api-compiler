@@ -1,5 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
+const mkdirp = require("mkdirp");
 const removeMarkdown = require("remove-markdown");
 const larg = require("larg");
 
@@ -11,6 +12,7 @@ const INDENT = args.indent === "tabs"
 
 const NAMESPACE = args.namespace || "ApiEndpoint";
 const PREPEND = args.prepend || "";
+const OUTPUT_FILE = args.output || "";
 
 const ENCODE_URI = args["encode-uri"];
 const NO_LINKS = args["no-links"];
@@ -22,6 +24,7 @@ const NO_COMMENTS = args["no-comments"];
 const NO_EXAMPLES = args["no-examples"] || NO_COMMENTS;
 const NO_STRUCTURES = args["no-structures"] || NO_TYPES;
 const EXPORT_TYPES = args["export-types"];
+const SPLIT_FILES = args["split-files"];
 
 /**
  * Splits a markdown table row by each column to access the values of each cell.
@@ -724,10 +727,10 @@ function serialize_request(sections, request, section) {
     const request_sections = [];
     recursive_find_request_sections(request_sections, sections);
 
-    let output = [];
+    let requests = [];
 
     for (const section of request_sections) {
-        output.push(serialize_request(
+        requests.push(serialize_request(
             sections,
             parse_raw_request(section.title),
             section
@@ -748,8 +751,9 @@ function serialize_request(sections, request, section) {
         after = Object.keys(declare_structures).length;
     }
 
-    const parts = [
-        ...(NO_REQUEST_TYPES ? [] : [`type DeclareEndpoint<
+    if (!SPLIT_FILES) {
+        const parts = [
+            ...(NO_REQUEST_TYPES ? [] : [`type DeclareEndpoint<
 ${INDENT}JSONParams extends Record<string, any> = {},
 ${INDENT}QueryParams extends Record<string, any> = {},
 ${INDENT}ResponseType extends Record<string, any> = {}
@@ -766,45 +770,52 @@ ${INDENT}T extends DeclareEndpoint<unknown, unknown, unknown>
 export type ExtractResponseType<
 ${INDENT}T extends DeclareEndpoint<unknown, unknown, unknown>
 > = T extends DeclareEndpoint<any, any, infer X> ? X: never`]
-        ),
-        Object.entries(declare_types).map(([ discordType, declareType ]) => {
-            let result = "";
-
-            if (EXPORT_TYPES) {
-                result += "export ";
-            }
-
-            result += "type " + PREPEND + capitalize(discordType);
-            result += "= " + declareType;
-
-            return result;
-        }).join("\n").trim(),
-        Object.entries(declare_structures).map(([ discordType, { table: structureTable, section } ]) => {
-            let result = "";
-
-            if (section) {
-                result += create_comment("", section);
-            }
-
-            if (EXPORT_TYPES) {
-                result += "export ";
-            }
-
-            result += "interface " + PREPEND + capitalize(discordType) + " ";
-            result += create_typescript_interface_from_table(sections, structureTable);
-
-            return result;
-        }).join("\n\n").trim(),
-        `export const ${PREPEND}${NAMESPACE} = {
-${output.map(endpoint => endpoint
+            ),
+            Object.entries(declare_types).map(([ discordType, declareType ]) => {
+                let result = "";
+    
+                if (EXPORT_TYPES) {
+                    result += "export ";
+                }
+    
+                result += "type " + PREPEND + capitalize(discordType);
+                result += "= " + declareType;
+    
+                return result;
+            }).join("\n").trim(),
+            Object.entries(declare_structures).map(([ discordType, { table: structureTable, section } ]) => {
+                let result = "";
+    
+                if (section) {
+                    result += create_comment("", section);
+                }
+    
+                if (EXPORT_TYPES) {
+                    result += "export ";
+                }
+    
+                result += "interface " + PREPEND + capitalize(discordType) + " ";
+                result += create_typescript_interface_from_table(sections, structureTable);
+    
+                return result;
+            }).join("\n\n").trim(),
+            `export const ${PREPEND}${NAMESPACE} = {
+${requests.map(endpoint => endpoint
     .split("\n")
     .map(ln => INDENT + ln)
     .join("\n")
 ).join(",\n")}
 }`
-    ].filter(_ => _);
+        ].filter(_ => _);
+    
+        const output = parts.join("\n\n");
 
-    console.log(parts.join("\n\n"));
+        if (OUTPUT_FILE) {
+            await fs.writeFile(OUTPUT_FILE, output, "utf8");
+        } else {
+            console.log(output);
+        }
+    }
 
     // console.log(require("util").inspect(sections, false, 25, false));
 })();
