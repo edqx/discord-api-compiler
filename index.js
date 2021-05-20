@@ -11,6 +11,7 @@ const INDENT = args.indent === "tabs"
 
 const NAMESPACE = args.namespace || "ApiEndpoint";
 
+const ENCODE_URI = args["encode-uri"];
 const NO_LINKS = args["no-links"];
 const NO_TYPES = args["no-types"];
 const NO_PARAM_TYPES = args["no-param-types"] || NO_TYPES;
@@ -522,7 +523,9 @@ function serialize_request(request, section) {
         + ") => `/"
         + request.endpoint.map(part =>
             part.type === "param"
-                ? "${" + part.name + "}"
+                ? ENCODE_URI
+                    ? "${encodeURIComponent(" + part.name + ")}"
+                    : "${" + part.name + "}"
                 : part.name
         ).join("/") + "`)"
         + (NO_PARAM_TYPES
