@@ -9,6 +9,7 @@ const INDENT = args.indent === "tabs"
     ? "\t"
     : " ".repeat(args.indent || 4);
 
+const NO_LINKS = args["no-links"];
 const NO_TYPES = args["no-types"];
 const NO_PARAM_TYPES = args["no-param-types"] || NO_TYPES;
 const NO_COMMENTS = args["no-comments"];
@@ -75,6 +76,8 @@ function is_section_line_child(depth, line) {
 
 /**
  * @typedef ParsedSection
+ * @property {ParsedSection} parent The section's parent section.
+ * @property {String} file The file that the section was found in relative to the base docs directory.
  * @property {String} body The ordinary text in the section.
  * @property {String} title The title of the section.
  * @property {Array<ParsedTable>} tables The tables in the section.
@@ -84,10 +87,11 @@ function is_section_line_child(depth, line) {
 
 /**
  * Parse a section of markdown.
+ * @param {String} file The file that the section was found in.
  * @param {String} text The markdown to parse including the section header.
  * @returns {ParsedSection} The parsed section.
  */
-function parse_section_recursive(text) {
+function parse_section_recursive(file, text) {
     const parsed = {};
     const lines = text.split("\n");
 
@@ -152,7 +156,7 @@ function parse_section_recursive(text) {
                 i++;
             }
             const child_text = child_lines.join("\n");
-            parsed.children.push(parse_section_recursive(child_text, hashes));
+            parsed.children.push(parse_section_recursive(file, child_text));
             i--;
         } else {
             parsed.body += lines[i] + "\n";
@@ -161,6 +165,7 @@ function parse_section_recursive(text) {
     parsed.notes = parsed.notes.map(note => note.trim()).filter(note => note);
 
     return {
+        file,
         body: parsed.body.trim(),
         title: parsed.title.trim(),
         tables: parsed.tables,
@@ -255,7 +260,7 @@ function parse_endpoint_parts(endpoint) {
 
 /**
  * @typedef ParsedRequest
- * @property {String} name The name of the request in a code-friendly format.
+ * @property {String} name The name of the request.
  * @property {String} verb The verb that the request uses.
  * @property {String} endpoint The endpoint of the request.
  */
@@ -271,16 +276,10 @@ function parse_raw_request(request_text) {
     const [ endpoint_name, full_request ] = request_text.split(" % ");
     const [ verb, endpoint ] = full_request.split(" ");
 
-    const code_friendly_name = endpoint_name
-        .split(" ")
-        .map(word => word.split("/")[0])
-        .join("")
-        .replace(/\W/g, "");
-
     const parsed_endpoint = parse_endpoint_parts(endpoint);
 
     return {
-        name: code_friendly_name,
+        name: endpoint_name,
         verb,
         endpoint: parsed_endpoint
     };
@@ -456,6 +455,12 @@ function create_typescript_interface_from_table(table) {
  * @returns {String} The serialised request.
  */
 function serialize_request(request, section) {
+    const code_friendly_name = request.name
+        .split(" ")
+        .map(word => word.split("/")[0])
+        .join("")
+        .replace(/\W/g, "");
+        
     const examples = section.children.filter(child => child.title.includes("Example"));
 
     const description = format_comment(
@@ -466,8 +471,18 @@ function serialize_request(request, section) {
                 .join("\n")
         )
     ).trim();
+    
+    const url_path = section.file
+        .split(path.sep)
+        .join(path.posix.sep)
+        .toLowerCase()
+        .split(".")[0]
+        .replace(/_/g, "-");
+
+    const link = "https://discord.com/developers/docs/" + url_path + "#" + request.name.toLowerCase().replace(/ /g, "-");
 
     const comment_parts = [
+        ...(NO_LINKS ? [] : [ link ]),
         ...(description ? [ description ] : []),
         ...section.notes
             .map(note => {
@@ -494,7 +509,7 @@ function serialize_request(request, section) {
     const query = section.children.find(child => child.title.includes("Query String"))?.tables?.[0];
 
     return (NO_COMMENTS ? "" : (comment ? "/**\n * " + comment + "\n */\n" : ""))
-        + request.name + ": "
+        + code_friendly_name + ": "
         + "(("
         + request.endpoint.
             filter(part =>
@@ -528,7 +543,7 @@ function serialize_request(request, section) {
 
     for (const file of files) {
         const data = await fs.readFile(file, "utf8");
-        const section = parse_section_recursive(data);
+        const section = parse_section_recursive(path.relative(base_path, file), data);
         sections.push(section);
     }
 
