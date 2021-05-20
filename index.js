@@ -427,7 +427,10 @@ function replace_discord_type(sections, type) {
 
     if (is_array) {
         type = type.substr(8);
-        return "(" + replace_discord_type(sections, type) + ")[]";
+        const replaced = replace_discord_type(sections, type);
+        return replaced.includes("|")
+            ? "(" + replaced + ")[]"
+            : replaced + "[]"
     }
 
     const is_partial = type.startsWith("partial ");
@@ -516,7 +519,7 @@ function create_typescript_interface_from_table(sections, table) {
                 (NO_COMMENTS ? "" : "/**\n * "
                 + sentence_case(description)
                 + "\n */\n")
-                + field.replace(/\\\*/g, "") + ": " + replace_discord_type(sections, row.type) + ";",
+                + field.replace(/\\\*/g, "").trim() + ": " + replace_discord_type(sections, row.type) + ";",
                 
                 INDENT
             );
@@ -545,7 +548,7 @@ function serialize_request(sections, request, section) {
     const examples = section.children.filter(child => child.title.includes("Example"));
 
     const returns = /returns( an?)? ((.+) object(s?))/gi.exec(section.body);
-    const type_name = returns?.[2]
+    const return_type_name = returns?.[2]
         ? replace_discord_type(sections, returns[2])
         : null;
 
@@ -584,7 +587,7 @@ function serialize_request(sections, request, section) {
                     : "";  
             }),
         ...(NO_EXAMPLES ? [] : examples.map(example =>
-            "@example\n * //" + example.title + "\n * "
+            "@example\n * // " + example.title + "\n * "
                 + prepend_comment_lines(example.code[0])
         ))
     ]
@@ -621,7 +624,7 @@ function serialize_request(sections, request, section) {
                 + create_typescript_interface_from_table(sections, query)
                 + ", "
                 + (
-                    type_name ||
+                    return_type_name ||
                     (response_body
                         ? create_typescript_interface_from_table(sections, response_body)
                         : null
