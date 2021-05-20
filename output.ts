@@ -2899,7 +2899,7 @@ export const ApiEndpoint = {
         /**
          * Role(s) to include.
          */
-        include_roles: any;
+        include_roles: string;
     }, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#begin-guild-prune

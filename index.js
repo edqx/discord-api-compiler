@@ -121,7 +121,7 @@ function parse_section_recursive(file, text, parent) {
 
     let hash_part = "";
 
-    if (parent?.hashes === 3) {
+    if (parent?.hashes > 2) {
         hash_part += parent.link.split("/")[1] + "-";
     }
 
@@ -551,6 +551,8 @@ function create_typescript_interface_from_table(sections, table) {
             if (row.description.startsWith("value of ")) {
                 row.type = row.description.substr(9);
             }
+
+            row.type = row.type.split(";")[0].split(",")[0];
 
             const description = format_comment(
                 stripped
