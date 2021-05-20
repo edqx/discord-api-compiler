@@ -12,7 +12,7 @@ const INDENT = args.indent === "tabs"
 
 const NAMESPACE = args.namespace || "ApiEndpoint";
 const PREPEND = args.prepend || "";
-const OUTPUT_FILE = args.output || "";
+const OUTPUT_FILE = args.output || "console";
 
 const ENCODE_URI = args["encode-uri"];
 const NO_LINKS = args["no-links"];
@@ -810,10 +810,10 @@ ${requests.map(endpoint => endpoint
     
         const output = parts.join("\n\n");
 
-        if (OUTPUT_FILE) {
-            await fs.writeFile(OUTPUT_FILE, output, "utf8");
-        } else {
+        if (!OUTPUT_FILE || OUTPUT_FILE === "console") {
             console.log(output);
+        } else {
+            await fs.writeFile(OUTPUT_FILE, output, "utf8");
         }
     }
 
