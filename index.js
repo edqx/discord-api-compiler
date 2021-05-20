@@ -1,27 +1,65 @@
 const fs = require("fs/promises");
 const path = require("path");
-const util = require("util");
-const removeMd = require("remove-markdown");
+const removeMarkdown = require("remove-markdown");
+const larg = require("larg");
 
+const args = larg(process.argv.slice(2));
+
+const INDENT = args.indent === "tabs"
+    ? "\t"
+    : " ".repeat(args.indent || 4);
+
+const NO_TYPES = args["no-types"];
+const NO_PARAM_TYPES = args["no-param-types"] || NO_TYPES;
+const NO_COMMENTS = args["no-comments"];
+const NO_EXAMPLES = args["no-examples"] || NO_COMMENTS;
+
+/**
+ * Splits a markdown table row by each column to access the values of each cell.
+ * @param {String} row_text The markdown to parse. 
+ * @returns An array of cells.
+ */
+function parse_row(row_text) {
+    return row_text
+        .split(/ *\| */g) // Split the row into each column.
+        .filter(_ => _);
+}
+
+/**
+ * @typedef {Array<{ [ key: string ]: string }>} ParsedTable
+ */
+
+/**
+ * Parse a markdown table into an array of 
+ * @param {String} table_text The markdown to parse. 
+ * @returns {Array<ParsedTable>} The table as an array of rows.
+ */
 function parse_table(table_text) {
-    // console.log(table_text);
     const parsed_table = [];
     const lines = table_text.trim().split("\n");
-    const headers = lines.shift().split(/ *\| */g).filter(_ => _);
-    lines.shift();
+    const headers = parse_row(lines.shift()); // Remove and parse the first line of the table, which is always the row declaring the headers.
+
+    lines.shift(); // Remove the next line of the table, which is always to split the headers and the rows, i.e. | ---- | ---- | ---- |
 
     for (const line of lines) {
-        const cells = line.split(/ *\| */g).filter(_ => _);
+        const cells = parse_row(line);
+
         const parsed_cell = {};
         for (let i = 0; i < cells.length; i++) {
             const cell = cells[i];
-            parsed_cell[headers[i].toLowerCase()] = cell;
+            parsed_cell[headers[i].toLowerCase()] = cell; // Use the headers as the keys for the each row.
         }
         parsed_table.push(parsed_cell);
     }
     return parsed_table;
 }
 
+/**
+ * Check if a markdown section is the child of another section.
+ * @param {String} depth The hashes on the parent section. 
+ * @param {String} line The line of the child section header to check. 
+ * @returns {Boolean}
+ */
 function is_section_line_child(depth, line) {
     const hashes = line.match(/^\#+/g)?.[0] || "";
 
@@ -35,7 +73,21 @@ function is_section_line_child(depth, line) {
     return false;
 }
 
-function parse_section_recursive(text, depth = "#") {
+/**
+ * @typedef ParsedSection
+ * @property {String} body The ordinary text in the section.
+ * @property {String} title The title of the section.
+ * @property {Array<ParsedTable>} tables The tables in the section.
+ * @property {Array<ParsedSection>} children The child sections in this section.
+ * @property {Array<String>} code The codeblocks in this section.
+ */
+
+/**
+ * Parse a section of markdown.
+ * @param {String} text The markdown to parse including the section header.
+ * @returns {ParsedSection} The parsed section.
+ */
+function parse_section_recursive(text) {
     const parsed = {};
     const lines = text.split("\n");
 
@@ -44,6 +96,8 @@ function parse_section_recursive(text, depth = "#") {
     parsed.tables = [];
     parsed.children = [];
     parsed.code = [];
+    
+    const depth = parsed.title.match(/^\#+/g)?.[0] || "";
     
     parsed.notes = [""];
     for (let i = 0; i < lines.length; i++) {
@@ -54,7 +108,7 @@ function parse_section_recursive(text, depth = "#") {
         if (line.startsWith("> ")) {
             const note_lines = [];
             while (i < lines.length && lines[i].startsWith("> ")) {
-                note_lines.push(lines[i]);
+                note_lines.push(lines[i].substr(2));
                 i++;
             }
             const note_text = note_lines.join("\n");
@@ -115,6 +169,11 @@ function parse_section_recursive(text, depth = "#") {
     };
 }
 
+/**
+ * Recursively fetch every documentation file.
+ * @param {Array<String>} arr The array to collect files. 
+ * @param {String} dir The directory to start from. 
+ */
 async function recursive_get_files(arr, dir) {
     const files = await fs.readdir(dir);
 
@@ -132,6 +191,11 @@ async function recursive_get_files(arr, dir) {
     }
 }
 
+/**
+ * Split an endpoint path into each part.
+ * @param {String} endpoint The endpoint to split. 
+ * @returns {Array<String>} The parts of the endpoint.
+ */
 function split_endpoint(endpoint) {
     const parts = [];
     let in_param = false;
@@ -156,6 +220,17 @@ function split_endpoint(endpoint) {
     return parts;
 }
 
+/**
+ * @typedef ParsedEndpointPart
+ * @property {"param"|"part"} type
+ * @property {String} name
+ */
+
+/**
+ * Parse an endpoint path to multiple parts of either a swappable parameter or a fixed syntax part.
+ * @param {String} endpoint The endpoint to parse.
+ * @returns {Array<ParsedEndpointPart>}
+ */
 function parse_endpoint_parts(endpoint) {
     const parts = split_endpoint(endpoint);
     const parsed = [];
@@ -177,13 +252,25 @@ function parse_endpoint_parts(endpoint) {
     return parsed;
 }
 
-function parse_raw_request(title) {
-    const [ endpoint_name, full_request ] = title.split(" % ");
+/**
+ * @typedef ParsedRequest
+ * @property {String} name The name of the request in a code-friendly format.
+ * @property {String} verb The verb that the request uses.
+ * @property {String} endpoint The endpoint of the request.
+ */
+
+/**
+ * Parse a full discord api request description.
+ * @param {String} request_text The request to parse.
+ * @returns {ParsedRequest}
+ */
+function parse_raw_request(request_text) {
+    const [ endpoint_name, full_request ] = request_text.split(" % ");
     const [ verb, endpoint ] = full_request.split(" ");
 
     const code_friendly_name = endpoint_name
         .split(" ")
-        .map(word => word.split("/")[1] || word.split("/")[0])
+        .map(word => word.split("/")[0])
         .join("")
         .replace(/\W/g, "");
 
@@ -196,6 +283,11 @@ function parse_raw_request(title) {
     };
 }
 
+/**
+ * Recursively search markdown sections and their children for those that describe a REST request.
+ * @param {Array<ParsedSection>} requests The array to collect request sections.
+ * @param {Array<ParsedSection>} sections The sections to search.
+ */
 function recursive_find_request_sections(requests, sections) {
     for (const section of sections) {
         if (section.title.includes(" % ")) {
@@ -205,8 +297,24 @@ function recursive_find_request_sections(requests, sections) {
     }
 }
 
+/**
+ * Prepend each line of a multi-line comment with a JSDoc-compliant * prefix.
+ * @param {String} comment The comment to prepend. 
+ * @returns {String} The new comment
+ */
+function prepend_comment_lines(comment, prepend = " * ") {
+    return comment
+        .split("\n")
+        .join("\n" + prepend);
+}
+
+/**
+ * Format a comment with long lines into a comment with a max line length of ~80 (adjusting to not split words)
+ * @param {String} comment The comment to format.
+ * @returns {String} The formatted comment.
+ */
 function format_comment(comment) {
-    const stripped = removeMd(comment);
+    const stripped = comment;
 
     const lines = [];
     const parts = stripped.split("\n\n");
@@ -229,43 +337,182 @@ function format_comment(comment) {
 
     lines.pop();
 
-    return lines;
+    return prepend_comment_lines(lines.join("\n"));
 }
 
+const note_types = ["warn", "info", "danger"];
+
+const declare_types = {};
+
+const known_types = {
+    "string": "string"
+};
+
+const custom_types = {
+    "snowflake": "string",
+    "integer": "number",
+    "float": "number"
+};
+
+function replace_discord_type(type) {
+    if (type.startsWith("array of")) {
+        const partial = type.startsWith("array of partial");
+        
+        if (type.endsWith("objects")) {
+            type = type.substr(0, type.length - 7);
+        }
+
+        if (partial) {
+            type = type.substr(15);
+        } else {
+            type = type.substr(8);
+        }
+
+        const replaced = replace_discord_type(type);
+
+        return (partial
+            ? "Partial<" + replaced + ">"
+            : replaced)
+            + "[]";
+    }
+
+    if (known_types[type])
+        return known_types[type];
+
+    const custom = custom_types[type];
+    if (custom) {
+        if (!declare_types[type]) {
+            declare_types[type] = custom;
+        }
+        return capitalize(type);
+    }
+
+    return "any";
+}
+
+/**
+ * Capitalise the first character of a string.
+ * @param {String} str
+ */
+function capitalize(str) {
+    return str[0].toUpperCase()
+        + str.substr(1);
+}
+
+/**
+ * Convert a string to sentence case.
+ * @param {String} str
+ */
+function sentence_case(str) {
+    return capitalize(str)
+        + (str.endsWith(".") ? "" : ".");
+}
+
+/**
+ * @param {ParsedTable=} table
+ */
+function create_typescript_interface_from_table(table) {
+    if (!table)
+        return "{}";
+
+    if (!table.length)
+        return "{}";
+
+    return "{\n"
+        + table.map(row => {
+            let stripped = removeMarkdown(row.description);
+
+            if (row.permission) {
+                stripped += "\n\nRequires " + row.permission;
+            }
+
+            const description = format_comment(
+                stripped
+            ).trim();
+
+            const field = row.field.includes("?")
+                ? row.field.replace(/\?/g, "") + "?"
+                : row.field;
+
+            return INDENT + prepend_comment_lines(
+                (NO_COMMENTS ? "" : "/**\n * "
+                + sentence_case(description)
+                + "\n */\n")
+                + field + ": " + replace_discord_type(row.type) + ";",
+                
+                INDENT
+            );
+        }).join("\n")
+        + "\n}";
+}
+
+/**
+ * Convert a documented request into a typescript endpoint definition.
+ * @param {ParsedRequest} request The request to serialise. 
+ * @param {ParsedSection} section The section of the request to serialise. 
+ * @returns {String} The serialised request.
+ */
 function serialize_request(request, section) {
-    const example = section.children.find(child => child.title.includes("Example"));
+    const examples = section.children.filter(child => child.title.includes("Example"));
 
     const description = format_comment(
-        section.body
-            .split("\n")
-            .filter(ln => !ln.endsWith("format:"))
-            .join("\n")
-    ).join("\n * ");
-
-    const comment = description
-        + (example
-            ? "\n * @example\n * "
-                + example.code[0]
-                    .split("\n")
-                    .join("\n * ")
-            : ""
+        removeMarkdown(
+            section.body
+                .split("\n")
+                .filter(ln => !ln.endsWith("format:"))
+                .join("\n")
         )
+    ).trim();
 
-    return (comment ? "/**\n * " + comment + "\n */\n" : "")
+    const comment_parts = [
+        ...(description ? [ description ] : []),
+        ...section.notes
+            .map(note => {
+                const stripped = removeMarkdown(
+                    note
+                        .split("\n")
+                        .filter(ln => !note_types.includes(ln))
+                        .join("\n")
+                );
+
+                return stripped
+                    ? format_comment(stripped)
+                    : "";  
+            }),
+        ...(NO_EXAMPLES ? [] : examples.map(example =>
+            "@example\n * "
+                + prepend_comment_lines(example.code[0])
+        ))
+    ]
+
+    const comment = comment_parts.join("\n * \n * ");
+
+    const parameters = section.children.find(child => child.title.includes("JSON"))?.tables?.[0];
+    const query = section.children.find(child => child.title.includes("Query String"))?.tables?.[0];
+
+    return (NO_COMMENTS ? "" : (comment ? "/**\n * " + comment + "\n */\n" : ""))
         + request.name + ": "
-        + "("
+        + "(("
         + request.endpoint.
             filter(part =>
                 part.type === "param"   
             )
-            .map(part => part.name + ": string")
+            .map(part => part.name + (NO_TYPES ? "" : ": string"))
             .join(", ")
         + ") => `/"
         + request.endpoint.map(part =>
             part.type === "param"
                 ? "${" + part.name + "}"
                 : part.name
-        ).join("/") + "`";
+        ).join("/") + "`)"
+        + (NO_PARAM_TYPES
+            ? ""
+            : " as DeclareEndpoint<"
+                + create_typescript_interface_from_table(parameters)
+                + ", "
+                + create_typescript_interface_from_table(query)
+                + ">"
+        );
 }
 
 (async () => {
@@ -294,14 +541,22 @@ function serialize_request(request, section) {
         ));
     }
 
-    console.log(
-        "export const Endpoints = {\n"
-        + output.map(endpoint => endpoint
-                .split("\n")
-                .map(ln => "    " + ln)
-                .join("\n")
-            ).join(",\n")
-        + "\n}"
+    console.log(`${!NO_PARAM_TYPES ? `type DeclareEndpoint<
+${INDENT}JSONParams extends Record<string, any> = {},
+${INDENT}QueryParams extends Record<string, any> = {}
+> = (...args: string[]) => string;` : ``}
+
+${Object.entries(declare_types).map(([ discordType, declareType ]) => {
+    return `type ${capitalize(discordType)} = ${declareType};`;
+}).join("\n")}
+
+export const ApiEndpoints = {
+${output.map(endpoint => endpoint
+    .split("\n")
+    .map(ln => INDENT + ln)
+    .join("\n")
+).join(",\n")}
+}`.trim()
     );
     
     // console.log(util.inspect(sections, false, 20, false));

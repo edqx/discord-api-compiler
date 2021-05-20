@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "larg": "^0.0.4",
     "remove-markdown": "^0.3.0"
   }
 }

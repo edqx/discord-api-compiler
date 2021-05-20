@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+larg@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/larg/-/larg-0.0.4.tgz#de20b0290a7290d8e49f836802f352199537f1ef"
+  integrity sha512-1CRCQrR3+LAFaBuP4k0jvlYfdNVegU2drCvHn4yRlkFQJRFPobqvKP7Fq2G557nSOpV7WoS7z/SkvwNx0nSvLQ==
+
 remove-markdown@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/remove-markdown/-/remove-markdown-0.3.0.tgz#5e4b667493a93579728f3d52ecc1db9ca505dc98"
