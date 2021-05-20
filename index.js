@@ -715,8 +715,7 @@ ${INDENT}T extends DeclareEndpoint<unknown, unknown>
             return `${EXPORT_TYPES ? "export " : ""}type ${capitalize(discordType)} = ${declareType};`;
         }).join("\n").trim(),
         Object.entries(declare_structures).map(([ discordType, { table: structureTable, section } ]) => {
-            return `${create_comment("", section)}
-${EXPORT_TYPES ? "export " : ""}interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
+            return `${create_comment("", section)}${EXPORT_TYPES ? "export " : ""}interface ${capitalize(discordType)} ${create_typescript_interface_from_table(sections, structureTable)};`;
         }).join("\n\n").trim(),
         `export const ${NAMESPACE} = {
 ${output.map(endpoint => endpoint
