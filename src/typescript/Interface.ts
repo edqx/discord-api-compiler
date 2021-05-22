@@ -1,0 +1,70 @@
+import wordWrap from "word-wrap";
+
+import { Compiler } from "../Compiler";
+import { OutputFile } from "../File";
+import { maskedLinkToUrl, MarkdownSection } from "../markdown/Section";
+import { MarkdownTable } from "../markdown/Table";
+import { prependCommentLines } from "../util/prependCommentLines";
+import { sentencify } from "../util/sentencify";
+import { Structure } from "./Structure";
+
+export class InterfaceStructureEntry {
+    constructor(
+        public readonly key: string,
+        public readonly type: string,
+        public readonly description?: string
+    ) {}
+
+    serialize() {
+        let out = "";
+        if (this.description) {
+            out += "    /**\n";
+            out += wordWrap(sentencify(maskedLinkToUrl(this.description)), { width: 80, indent: "     * " });
+            out += "\n     */\n";
+        }
+        out += "    " + this.key.replace(/\\?\*/g, "").trim() + ": " + this.type;
+
+        return out;
+    }
+}
+
+export class InterfaceStructure extends Structure {
+    constructor(
+        protected readonly compiler: Compiler,
+        public readonly file: OutputFile,
+        public readonly section: MarkdownSection,
+        public readonly name: string,
+        public readonly entries: InterfaceStructureEntry[]
+    ) {
+        super(compiler, file, section, name);
+    }
+
+    loadFromTable(
+        table: MarkdownTable<"field"|"type"|"description">
+    ) {
+        for (const row of table.rows) {
+            const resolved = this.compiler.resolveType(row.type);
+            const structure = this.compiler.structures.get(resolved.replace(/\(|\)|(\[\])|(\|null)|Partial|\<|\>/g, ""));
+
+            if (structure)
+                this.file.registerImport(structure);
+
+            if (row.description) this.compiler.resolveType(row.description);
+
+            this.entries.push(
+                new InterfaceStructureEntry(
+                    row.field,
+                    resolved,
+                    row.description
+                )
+            );
+        }
+    }
+
+    serialize() {
+        return prependCommentLines(this.section.serialize())
+            + "\nexport interface " + this.name + " {\n"
+            + this.entries.map(entry => entry.serialize() + ";").join("\n")
+            + "\n}";
+    }
+}

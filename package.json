@@ -6,6 +6,15 @@
   "dependencies": {
     "larg": "^0.0.4",
     "mkdirp": "^1.0.4",
-    "remove-markdown": "^0.3.0"
+    "remove-markdown": "^0.3.0",
+    "rimraf": "^3.0.2",
+    "word-wrap": "^1.2.3"
+  },
+  "devDependencies": {
+    "@types/mkdirp": "^1.0.1",
+    "@types/node": "^15.6.0",
+    "@types/rimraf": "^3.0.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   }
 }

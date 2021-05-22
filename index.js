@@ -579,7 +579,7 @@ function make_code_friendly(name) {
         .split(" ")
         .map(word => word.split("/")[0])
         .join("")
-        .replace(/\W/g, "");;
+        .replace(/\W/g, "");
 }
 
 function create_comment(description, section) {
