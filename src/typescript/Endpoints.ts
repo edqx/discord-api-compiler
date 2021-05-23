@@ -88,7 +88,11 @@ export class DocumentedRequest {
     getCodeFriendlyName() {
         return this.name
             .split(" ")
-            .map(word => word.split("/")[0])
+            .map(word => {
+                const stripped = word.split("/")[0];
+
+                return stripped[0].toUpperCase() + stripped.substr(1);
+            })
             .join("")
             .replace(/\W/g, "")
     }

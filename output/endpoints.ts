@@ -32,10 +32,10 @@ import { CreateGuildApplicationCommandJsonParams } from "./requests/CreateGuildA
 import { CreateGuildBanJsonParams } from "./requests/CreateGuildBanJsonParams";
 import { CreateGuildChannelJsonParams } from "./requests/CreateGuildChannelJsonParams";
 import { CreateGuildEmojiJsonParams } from "./requests/CreateGuildEmojiJsonParams";
+import { CreateGuildFromGuildTemplateJsonParams } from "./requests/CreateGuildFromGuildTemplateJsonParams";
 import { CreateGuildJsonParams } from "./requests/CreateGuildJsonParams";
 import { CreateGuildRoleJsonParams } from "./requests/CreateGuildRoleJsonParams";
 import { CreateGuildTemplateJsonParams } from "./requests/CreateGuildTemplateJsonParams";
-import { CreateGuildfromGuildTemplateJsonParams } from "./requests/CreateGuildfromGuildTemplateJsonParams";
 import { CreateMessageJsonParams } from "./requests/CreateMessageJsonParams";
 import { CreateStageInstanceJsonParams } from "./requests/CreateStageInstanceJsonParams";
 import { CreateWebhookJsonParams } from "./requests/CreateWebhookJsonParams";
@@ -76,8 +76,8 @@ import { ModifyGuildRolePositionsJsonParams } from "./requests/ModifyGuildRolePo
 import { ModifyGuildTemplateJsonParams } from "./requests/ModifyGuildTemplateJsonParams";
 import { ModifyWebhookJsonParams } from "./requests/ModifyWebhookJsonParams";
 import { SearchGuildMembersQueryParams } from "./requests/SearchGuildMembersQueryParams";
-import { StartThreadwithMessageJsonParams } from "./requests/StartThreadwithMessageJsonParams";
-import { StartThreadwithoutMessageJsonParams } from "./requests/StartThreadwithoutMessageJsonParams";
+import { StartThreadWithMessageJsonParams } from "./requests/StartThreadWithMessageJsonParams";
+import { StartThreadWithoutMessageJsonParams } from "./requests/StartThreadWithoutMessageJsonParams";
 import { UpdateCurrentUserVoiceStateJsonParams } from "./requests/UpdateCurrentUserVoiceStateJsonParams";
 import { UpdateStageInstanceJsonParams } from "./requests/UpdateStageInstanceJsonParams";
 import { UpdateUserVoiceStateJsonParams } from "./requests/UpdateUserVoiceStateJsonParams";
@@ -851,7 +851,7 @@ export const ApiEndpoints = {
      * fail with `10014: Unknown Emoji`. To use custom emoji, you must encode it in the 
      * format `name:id` with the emoji name and emoji id.
      */
-    DeleteAllReactionsforEmoji: ((
+    DeleteAllReactionsForEmoji: ((
         channelid: string,
         messageid: string,
         emoji: string
@@ -1057,10 +1057,10 @@ export const ApiEndpoints = {
      * created thread will be the same as the id of the message, and as such a message 
      * can only have a single thread created from it.
      */
-    StartThreadwithMessage: ((
+    StartThreadWithMessage: ((
         channelid: string,
         messageid: string
-    ) => `/channels/${channelid}/messages/${messageid}/threads`) as DeclareEndpoint<StartThreadwithMessageJsonParams, {}, ChannelStructure>,
+    ) => `/channels/${channelid}/messages/${messageid}/threads`) as DeclareEndpoint<StartThreadWithMessageJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#start-thread-without-message-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#threads
      * 
@@ -1070,9 +1070,9 @@ export const ApiEndpoints = {
      * REQUEST on invalid parameters. Fires a [Thread 
      * Create](#DOCS_TOPICS_GATEWAY/thread-create) Gateway event.
      */
-    StartThreadwithoutMessage: ((
+    StartThreadWithoutMessage: ((
         channelid: string
-    ) => `/channels/${channelid}/threads`) as DeclareEndpoint<StartThreadwithoutMessageJsonParams, {}, ChannelStructure>,
+    ) => `/channels/${channelid}/threads`) as DeclareEndpoint<StartThreadWithoutMessageJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#join-thread-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#@me
      * 
@@ -1872,9 +1872,9 @@ export const ApiEndpoints = {
      * 
      * This endpoint can be used only by bots in less than 10 guilds.
      */
-    CreateGuildfromGuildTemplate: ((
+    CreateGuildFromGuildTemplate: ((
         templatecode: string
-    ) => `/guilds/templates/${templatecode}`) as DeclareEndpoint<CreateGuildfromGuildTemplateJsonParams, {}, GuildStructure>,
+    ) => `/guilds/templates/${templatecode}`) as DeclareEndpoint<CreateGuildFromGuildTemplateJsonParams, {}, GuildStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#get-guild-templates-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#templates
      * 
@@ -2120,7 +2120,7 @@ export const ApiEndpoints = {
      * Same as above, except this call does not require authentication and returns no 
      * user in the webhook object.
      */
-    GetWebhookwithToken: ((
+    GetWebhookWithToken: ((
         webhookid: string,
         webhooktoken: string
     ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, WebhookStructure>,
@@ -2142,7 +2142,7 @@ export const ApiEndpoints = {
      * a `channel_id` parameter in the body, and does not return a user in the webhook 
      * object.
      */
-    ModifyWebhookwithToken: ((
+    ModifyWebhookWithToken: ((
         webhookid: string,
         webhooktoken: string
     ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<ModifyWebhookJsonParams, {}, WebhookStructure>,
@@ -2160,7 +2160,7 @@ export const ApiEndpoints = {
      * 
      * Same as above, except this call does not require authentication.
      */
-    DeleteWebhookwithToken: ((
+    DeleteWebhookWithToken: ((
         webhookid: string,
         webhooktoken: string
     ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,

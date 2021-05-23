@@ -1,7 +1,7 @@
 /**
  * https://discord.com/developers/docs/resources/channel#json-params
  */
-export interface StartThreadwithoutMessageJsonParams {
+export interface StartThreadWithoutMessageJsonParams {
     /**
      * 2-100 character channel name.
      */

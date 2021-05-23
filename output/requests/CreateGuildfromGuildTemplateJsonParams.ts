@@ -1,7 +1,7 @@
 /**
  * https://discord.com/developers/docs/resources/guild/template#json-params
  */
-export interface CreateGuildfromGuildTemplateJsonParams {
+export interface CreateGuildFromGuildTemplateJsonParams {
     /**
      * Name of the guild (2-100 characters).
      */
