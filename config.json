@@ -1,4 +1,5 @@
 {
+    "$schema": "./misc/config.schema.json",
     "output": {
         "output_dir": "output"
     },

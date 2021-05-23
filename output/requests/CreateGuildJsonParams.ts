@@ -37,7 +37,7 @@ export interface CreateGuildJsonParams {
     /**
      * Base64 128x128 image for the guild icon.
      */
-    icon?: any;
+    icon?: string;
     /**
      * [verification 
      * level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level).

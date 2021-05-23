@@ -6,7 +6,7 @@ import { maskedLinkToUrl, MarkdownSection } from "../markdown/Section";
 import { MarkdownTable } from "../markdown/Table";
 import { prependCommentLines } from "../util/prependCommentLines";
 import { sentencify } from "../util/sentencify";
-import { Structure } from "./Structure";
+import { BaseStructure } from "./Structure";
 
 export class InterfaceStructureEntry {
     constructor(
@@ -32,7 +32,7 @@ export class InterfaceStructureEntry {
     }
 }
 
-export class InterfaceStructure extends Structure {
+export class InterfaceStructure extends BaseStructure {
     constructor(
         protected readonly compiler: Compiler,
         public readonly file: OutputFile,
@@ -48,17 +48,19 @@ export class InterfaceStructure extends Structure {
     ) {
         for (const row of table.rows) {
             const resolved = this.compiler.resolveType(row.type);
-            const structure = this.compiler.structures.get(resolved.replace(/\(|\)|(\[\])|(\|null)|Partial|\<|\>/g, ""));
+            const resolvedStructure = resolved.getRootSymbol().ref;
 
-            if (structure)
-                this.file.registerImport(structure);
+            if (typeof resolvedStructure !== "string") {
+                this.file.registerImport(resolvedStructure);
+            }
 
-            if (row.description) this.compiler.resolveType(row.description);
+            if (row.description)
+                this.compiler.resolveType(row.description);
 
             this.entries.push(
                 new InterfaceStructureEntry(
                     row.field,
-                    resolved,
+                    resolved.serialize(),
                     row.description
                 )
             );

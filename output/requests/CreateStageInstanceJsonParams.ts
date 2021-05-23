@@ -1,5 +1,5 @@
 /**
- * https://discord.com/developers/docs/resources/stage-instance#json-params
+ * https://discord.com/developers/docs/resources/stage/instance#json-params
  */
 export interface CreateStageInstanceJsonParams {
     /**

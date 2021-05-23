@@ -3,9 +3,9 @@ import { OutputFile } from "../File";
 import { MarkdownSection } from "../markdown/Section";
 import { MarkdownTable } from "../markdown/Table";
 import { prependCommentLines } from "../util/prependCommentLines";
-import { Structure } from "./Structure";
+import { BaseStructure } from "./Structure";
 
-export class EnumStructure extends Structure {
+export class EnumStructure extends BaseStructure {
     constructor(
         protected readonly compiler: Compiler,
         public readonly file: OutputFile,
@@ -20,7 +20,10 @@ export class EnumStructure extends Structure {
         table: MarkdownTable<"name"|"flag"|"value">
     ) {
         for (const row of table.rows) {
-            this.entries.push([ (row.name || row.flag).replace(/\W/g, ""), row.value ]);
+            const primary = row.name || row.flag;
+            const stripped = primary.replace(/\W/g, "");
+
+            this.entries.push([ stripped, row.value ]);
         }
     }
 

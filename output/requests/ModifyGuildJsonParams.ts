@@ -39,7 +39,7 @@ export interface ModifyGuildJsonParams {
      * Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when 
      * the server has the `ANIMATED_ICON` feature).
      */
-    icon: any|null;
+    icon: string|null;
     /**
      * User id to transfer guild ownership to (must be owner).
      */
@@ -48,17 +48,17 @@ export interface ModifyGuildJsonParams {
      * Base64 16:9 png/jpeg image for the guild splash (when the server has the 
      * `INVITE_SPLASH` feature).
      */
-    splash: any|null;
+    splash: string|null;
     /**
      * Base64 16:9 png/jpeg image for the guild discovery splash (when the server has 
      * the `DISCOVERABLE` feature).
      */
-    discovery_splash: any|null;
+    discovery_splash: string|null;
     /**
      * Base64 16:9 png/jpeg image for the guild banner (when the server has the 
      * `BANNER` feature).
      */
-    banner: any|null;
+    banner: string|null;
     /**
      * The id of the channel where guild notices such as welcome messages and boost 
      * events are posted.

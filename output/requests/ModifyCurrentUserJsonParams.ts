@@ -9,5 +9,5 @@ export interface ModifyCurrentUserJsonParams {
     /**
      * If passed, modifies the user's avatar.
      */
-    avatar: any|null;
+    avatar: string|null;
 }

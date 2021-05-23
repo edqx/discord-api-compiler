@@ -6,7 +6,6 @@ import fs from "fs/promises";
 import { MarkdownSection } from "./markdown/Section";
 import { Compiler } from "./Compiler";
 import { OutputFile } from "./File";
-import { InterfaceStructure } from "./typescript/Interface";
 import { DocumentedRequest, EndpointStructure } from "./typescript/Endpoints";
 
 const rimraf = util.promisify(rimrafp);

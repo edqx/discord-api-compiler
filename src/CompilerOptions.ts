@@ -12,31 +12,31 @@ export interface OutputOptions {
     output_dir: string;
 
     /**
-     * Directory to emit all enums to, relative to the output directory.
+     * Directory to emit all enums to, relative to the base output directory.
      * @default "enums"
      */
     enums_output: string;
     
     /**
-     * Directory to emit all structures to, relative to the output directory.
+     * Directory to emit all structures to, relative to the base output directory.
      * @default "interfaces"
      */
     structures_output: string;
     
     /**
-     * Directory to emit all request json and query parameter structures to, relative to the output directory.
+     * Directory to emit all request json and query parameter structures to, relative to the base output directory.
      * @default "requests"
      */
     requests_output: string;
     
     /**
-     * Directory to emit all special response structures to, relative to the output directory.
+     * Directory to emit all special response structures to, relative to the base output directory.
      * @default "responses"
      */
     responses_output: string;
 
     /**
-     * File to emit all endpoint declarations to, relative to the output directory.
+     * File to emit all endpoint declarations to, relative to the base output directory.
      * @default "endpoints"
      */
     endpoints_output: string;

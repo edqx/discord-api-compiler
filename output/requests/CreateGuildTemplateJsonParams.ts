@@ -1,5 +1,5 @@
 /**
- * https://discord.com/developers/docs/resources/guild-template#json-params
+ * https://discord.com/developers/docs/resources/guild/template#json-params
  */
 export interface CreateGuildTemplateJsonParams {
     /**

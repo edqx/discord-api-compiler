@@ -1,5 +1,5 @@
 /**
- * https://discord.com/developers/docs/resources/audit-log#query-string-params
+ * https://discord.com/developers/docs/resources/audit/log#query-string-params
  */
 export interface GetGuildAuditLogQueryParams {
     /**

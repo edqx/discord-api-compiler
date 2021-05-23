@@ -9,7 +9,7 @@ export interface CreateGuildEmojiJsonParams {
     /**
      * The 128x128 emoji image.
      */
-    image: any;
+    image: string;
     /**
      * Roles allowed to use this emoji.
      */

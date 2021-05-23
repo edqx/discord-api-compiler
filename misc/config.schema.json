@@ -1,0 +1,46 @@
+{
+    "type": "object",
+    "properties": {
+        "output": {
+            "type": "object",
+            "properties": {
+                "single_file": {
+                    "type": "boolean",
+                    "description": "Whether to output all enums and structures to a single file."
+                },
+                "output_dir": {
+                    "type": "string",
+                    "description": "Directory to emit all files to, or file if single_file is set to true."
+                },
+                "enums_output": {
+                    "type": "string",
+                    "description": "Directory to emit all enums to, relative to the base output directory."
+                },
+                "structures_output": {
+                    "type": "string",
+                    "description": "Directory to emit all structures to, relative to the base output directory"
+                },
+                "requests_output": {
+                    "type": "string",
+                    "description": "Directory to emit all request json and query parameter structures to, relative to the base output directory."
+                },
+                "responses_output": {
+                    "type": "string",
+                    "description": "Directory to emit all special respose structures to, relative to the base output directory"
+                },
+                "endpoints_output": {
+                    "type": "string",
+                    "description": "File ot emit all endpoint declarations to, relative to the base output directory."
+                }
+            }
+        },
+        "typings": {
+            "type": "boolean",
+            "description": "Whether to emit typescript type declawrations"
+        },
+        "comments": {
+            "type": "boolean",
+            "description": "Whether to emit detailed comments"
+        }
+    }
+}

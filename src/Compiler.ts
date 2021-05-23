@@ -1,4 +1,6 @@
 import path from "path";
+import stripMarkdown from "remove-markdown";
+
 import { CompilerOptions } from "./CompilerOptions";
 import { OutputFile } from "./File";
 import { MarkdownPart } from "./markdown/MarkdownPart";
@@ -6,14 +8,37 @@ import { linkRegex, MarkdownSection } from "./markdown/Section";
 import { MarkdownTable } from "./markdown/Table";
 import { EnumStructure } from "./typescript/Enum";
 import { InterfaceStructure } from "./typescript/Interface";
-import { Structure } from "./typescript/Structure";
+import { BaseStructure } from "./typescript/Structure";
+import { ArraySymbol } from "./typescript/symbols/Array";
+import { BasicSymbol } from "./typescript/symbols/Basic";
+import { NullableSymbol } from "./typescript/symbols/Nullable";
+import { OrSymbol } from "./typescript/symbols/Or";
+import { PartialSymbol } from "./typescript/symbols/Partial";
+import { BaseSymbol } from "./typescript/symbols/Symbol";
+
+const knownTypes: Record<string, string> = {
+    "string": "string",
+    "strings": "string",
+    "integer": "number",
+    "int": "number",
+    "boolean": "boolean",
+    "bool": "boolean",
+    "snowflake": "string",
+    "snowflakes": "string",
+    "null": "null",
+    "ISO8601 timestamp": "string",
+    "file contents": "string",
+    "binary": "string",
+    "dict": "Record<string, string>",
+    "image data": "string"
+};
 
 export class Compiler {
     public readonly options: CompilerOptions;
 
     links: Map<string, MarkdownSection>;
     
-    structures: Map<string, Structure>;
+    structures: Map<string, BaseStructure>;
     files: Map<string, OutputFile>;
 
     constructor(options: Partial<CompilerOptions>, public readonly sections: MarkdownSection[]) {
@@ -57,35 +82,33 @@ export class Compiler {
     }
 
     resolveTable(root: MarkdownSection, headers: string[]): [ MarkdownSection, MarkdownTable<string> ]|null {
-        const children = [ root, ...root.sections ];
+        const children = [ root, ...root.getSectionChildren() ];
     
         for (const child of children) {
-            const table = child.tables[0];
-    
-            if (!table)
-                continue;
-        
-            let flag = false;
-            for (const header of headers) {
-                if (!table.hasHeader(header)) {
-                    flag = true;
-                    break;
+            for (const table of child.getTableChildren()) {
+                let flag = false;
+                for (const header of headers) {
+                    if (!table.hasHeader(header)) {
+                        flag = true;
+                        break;
+                    }
                 }
+        
+                if (flag) continue;
+        
+                return [ child, table ];
             }
-    
-            if (flag) continue;
-    
-            return [ child, table ];
         }
     
         return null;
     }
 
-    addStructure(structure: Structure, table: MarkdownTable<string>) {
+    addStructure(structure: BaseStructure, table: MarkdownTable<string>) {
         if (this.structures.has(structure.name))
             return structure;
 
         this.structures.set(structure.name, structure);
+
         structure.file.structures.add(structure);
         this.files.set(structure.file.filename, structure.file);
 
@@ -100,6 +123,13 @@ export class Compiler {
         if (resolvedInterface) {
             const [ resolvedSection, table ] = resolvedInterface;
             const interfaceName = resolvedSection.title.replace(/\W/g, "");
+
+            const cached = this.structures.get(interfaceName);
+
+            if (cached) {
+                return cached;
+            }
+
             const file = this.createFile(
                 path.join(
                     this.options.output.structures_output,
@@ -115,7 +145,7 @@ export class Compiler {
                 []
             );
 
-            return this.addStructure(interfaceStructure, table).name;
+            return this.addStructure(interfaceStructure, table);
         }
 
         const resolvedEnum = this.resolveTable(section, [ "name", "value" ]) || this.resolveTable(section, [ "flag", "value" ]);
@@ -123,6 +153,13 @@ export class Compiler {
         if (resolvedEnum) {
             const [ resolvedSection, table ] = resolvedEnum;
             const enumName = resolvedSection.title.replace(/\W/g, "");
+            
+            const cached = this.structures.get(enumName);
+
+            if (cached) {
+                return cached;
+            }
+
             const file = this.createFile(
                 path.join(
                     this.options.output.enums_output,
@@ -138,37 +175,35 @@ export class Compiler {
                 []
             );
 
-            return this.addStructure(enumStructure, table).name;
+            return this.addStructure(enumStructure, table);
         }
     }
 
-    resolveType(type: string): string {
+    resolveType(type: string): BaseSymbol {
         const is_array = type.includes("array of ") || type.includes("list of ");
         
         if (is_array) {
             type = type.replace(/(array|list) of /, "");
-            const resolved = this.resolveType(type);
 
-            if (resolved.includes("|")) {
-                return "(" + resolved + ")[]";
-            } else {
-                return resolved + "[]";
-            }
+            return new ArraySymbol(this.resolveType(type));
         }
 
         if (type.includes("?")) {
             type = type.replace(/\?/g, "");
-            return this.resolveType(type) + "|null";
+            return new NullableSymbol(this.resolveType(type));
         }
 
         if (type.includes("partial ")) {
             type = type.replace("partial ", "");
-            return "Partial<" + this.resolveType(type) + ">";
+            return new PartialSymbol(this.resolveType(type));
         }
 
         if (type.includes(" or ")) {
             const types = type.split(" or ");
-            return types.map(type => this.resolveType(type)).join("|");
+            return new OrSymbol(
+                this.resolveType(types[0]),
+                this.resolveType(types[1])
+            );
         }
 
         if (type.includes(" object")) {
@@ -184,46 +219,23 @@ export class Compiler {
             if (section) {
                 const res = this.addResourceSection(section);
 
-                if (res) return res;
+                if (res) return new BasicSymbol(res);
             }
         }
 
-        type = type.replace(/\(.+?\)/g, "").trim();
+        type = stripMarkdown(type).replace(/\(.+?\)/g, "").trim();
 
-        switch (type) {
-        case "string":
-            return "string";
-        case "strings":
-            return "string";
-        case "integer":
-            return "number";
-        case "int":
-            return "number";
-        case "boolean":
-            return "boolean";
-        case "snowflake":
-            return "string";
-        case "snowflakes":
-            return "string";
-        case "null":
-            return "null";
-        case "ISO8601 timestamp":
-            return "string";
-        case "file contents":
-            return "string";
-        case "binary":
-            return "string";
-        case "dict":
-            return "Record<string, string>";
+        if (type in knownTypes) {
+            return new BasicSymbol(knownTypes[type]);
         }
         
-        return "any";
+        return new BasicSymbol("any");
     }
     
     generateLinksRecursive(sections: MarkdownPart[]) {
         for (const section of sections) {
             if (section instanceof MarkdownSection) {
-                this.links.set(section.link, section);
+                this.links.set(section.getLink(), section);
 
                 this.generateLinksRecursive(section.children);
             }

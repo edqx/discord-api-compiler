@@ -1,5 +1,7 @@
+import { ApplicationCommandOption } from "../interfaces/ApplicationCommandOption";
+
 /**
- * https://discord.com/developers/docs/interactions/slash-commands#json-params
+ * https://discord.com/developers/docs/interactions/slash/commands#json-params
  */
 export interface EditGuildApplicationCommandJsonParams {
     /**
@@ -13,7 +15,7 @@ export interface EditGuildApplicationCommandJsonParams {
     /**
      * The parameters for the command.
      */
-    options: (any|null)[];
+    options: (ApplicationCommandOption|null)[];
     /**
      * Whether the command is enabled by default when the app is added to a guild.
      */

@@ -3,8 +3,10 @@ import { OutputFile } from "../File";
 import { MarkdownSection } from "../markdown/Section";
 import { indentMultilineString } from "../util/indentMultilineString";
 import { prependCommentLines } from "../util/prependCommentLines";
-import { InterfaceStructure } from "./Interface";
-import { Structure } from "./Structure";
+import { InterfaceStructure, InterfaceStructureEntry } from "./Interface";
+import { BaseStructure } from "./Structure";
+import { BasicSymbol } from "./symbols/Basic";
+import { BaseSymbol } from "./symbols/Symbol";
 
 export class EndpointPart {
     constructor(
@@ -60,9 +62,9 @@ export class Endpoint {
 }
 
 export class DocumentedRequest {
-    public jsonParamsStructure?: Structure|null;
-    public queryParamsStructure?: Structure|null;
-    public responseStructure?: Structure|null;
+    public jsonParamsStructure?: BaseStructure|null;
+    public queryParamsStructure?: BaseStructure|null;
+    public responseSymbol?: BaseSymbol|null;
 
     constructor(
         public readonly compiler: Compiler,
@@ -72,7 +74,7 @@ export class DocumentedRequest {
         public readonly endpoint: Endpoint
     ) {}
 
-    get codename() {
+    getCodeFriendlyName() {
         return this.name
             .split(" ")
             .map(word => word.split("/")[0])
@@ -80,7 +82,7 @@ export class DocumentedRequest {
             .replace(/\W/g, "")
     }
 
-    get params() {
+    getEndpointParams() {
         return this.endpoint.parts
             .filter(part => part.type === "param");
     }
@@ -97,20 +99,20 @@ export class DocumentedRequest {
     findJsonParamsStructure() {
         if (typeof this.jsonParamsStructure !== "undefined") return this.jsonParamsStructure;
 
-        const jsonSection = this.section.sections.find(section => section.title.includes("JSON"));
+        const jsonSection = this.section.getSectionChildren().find(section => section.title.includes("JSON"));
 
         if (jsonSection) {
             const resolvedInterface = this.compiler.resolveTable(this.section, [ "field", "type" ]);
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("requests/" + this.codename + "JsonParams");
+                const file = this.compiler.createFile("requests/" + this.getCodeFriendlyName() + "JsonParams");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
                     file,
                     resolvedSection,
-                    this.codename + "JsonParams",
+                    this.getCodeFriendlyName() + "JsonParams",
                     []
                 );
                 
@@ -126,20 +128,20 @@ export class DocumentedRequest {
     findQueryParamsStructure() {
         if (typeof this.queryParamsStructure !== "undefined") return this.queryParamsStructure;
 
-        const querySection = this.section.sections.find(section => section.title.includes("Query"));
+        const querySection = this.section.getSectionChildren().find(section => section.title.includes("Query"));
 
         if (querySection) {
             const resolvedInterface = this.compiler.resolveTable(this.section, [ "field", "type" ]);
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("requests/" + this.codename + "QueryParams");
+                const file = this.compiler.createFile("requests/" + this.getCodeFriendlyName() + "QueryParams");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
                     file,
                     resolvedSection,
-                    this.codename + "QueryParams",
+                    this.getCodeFriendlyName() + "QueryParams",
                     []
                 );
 
@@ -153,41 +155,42 @@ export class DocumentedRequest {
     }
 
     findResponseStructure() {
-        if (typeof this.responseStructure !== "undefined") return this.responseStructure;
+        if (typeof this.responseSymbol !== "undefined") return this.responseSymbol;
 
-        const responseStructure = this.section.sections.find(section => section.title.includes("Response"));
+        const responseStructure = this.section.getSectionChildren().find(section => section.title.includes("Response"));
 
         if (responseStructure) {
             const resolvedInterface = this.compiler.resolveTable(this.section, [ "field", "type" ]);
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("responses/" + this.codename + "Response");
+                const file = this.compiler.createFile("responses/" + this.getCodeFriendlyName() + "Response");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
                     file,
                     resolvedSection,
-                    this.codename + "Response",
+                    this.getCodeFriendlyName() + "Response",
                     []
                 );
 
-                this.responseStructure = interfaceStructure;
+                this.compiler.addStructure(interfaceStructure, table);
+                this.responseSymbol = new BasicSymbol(interfaceStructure);
     
-                return this.compiler.addStructure(interfaceStructure, table);
+                return this.responseSymbol;
             }
         }
 
         return null;
     }
 
-    findResponse() {
+    findResponseSymbol() {
         const structure = this.findResponseStructure();
 
         if (structure) return structure;
 
-        const haystack = this.section.text.map(child => child.text).join(" ");
-        const matched = /Returns (an?|the (new|updated)?) \`?(?<object>.+)\`?( object)?( on success)?/.exec(haystack);
+        const haystack = this.section.getTextChildren().map(child => child.text).join(" ");
+        const matched = /Returns( \`?\d+\`? and)? (an?|the (new|updated)?) \`?(?<object>.+?)\`?( objects?)?( on success)?(?=\.|,)/.exec(haystack);
 
         if (matched) {
             const object = matched.groups?.object;
@@ -197,13 +200,13 @@ export class DocumentedRequest {
 
             const stripped = object.replace(" object", "").replace(/(on )?success/, "").trim();
 
-            const structureName = this.compiler.resolveType(stripped);
-            const structure = this.compiler.structures.get(structureName);
+            const resolved = this.compiler.resolveType(stripped);
+            const resolvedStructure = resolved.getRootSymbol().ref;
 
-            if (structure) {
-                this.responseStructure = structure;
+            if (resolvedStructure instanceof BaseStructure) {
+                this.responseSymbol = resolved;
 
-                return structure;
+                return resolved;
             }
         }
 
@@ -211,7 +214,7 @@ export class DocumentedRequest {
     }
 }
 
-export class EndpointStructure extends Structure {
+export class EndpointStructure extends BaseStructure {
     constructor(
         public readonly compiler: Compiler,
         public readonly file: OutputFile,
@@ -224,7 +227,7 @@ export class EndpointStructure extends Structure {
             for (const request of this.requests) {
                 const jsonParamsStructure = request.findJsonParamsStructure();
                 const queryParamsStructure = request.findQueryParamsStructure();
-                const responseStructure = request.findResponse();
+                const responseSymbol = request.findResponseSymbol();
         
                 if (jsonParamsStructure)
                     this.file.registerImport(jsonParamsStructure);
@@ -232,8 +235,13 @@ export class EndpointStructure extends Structure {
                 if (queryParamsStructure)
                     this.file.registerImport(queryParamsStructure);
                     
-                if (responseStructure)
-                    this.file.registerImport(responseStructure);
+                if (responseSymbol)  {
+                    const resolvedStructure = responseSymbol.getRootSymbol().ref;
+
+                    if (resolvedStructure instanceof BaseStructure) {
+                        this.file.registerImport(resolvedStructure);
+                    }
+                }
             }
         }
     }
@@ -263,10 +271,10 @@ export type ExtractResponseType<
     
         for (const request of this.requests) {
             if (this.compiler.options.comments) endpointText += indentMultilineString(prependCommentLines(request.section.serialize())) + "\n";
-            endpointText += "    " + request.codename + ": ";
+            endpointText += "    " + request.getCodeFriendlyName() + ": ";
             if (this.compiler.options.typings) endpointText += "(";
             endpointText += "("
-                + (request.params.map(param => param.name + (this.compiler.options.typings ? ": string" : "")).join(", "))
+                + (request.getEndpointParams().map(param => param.name + (this.compiler.options.typings ? ": string" : "")).join(", "))
                 + ") => ";
             endpointText += "`/" + request.endpoint.parts.map(part =>
                 part.type === "param" ? "${" + part.name + "}" : part.name).join("/") + "`";
@@ -282,8 +290,8 @@ export type ExtractResponseType<
                     ? request.queryParamsStructure.name
                     : "{}";
                 endpointText += ", ";
-                endpointText += request.responseStructure
-                    ? request.responseStructure.name
+                endpointText += request.responseSymbol
+                    ? request.responseSymbol.serialize()
                     : "{}";
                 endpointText += ">";
             }

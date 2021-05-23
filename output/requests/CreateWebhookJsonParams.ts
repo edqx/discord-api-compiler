@@ -9,5 +9,5 @@ export interface CreateWebhookJsonParams {
     /**
      * Image for the default webhook avatar.
      */
-    avatar: any|null;
+    avatar: string|null;
 }

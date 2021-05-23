@@ -3,6 +3,7 @@ import { EmojiStructure } from "./EmojiStructure";
 import { GuildMemberStructure } from "./GuildMemberStructure";
 import { PresenceUpdateEventFields } from "./PresenceUpdateEventFields";
 import { RoleStructure } from "./RoleStructure";
+import { StageInstanceStructure } from "./StageInstanceStructure";
 import { VoiceStateStructure } from "./VoiceStateStructure";
 import { WelcomeScreenStructure } from "./WelcomeScreenStructure";
 
@@ -241,5 +242,5 @@ export interface GuildStructure {
     /**
      * Stage instances in the guild.
      */
-    stage_instances?: any[];
+    stage_instances?: StageInstanceStructure[];
 }

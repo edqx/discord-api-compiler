@@ -9,7 +9,7 @@ export interface ModifyWebhookJsonParams {
     /**
      * Image for the default webhook avatar.
      */
-    avatar: any|null;
+    avatar: string|null;
     /**
      * The new channel id this webhook should be moved to.
      */

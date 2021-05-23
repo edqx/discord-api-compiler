@@ -1,10 +1,10 @@
 import path from "path";
 import { Compiler } from "./Compiler";
-import { Structure } from "./typescript/Structure";
+import { BaseStructure } from "./typescript/Structure";
 
 export class OutputFile {
-    imports: Set<Structure>;
-    structures: Set<Structure>;
+    imports: Set<BaseStructure>;
+    structures: Set<BaseStructure>;
 
     constructor(
         public readonly filename: string
@@ -35,7 +35,7 @@ export class OutputFile {
         return joined;
     }
 
-    registerImport(structure: Structure) {
+    registerImport(structure: BaseStructure) {
         if (structure.file.filename === this.filename) {
             return;
         }

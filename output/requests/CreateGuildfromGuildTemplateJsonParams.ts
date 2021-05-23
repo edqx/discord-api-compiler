@@ -1,5 +1,5 @@
 /**
- * https://discord.com/developers/docs/resources/guild-template#json-params
+ * https://discord.com/developers/docs/resources/guild/template#json-params
  */
 export interface CreateGuildfromGuildTemplateJsonParams {
     /**
@@ -9,5 +9,5 @@ export interface CreateGuildfromGuildTemplateJsonParams {
     /**
      * Base64 128x128 image for the guild icon.
      */
-    icon?: any;
+    icon?: string;
 }

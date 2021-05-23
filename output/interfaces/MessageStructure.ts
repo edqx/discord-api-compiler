@@ -4,6 +4,7 @@ import { ChannelMentionStructure } from "./ChannelMentionStructure";
 import { EmbedStructure } from "./EmbedStructure";
 import { GuildMemberStructure } from "./GuildMemberStructure";
 import { MessageActivityStructure } from "./MessageActivityStructure";
+import { MessageInteraction } from "../enums/MessageInteraction";
 import { MessageReferenceStructure } from "./MessageReferenceStructure";
 import { MessageStickerStructure } from "./MessageStickerStructure";
 import { ReactionStructure } from "./ReactionStructure";
@@ -130,7 +131,7 @@ export interface MessageStructure {
     application?: Partial<ApplicationStructure>;
     /**
      * If the message is a response to an 
-     * [Interaction](https://discord.com/developers/docs/interactions/slash-commands#), 
+     * [Interaction](https://discord.com/developers/docs/interactions/slash/commands#), 
      * this is the id of the interaction's application.
      */
     application_id?: string;
@@ -157,9 +158,9 @@ export interface MessageStructure {
     referenced_message?: MessageStructure|null;
     /**
      * Sent if the message is a response to an 
-     * [Interaction](https://discord.com/developers/docs/interactions/slash-commands#).
+     * [Interaction](https://discord.com/developers/docs/interactions/slash/commands#).
      */
-    interaction?: any;
+    interaction?: MessageInteraction;
     /**
      * The thread that was started from this message, includes [thread 
      * member](https://discord.com/developers/docs/resources/channel#thread-member-object) 

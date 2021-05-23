@@ -29,7 +29,6 @@ export function maskedLinkToUrl(text: string) {
             .substr(1) // Remove starting #
             .toLowerCase()
             .split("/").join("#")
-            .replace("slash_commands", "slash-commands")
             .replace(/_/g, "/");
 
         if (mask) {
@@ -55,24 +54,24 @@ export class MarkdownSection extends MarkdownPart {
         return {
             file: this.file,
             type: "section",
-            link: this.link,
+            link: this.getLink(),
             children: this.children,
             level: this.level,
             title: this.title
         };
     }
 
-    get link() {
+    getLink() {
         let link = "#DOCS"
             + this.file
                 .split(".")[0]
                 .split(path.sep)
-                .map(filename => "_" + filename.toUpperCase().replace(/_/g, "-"))
+                .map(filename => "_" + filename.toUpperCase())
                 .join("")
             + "/";
 
         if (this.parent && this.parent?.level > 2 && (this.level - this.parent?.level > 1)) {
-            link += this.parent.link.split("/")[1] + "-";
+            link += this.parent.getLink().split("/")[1] + "-";
         }
 
         link += this.title.toLowerCase().replace(/ /g, "-");
@@ -80,35 +79,35 @@ export class MarkdownSection extends MarkdownPart {
         return link;
     }
 
-    get url() {
-        return "https://discord.com/developers/" + this.link
+    getDApiUrl() {
+        return "https://discord.com/developers/" + this.getLink()
             .substr(1) // Remove starting #
             .toLowerCase()
             .split("/").join("#")
             .replace(/_/g, "/")
     }
 
-    get text() {
+    getTextChildren() {
         return this.children.filter(child =>
             child instanceof MarkdownText) as MarkdownText[];
     }
 
-    get sections() {
+    getSectionChildren() {
         return this.children.filter(child =>
             child instanceof MarkdownSection) as MarkdownSection[];
     }
 
-    get quotes() {
+    getQuoteChildren() {
         return this.children.filter(child =>
             child instanceof MarkdownQuote) as MarkdownQuote[];
     }
 
-    get code() {
+    getCodeblockChildren() {
         return this.children.filter(child =>
             child instanceof MarkdownCodeblock) as MarkdownCodeblock[];
     }
 
-    get tables() {
+    getTableChildren() {
         return this.children.filter(child =>
             child instanceof MarkdownTable) as MarkdownTable<string>[];
     }
@@ -244,20 +243,20 @@ export class MarkdownSection extends MarkdownPart {
 
     serialize() {
         let out: string = [
-            this.url,
-            ...this.text
+            this.getDApiUrl(),
+            ...this.getTextChildren()
                 .map(text =>
                     wordWrap(text.serialize(), {
                         width: 80,
                         indent: ""
                     })),
-            ...this.quotes
+            ...this.getQuoteChildren()
                 .map(quote =>
                     wordWrap(quote.serialize(), {
                         width: 80,
                         indent: "" 
                     })),
-            ...this.sections
+            ...this.getSectionChildren()
                 .filter(child =>
                     child.title.includes("Example")
                     && child.children.find(echild =>
