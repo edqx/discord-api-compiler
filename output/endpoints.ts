@@ -117,7 +117,7 @@ export const ApiEndpoints = {
      * for your support team.
      * 
      * @example
-     * ```undefined
+     * ```
      * curl https://discord.com/api/v6/applications/461618159171141643/entitlements?user_id=53908232506183680&sku_ids=53908232599983680&with_payments=true&limit=1 \
      * -H "Authorization: Bearer <token>" \
      * -H "Accept: application/json"
@@ -154,7 +154,7 @@ export const ApiEndpoints = {
      * a given entitlement that another call or the SDK says they do.
      * 
      * @example
-     * ```undefined
+     * ```
      * curl https://discord.com/api/v6/applications/461618159171141643/entitlements/53908232506183999?with_payment=true \
      * -H "Authorization: Bearer <token>" \
      * -H "Accept: application/json"
@@ -187,7 +187,7 @@ export const ApiEndpoints = {
      * Get all SKUs for an application.
      * 
      * @example
-     * ```undefined
+     * ```
      * curl https://discord.com/api/v6/applications/461618159171141643/skus \
      * -H "Authorization: Bearer <token>" \
      * -H "Accept: application/json"
@@ -230,7 +230,7 @@ export const ApiEndpoints = {
      * the entitlement was for before consuming it!**
      * 
      * @example
-     * ```undefined
+     * ```
      * curl -X POST https://discord.com/api/v6/applications/461618159171141643/entitlements/53908232506183999/consume \
      * -H "Authorization: Bearer <token>" \
      * -H "Accept: application/json"
@@ -251,7 +251,7 @@ export const ApiEndpoints = {
      * that users actually purchased.
      * 
      * @example
-     * ```undefined
+     * ```
      * curl -X DELETE https://discord.com/api/v6/applications/461618159171141643/entitlements/53908232506183999 \
      * -H "Authorization: Bearer <token>" \
      * -H "Accept: application/json"
@@ -274,7 +274,7 @@ export const ApiEndpoints = {
      * the TTL expires.
      * 
      * @example
-     * ```undefined
+     * ```
      * curl -X PUT https://discord.com/api/v6/store/skus/461618229171141643/discounts/53908232522183999 \
      * -H "Authorization: Bearer <token>" \
      * -H "Accept: application/json" \
@@ -297,7 +297,7 @@ export const ApiEndpoints = {
      * user for subsequent purchases.
      * 
      * @example
-     * ```undefined
+     * ```
      * curl -X DELETE https://discord.com/api/v6/store/skus/461618229171141643/discounts/53908232522183999 \
      * -H "Authorization: Bearer <token>" \
      * -H "Accept: application/json"
@@ -735,7 +735,7 @@ export const ApiEndpoints = {
      * ```
      * 
      * @example
-     * ```undefined
+     * ```
      * --boundary
      * Content-Disposition: form-data; name="content"
      * 

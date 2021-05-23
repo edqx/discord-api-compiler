@@ -5,8 +5,8 @@ export class MarkdownCodeblock extends MarkdownPart {
     constructor(
         public readonly file: string,
         public readonly parent: MarkdownSection|undefined,
-        public readonly language: string|undefined,
-        public readonly code: string
+        public readonly code: string,
+        public readonly language?: string|undefined
     ) {
         super(file, parent);
     }
@@ -39,10 +39,10 @@ export class MarkdownCodeblock extends MarkdownPart {
         if (!joined)
             return null;
 
-        return new MarkdownCodeblock(file, parent, language, joined);
+        return new MarkdownCodeblock(file, parent, joined, language);
     }
 
     serialize() {
-        return "```" + this.language + "\n" + this.code + "\n```";
+        return "```" + (this.language || "") + "\n" + this.code + "\n```";
     }
 }
