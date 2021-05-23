@@ -1,3 +1,5 @@
+import path from "path";
+import { CompilerOptions } from "./CompilerOptions";
 import { OutputFile } from "./File";
 import { MarkdownPart } from "./markdown/MarkdownPart";
 import { linkRegex, MarkdownSection } from "./markdown/Section";
@@ -7,18 +9,49 @@ import { InterfaceStructure } from "./typescript/Interface";
 import { Structure } from "./typescript/Structure";
 
 export class Compiler {
+    public readonly options: CompilerOptions;
+
     links: Map<string, MarkdownSection>;
     
     structures: Map<string, Structure>;
-    files: Set<OutputFile>;
+    files: Map<string, OutputFile>;
 
-    constructor(public readonly sections: MarkdownSection[]) {
+    constructor(options: Partial<CompilerOptions>, public readonly sections: MarkdownSection[]) {
+        this.options = {
+            ...options,
+            output: {
+                single_file: false,
+                output_dir: "output",
+                enums_output: "enums",
+                structures_output: "interfaces",
+                requests_output: "requests",
+                responses_output: "responses",
+                endpoints_output: "endpoints.ts",
+                ...options.output
+            }
+        };
+        
         this.links = new Map;
 
         this.structures = new Map;
-        this.files = new Set;
+        this.files = new Map;
 
         this.generateLinksRecursive(this.sections);
+    }
+
+    createFile(filename: string): OutputFile {
+        const cached = this.files.get(filename);
+        if (cached) {
+            return cached;
+        }
+
+        if (this.options.output.single_file && filename !== this.options.output.output_dir) {
+            return this.createFile(this.options.output.output_dir);
+        }
+
+        const file = new OutputFile(filename);
+        this.files.set(filename, file);
+        return file;
     }
 
     resolveTable(root: MarkdownSection, headers: string[]): [ MarkdownSection, MarkdownTable<string> ]|null {
@@ -52,7 +85,7 @@ export class Compiler {
 
         this.structures.set(structure.name, structure);
         structure.file.structures.add(structure);
-        this.files.add(structure.file);
+        this.files.set(structure.file.filename, structure.file);
 
         structure.loadFromTable(table);
 
@@ -65,7 +98,12 @@ export class Compiler {
         if (resolvedInterface) {
             const [ resolvedSection, table ] = resolvedInterface;
             const interfaceName = resolvedSection.title.replace(/\W/g, "");
-            const file = new OutputFile("interfaces/" + interfaceName + ".ts");
+            const file = this.createFile(
+                path.join(
+                    this.options.output.structures_output,
+                    interfaceName + ".ts"
+                )
+            );
 
             const interfaceStructure = new InterfaceStructure(
                 this,
@@ -83,7 +121,12 @@ export class Compiler {
         if (resolvedEnum) {
             const [ resolvedSection, table ] = resolvedEnum;
             const enumName = resolvedSection.title.replace(/\W/g, "");
-            const file = new OutputFile("enums/" + enumName + ".ts");
+            const file = this.createFile(
+                path.join(
+                    this.options.output.enums_output,
+                    enumName + ".ts"
+                )
+            );
 
             const enumStructure = new EnumStructure(
                 this,

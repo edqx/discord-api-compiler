@@ -1,4 +1,5 @@
 import path from "path";
+import { Compiler } from "./Compiler";
 import { Structure } from "./typescript/Structure";
 
 export class OutputFile {
@@ -10,6 +11,12 @@ export class OutputFile {
     ) {
         this.imports = new Set;
         this.structures = new Set;
+    }
+
+    static resolve(compiler: Compiler, file: OutputFile) {
+        return compiler.options.output.single_file
+            ? file.filename
+            : path.resolve(compiler.options.output.output_dir, file.filename);
     }
 
     getRelativeImport(file: OutputFile) {
@@ -53,7 +60,7 @@ export class OutputFile {
         out += "\n";
 
         for (const structure of this.structures) {
-            out += structure.serialize() + "\n";
+            out += structure.serialize() + "\n\n";
         }
 
         return out.trim() + "\n";

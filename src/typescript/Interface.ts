@@ -13,7 +13,11 @@ export class InterfaceStructureEntry {
         public readonly key: string,
         public readonly type: string,
         public readonly description?: string
-    ) {}
+    ) {
+        if (this.key.startsWith("?")) {
+            this.key = this.key.substr(1) + "?";
+        }
+    }
 
     serialize() {
         let out = "";

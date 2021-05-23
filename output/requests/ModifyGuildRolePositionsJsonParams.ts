@@ -9,5 +9,5 @@ export interface ModifyGuildRolePositionsJsonParams {
     /**
      * Sorting position of the role.
      */
-    ?position: number|null;
+    position?: number|null;
 }

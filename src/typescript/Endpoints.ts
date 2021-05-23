@@ -104,7 +104,7 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = new OutputFile("requests/" + this.codename + "JsonParams.ts");
+                const file = this.compiler.createFile("requests/" + this.codename + "JsonParams.ts");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -133,7 +133,7 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = new OutputFile("requests/" + this.codename + "QueryParams.ts");
+                const file = this.compiler.createFile("requests/" + this.codename + "QueryParams.ts");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -162,7 +162,7 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = new OutputFile("responses/" + this.codename + "Response.ts");
+                const file = this.compiler.createFile("responses/" + this.codename + "Response.ts");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -186,12 +186,18 @@ export class DocumentedRequest {
 
         if (structure) return structure;
 
-        const matched = this.section.text.map(child => child.text).join("\n").match(/Returns an? \`?(.+)\`? object?/);
+        const haystack = this.section.text.map(child => child.text).join(" ");
+        const matched = /Returns (an?|the (new|updated)?) \`?(?<object>.+)\`?( object)?( on success)?/.exec(haystack);
 
         if (matched) {
-            const [ , object ] = matched;
+            const object = matched.groups?.object;
 
-            const structureName = this.compiler.resolveType(object);
+            if (!object)
+                return null;
+
+            const stripped = object.replace(" object", "").replace(/(on )?success/, "").trim();
+
+            const structureName = this.compiler.resolveType(stripped);
             const structure = this.compiler.structures.get(structureName);
 
             if (structure) {

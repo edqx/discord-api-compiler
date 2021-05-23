@@ -1,5 +1,4 @@
 import { AddGuildMemberJsonParams } from "./requests/AddGuildMemberJsonParams";
-import { BanStructure } from "./interfaces/BanStructure";
 import { BeginGuildPruneJsonParams } from "./requests/BeginGuildPruneJsonParams";
 import { BulkDeleteMessagesJsonParams } from "./requests/BulkDeleteMessagesJsonParams";
 import { ChannelStructure } from "./interfaces/ChannelStructure";
@@ -31,6 +30,7 @@ import { ExecuteWebhookJsonParams } from "./requests/ExecuteWebhookJsonParams";
 import { ExecuteWebhookQueryParams } from "./requests/ExecuteWebhookQueryParams";
 import { FollowNewsChannelJsonParams } from "./requests/FollowNewsChannelJsonParams";
 import { FollowedChannelStructure } from "./interfaces/FollowedChannelStructure";
+import { GatewayURLQueryStringParams } from "./interfaces/GatewayURLQueryStringParams";
 import { GetChannelMessagesQueryParams } from "./requests/GetChannelMessagesQueryParams";
 import { GetCurrentAuthorizationInformationResponse } from "./responses/GetCurrentAuthorizationInformationResponse";
 import { GetCurrentUserGuildsQueryParams } from "./requests/GetCurrentUserGuildsQueryParams";
@@ -44,7 +44,13 @@ import { GetGuildWidgetImageQueryParams } from "./requests/GetGuildWidgetImageQu
 import { GetInviteQueryParams } from "./requests/GetInviteQueryParams";
 import { GetReactionsQueryParams } from "./requests/GetReactionsQueryParams";
 import { GroupDMAddRecipientJsonParams } from "./requests/GroupDMAddRecipientJsonParams";
+import { GuildBanAddEventFields } from "./interfaces/GuildBanAddEventFields";
+import { GuildBanRemoveEventFields } from "./interfaces/GuildBanRemoveEventFields";
+import { GuildIntegrationsUpdateEventFields } from "./interfaces/GuildIntegrationsUpdateEventFields";
+import { GuildMemberRemoveEventFields } from "./interfaces/GuildMemberRemoveEventFields";
 import { GuildMemberStructure } from "./interfaces/GuildMemberStructure";
+import { GuildMemberUpdateEventFields } from "./interfaces/GuildMemberUpdateEventFields";
+import { GuildRoleDeleteEventFields } from "./interfaces/GuildRoleDeleteEventFields";
 import { GuildStructure } from "./interfaces/GuildStructure";
 import { GuildWidgetStructure } from "./interfaces/GuildWidgetStructure";
 import { InviteStructure } from "./interfaces/InviteStructure";
@@ -56,6 +62,8 @@ import { ListPrivateArchivedThreadsQueryParams } from "./requests/ListPrivateArc
 import { ListPrivateArchivedThreadsResponse } from "./responses/ListPrivateArchivedThreadsResponse";
 import { ListPublicArchivedThreadsQueryParams } from "./requests/ListPublicArchivedThreadsQueryParams";
 import { ListPublicArchivedThreadsResponse } from "./responses/ListPublicArchivedThreadsResponse";
+import { MessageDeleteBulkEventFields } from "./interfaces/MessageDeleteBulkEventFields";
+import { MessageDeleteEventFields } from "./interfaces/MessageDeleteEventFields";
 import { MessageStructure } from "./interfaces/MessageStructure";
 import { ModifyChannelJsonParams } from "./requests/ModifyChannelJsonParams";
 import { ModifyCurrentUserJsonParams } from "./requests/ModifyCurrentUserJsonParams";
@@ -68,14 +76,18 @@ import { ModifyGuildRoleJsonParams } from "./requests/ModifyGuildRoleJsonParams"
 import { ModifyGuildRolePositionsJsonParams } from "./requests/ModifyGuildRolePositionsJsonParams";
 import { ModifyGuildTemplateJsonParams } from "./requests/ModifyGuildTemplateJsonParams";
 import { ModifyWebhookJsonParams } from "./requests/ModifyWebhookJsonParams";
+import { RoleStructure } from "./interfaces/RoleStructure";
 import { SearchGuildMembersQueryParams } from "./requests/SearchGuildMembersQueryParams";
 import { StartThreadwithMessageJsonParams } from "./requests/StartThreadwithMessageJsonParams";
 import { StartThreadwithoutMessageJsonParams } from "./requests/StartThreadwithoutMessageJsonParams";
+import { ThreadMembersUpdateEventFields } from "./interfaces/ThreadMembersUpdateEventFields";
+import { TypingStartEventFields } from "./interfaces/TypingStartEventFields";
 import { UpdateCurrentUserVoiceStateJsonParams } from "./requests/UpdateCurrentUserVoiceStateJsonParams";
 import { UpdateStageInstanceJsonParams } from "./requests/UpdateStageInstanceJsonParams";
 import { UpdateUserVoiceStateJsonParams } from "./requests/UpdateUserVoiceStateJsonParams";
 import { UserStructure } from "./interfaces/UserStructure";
 import { WebhookStructure } from "./interfaces/WebhookStructure";
+import { WelcomeScreenStructure } from "./interfaces/WelcomeScreenStructure";
 
 type DeclareEndpoint<
     JSONParams extends Record<string, any> = {},
@@ -541,7 +553,7 @@ export const ApiEndpoints = {
      * [channel](#DOCS_RESOURCES_CHANNEL/channel-object) on success, and a 400 BAD 
      * REQUEST on invalid parameters. All JSON parameters are optional.
      */
-    ModifyChannel: ((channelid: string) => `/channels/${channelid}`) as DeclareEndpoint<ModifyChannelJsonParams, {}, {}>,
+    ModifyChannel: ((channelid: string) => `/channels/${channelid}`) as DeclareEndpoint<ModifyChannelJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete#close-channel-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}
      * 
@@ -751,7 +763,7 @@ export const ApiEndpoints = {
      * `MANAGE_MESSAGES` permission. Returns a 204 empty response on success. Fires a 
      * [Message Delete](#DOCS_TOPICS_GATEWAY/message-delete) Gateway event.
      */
-    DeleteMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<{}, {}, MessageDeleteEventFields>,
     /**
      * https://discord.com/developers/docs/resources/channel#bulk-delete-messages-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#messages#bulk-delete
      * 
@@ -766,7 +778,7 @@ export const ApiEndpoints = {
      * 400 BAD REQUEST if any message provided is older than that or if any duplicate 
      * message IDs are provided.
      */
-    BulkDeleteMessages: ((channelid: string) => `/channels/${channelid}/messages/bulk-delete`) as DeclareEndpoint<BulkDeleteMessagesJsonParams, {}, {}>,
+    BulkDeleteMessages: ((channelid: string) => `/channels/${channelid}/messages/bulk-delete`) as DeclareEndpoint<BulkDeleteMessagesJsonParams, {}, MessageDeleteBulkEventFields>,
     /**
      * https://discord.com/developers/docs/resources/channel#edit-channel-permissions-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#permissions#{overwrite.id#docs/resources/channel#overwrite-object}
      * 
@@ -826,7 +838,7 @@ export const ApiEndpoints = {
      * on success. Fires a [Typing Start](#DOCS_TOPICS_GATEWAY/typing-start) Gateway 
      * event.
      */
-    TriggerTypingIndicator: ((channelid: string) => `/channels/${channelid}/typing`) as DeclareEndpoint<{}, {}, {}>,
+    TriggerTypingIndicator: ((channelid: string) => `/channels/${channelid}/typing`) as DeclareEndpoint<{}, {}, TypingStartEventFields>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-pinned-messages-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#pins
      * 
@@ -874,7 +886,7 @@ export const ApiEndpoints = {
      * created thread will be the same as the id of the message, and as such a message 
      * can only have a single thread created from it.
      */
-    StartThreadwithMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}/threads`) as DeclareEndpoint<StartThreadwithMessageJsonParams, {}, {}>,
+    StartThreadwithMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}/threads`) as DeclareEndpoint<StartThreadwithMessageJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#start-thread-without-message-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#threads
      * 
@@ -884,7 +896,7 @@ export const ApiEndpoints = {
      * REQUEST on invalid parameters. Fires a [Thread 
      * Create](#DOCS_TOPICS_GATEWAY/thread-create) Gateway event.
      */
-    StartThreadwithoutMessage: ((channelid: string) => `/channels/${channelid}/threads`) as DeclareEndpoint<StartThreadwithoutMessageJsonParams, {}, {}>,
+    StartThreadwithoutMessage: ((channelid: string) => `/channels/${channelid}/threads`) as DeclareEndpoint<StartThreadwithoutMessageJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#join-thread-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#@me
      * 
@@ -892,7 +904,7 @@ export const ApiEndpoints = {
      * Returns a 204 empty response on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    JoinThread: ((channelid: string) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, {}>,
+    JoinThread: ((channelid: string) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, ThreadMembersUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/channel#add-thread-member-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#{user.id#docs/resources/user#user-object}
      * 
@@ -901,7 +913,7 @@ export const ApiEndpoints = {
      * on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    AddThreadMember: ((channelid: string, userid: string) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    AddThreadMember: ((channelid: string, userid: string) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, ThreadMembersUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/channel#leave-thread-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#@me
      * 
@@ -909,7 +921,7 @@ export const ApiEndpoints = {
      * archived. Returns a 204 empty response on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    LeaveThread: ((channelid: string) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, {}>,
+    LeaveThread: ((channelid: string) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, ThreadMembersUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/channel#remove-thread-member-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#{user.id#docs/resources/user#user-object}
      * 
@@ -918,7 +930,7 @@ export const ApiEndpoints = {
      * archived. Returns a 204 empty response on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    RemoveThreadMember: ((channelid: string, userid: string) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveThreadMember: ((channelid: string, userid: string) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, ThreadMembersUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/channel#list-thread-members-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members
      * 
@@ -996,7 +1008,7 @@ export const ApiEndpoints = {
      * an error message, but not a [JSON status 
      * code](#DOCS_TOPICS_OPCODES_AND_STATUS_CODES/json).
      */
-    CreateGuildEmoji: ((guildid: string) => `/guilds/${guildid}/emojis`) as DeclareEndpoint<CreateGuildEmojiJsonParams, {}, {}>,
+    CreateGuildEmoji: ((guildid: string) => `/guilds/${guildid}/emojis`) as DeclareEndpoint<CreateGuildEmojiJsonParams, {}, EmojiStructure>,
     /**
      * https://discord.com/developers/docs/resources/emoji#modify-guild-emoji-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#emojis#{emoji.id#docs/resources/emoji#emoji-object}
      * 
@@ -1006,7 +1018,7 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional.
      */
-    ModifyGuildEmoji: ((guildid: string, emojiid: string) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<ModifyGuildEmojiJsonParams, {}, {}>,
+    ModifyGuildEmoji: ((guildid: string, emojiid: string) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<ModifyGuildEmojiJsonParams, {}, EmojiStructure>,
     /**
      * https://discord.com/developers/docs/resources/emoji#delete-guild-emoji-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#emojis#{emoji.id#docs/resources/emoji#emoji-object}
      * 
@@ -1142,7 +1154,7 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional
      */
-    ModifyGuild: ((guildid: string) => `/guilds/${guildid}`) as DeclareEndpoint<ModifyGuildJsonParams, {}, {}>,
+    ModifyGuild: ((guildid: string) => `/guilds/${guildid}`) as DeclareEndpoint<ModifyGuildJsonParams, {}, GuildStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#delete-guild-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}
      * 
@@ -1171,7 +1183,7 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional excluding 'name'
      */
-    CreateGuildChannel: ((guildid: string) => `/guilds/${guildid}/channels`) as DeclareEndpoint<CreateGuildChannelJsonParams, {}, {}>,
+    CreateGuildChannel: ((guildid: string) => `/guilds/${guildid}/channels`) as DeclareEndpoint<CreateGuildChannelJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#channels
      * 
@@ -1252,7 +1264,7 @@ export const ApiEndpoints = {
      * to channels, the API user _must_ have permissions to both connect to the channel 
      * and have the `MOVE_MEMBERS` permission.
      */
-    ModifyGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<ModifyGuildMemberJsonParams, {}, {}>,
+    ModifyGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<ModifyGuildMemberJsonParams, {}, GuildMemberStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-current-user-nick-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#members#@me#nick
      * 
@@ -1260,7 +1272,7 @@ export const ApiEndpoints = {
      * nickname on success. Fires a [Guild Member 
      * Update](#DOCS_TOPICS_GATEWAY/guild-member-update) Gateway event.
      */
-    ModifyCurrentUserNick: ((guildid: string) => `/guilds/${guildid}/members/@me/nick`) as DeclareEndpoint<ModifyCurrentUserNickJsonParams, {}, {}>,
+    ModifyCurrentUserNick: ((guildid: string) => `/guilds/${guildid}/members/@me/nick`) as DeclareEndpoint<ModifyCurrentUserNickJsonParams, {}, GuildMemberUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#add-guild-member-role-%-put-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}#roles#{role.id#docs/topics/permissions#role-object}
      * 
@@ -1269,7 +1281,7 @@ export const ApiEndpoints = {
      * Fires a [Guild Member Update](#DOCS_TOPICS_GATEWAY/guild-member-update) Gateway 
      * event.
      */
-    AddGuildMemberRole: ((guildid: string, userid: string, roleid: string) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
+    AddGuildMemberRole: ((guildid: string, userid: string, roleid: string) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, GuildMemberUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#remove-guild-member-role-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}#roles#{role.id#docs/topics/permissions#role-object}
      * 
@@ -1278,7 +1290,7 @@ export const ApiEndpoints = {
      * Fires a [Guild Member Update](#DOCS_TOPICS_GATEWAY/guild-member-update) Gateway 
      * event.
      */
-    RemoveGuildMemberRole: ((guildid: string, userid: string, roleid: string) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveGuildMemberRole: ((guildid: string, userid: string, roleid: string) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, GuildMemberUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#remove-guild-member-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}
      * 
@@ -1286,7 +1298,7 @@ export const ApiEndpoints = {
      * empty response on success. Fires a [Guild Member 
      * Remove](#DOCS_TOPICS_GATEWAY/guild-member-remove) Gateway event.
      */
-    RemoveGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<{}, {}, GuildMemberRemoveEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-bans-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#bans
      * 
@@ -1300,7 +1312,7 @@ export const ApiEndpoints = {
      * Returns a [ban](#DOCS_RESOURCES_GUILD/ban-object) object for the given user or a 
      * 404 not found if the ban cannot be found. Requires the `BAN_MEMBERS` permission.
      */
-    GetGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, BanStructure>,
+    GetGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#create-guild-ban-%-put-#guilds#{guild.id#docs/resources/guild#guild-object}#bans#{user.id#docs/resources/user#user-object}
      * 
@@ -1312,7 +1324,7 @@ export const ApiEndpoints = {
      * Supplying a reason in the JSON body will override `X-Audit-Log-Reason` header if 
      * both are provided.
      */
-    CreateGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<CreateGuildBanJsonParams, {}, {}>,
+    CreateGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<CreateGuildBanJsonParams, {}, GuildBanAddEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#remove-guild-ban-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#bans#{user.id#docs/resources/user#user-object}
      * 
@@ -1320,7 +1332,7 @@ export const ApiEndpoints = {
      * empty response on success. Fires a [Guild Ban 
      * Remove](#DOCS_TOPICS_GATEWAY/guild-ban-remove) Gateway event.
      */
-    RemoveGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, GuildBanRemoveEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-roles-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#roles
      * 
@@ -1337,7 +1349,7 @@ export const ApiEndpoints = {
      * Role Create](#DOCS_TOPICS_GATEWAY/guild-role-create) Gateway event. All JSON 
      * params are optional.
      */
-    CreateGuildRole: ((guildid: string) => `/guilds/${guildid}/roles`) as DeclareEndpoint<CreateGuildRoleJsonParams, {}, {}>,
+    CreateGuildRole: ((guildid: string) => `/guilds/${guildid}/roles`) as DeclareEndpoint<CreateGuildRoleJsonParams, {}, RoleStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-role-positions-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#roles
      * 
@@ -1358,7 +1370,7 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional and nullable.
      */
-    ModifyGuildRole: ((guildid: string, roleid: string) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<ModifyGuildRoleJsonParams, {}, {}>,
+    ModifyGuildRole: ((guildid: string, roleid: string) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<ModifyGuildRoleJsonParams, {}, RoleStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#delete-guild-role-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#roles#{role.id#docs/topics/permissions#role-object}
      * 
@@ -1366,7 +1378,7 @@ export const ApiEndpoints = {
      * response on success. Fires a [Guild Role 
      * Delete](#DOCS_TOPICS_GATEWAY/guild-role-delete) Gateway event.
      */
-    DeleteGuildRole: ((guildid: string, roleid: string) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuildRole: ((guildid: string, roleid: string) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, GuildRoleDeleteEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-prune-count-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#prune
      * 
@@ -1395,7 +1407,7 @@ export const ApiEndpoints = {
      * Supplying a reason in the JSON body will override `X-Audit-Log-Reason` header if 
      * both are provided.
      */
-    BeginGuildPrune: ((guildid: string) => `/guilds/${guildid}/prune`) as DeclareEndpoint<BeginGuildPruneJsonParams, {}, {}>,
+    BeginGuildPrune: ((guildid: string) => `/guilds/${guildid}/prune`) as DeclareEndpoint<BeginGuildPruneJsonParams, {}, GuildMemberRemoveEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-voice-regions-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#regions
      * 
@@ -1428,7 +1440,7 @@ export const ApiEndpoints = {
      * response on success. Fires a [Guild Integrations 
      * Update](#DOCS_TOPICS_GATEWAY/guild-integrations-update) Gateway event.
      */
-    DeleteGuildIntegration: ((guildid: string, integrationid: string) => `/guilds/${guildid}/integrations/${integrationid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuildIntegration: ((guildid: string, integrationid: string) => `/guilds/${guildid}/integrations/${integrationid}`) as DeclareEndpoint<{}, {}, GuildIntegrationsUpdateEventFields>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-widget-settings-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#widget
      * 
@@ -1444,7 +1456,7 @@ export const ApiEndpoints = {
      * `MANAGE_GUILD` permission. Returns the updated [guild 
      * widget](#DOCS_RESOURCES_GUILD/guild-widget-object) object.
      */
-    ModifyGuildWidget: ((guildid: string) => `/guilds/${guildid}/widget`) as DeclareEndpoint<{}, {}, {}>,
+    ModifyGuildWidget: ((guildid: string) => `/guilds/${guildid}/widget`) as DeclareEndpoint<{}, {}, GuildWidgetStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-widget-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#widget.json
      * 
@@ -1525,7 +1537,7 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional and nullable
      */
-    ModifyGuildWelcomeScreen: ((guildid: string) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<{}, {}, {}>,
+    ModifyGuildWelcomeScreen: ((guildid: string) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<{}, {}, WelcomeScreenStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#update-current-user-voice-state-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#voice-states#@me
      * 
@@ -1758,7 +1770,7 @@ export const ApiEndpoints = {
      * Returns the new [webhook](#DOCS_RESOURCES_WEBHOOK/webhook-object) object for the 
      * given id.
      */
-    GetWebhook: ((webhookid: string) => `/webhooks/${webhookid}`) as DeclareEndpoint<{}, {}, {}>,
+    GetWebhook: ((webhookid: string) => `/webhooks/${webhookid}`) as DeclareEndpoint<{}, {}, WebhookStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#get-webhook-with-token-%-get-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}
      * 
@@ -1774,7 +1786,7 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional
      */
-    ModifyWebhook: ((webhookid: string) => `/webhooks/${webhookid}`) as DeclareEndpoint<ModifyWebhookJsonParams, {}, {}>,
+    ModifyWebhook: ((webhookid: string) => `/webhooks/${webhookid}`) as DeclareEndpoint<ModifyWebhookJsonParams, {}, WebhookStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token-%-patch-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}
      * 
@@ -1880,7 +1892,7 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetGateway: (() => `/gateway`) as DeclareEndpoint<{}, {}, {}>,
+    GetGateway: (() => `/gateway`) as DeclareEndpoint<{}, {}, GatewayURLQueryStringParams>,
     /**
      * https://discord.com/developers/docs/topics/gateway#get-gateway-bot-%-get-#gateway#bot
      * 

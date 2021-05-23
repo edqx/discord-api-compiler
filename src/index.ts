@@ -52,7 +52,10 @@ async function crawlFiles(entrypoint: string) {
         }
     }
 
-    const compiler = new Compiler(sections);
+    const optionsData = await fs.readFile(path.resolve(process.cwd(), "./config.json"), "utf8");
+    const options = JSON.parse(optionsData)
+
+    const compiler = new Compiler(options, sections);
 
     const requests = [];
 
@@ -63,7 +66,7 @@ async function crawlFiles(entrypoint: string) {
         }
     }
 
-    const endpointOutputFile = new OutputFile("endpoints.ts");
+    const endpointOutputFile = compiler.createFile("endpoints.ts");
     const endpointStructure = new EndpointStructure(
         compiler,
         endpointOutputFile,
@@ -73,16 +76,14 @@ async function crawlFiles(entrypoint: string) {
 
     compiler.structures.set("ApiEndpoints", endpointStructure);
     endpointOutputFile.structures.add(endpointStructure);
-    compiler.files.add(endpointOutputFile);
 
     await rimraf("output");
 
-    for (const file of compiler.files) {
-        const dirname = path.dirname(file.filename);
-        await mkdirp(path.resolve("output", dirname));
+    for (const [ , file ] of compiler.files) {
+        await mkdirp(path.dirname(OutputFile.resolve(compiler, file)));
 
         const serialized = file.serialize();
-        await fs.writeFile(path.resolve("output", file.filename), serialized, "utf8");
+        await fs.writeFile(OutputFile.resolve(compiler, file), serialized, "utf8");
     }
 
     await fs.writeFile(path.resolve(process.cwd(), "output.json"), JSON.stringify(sections, null, 4), "utf8");
