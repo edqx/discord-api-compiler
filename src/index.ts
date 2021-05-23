@@ -110,8 +110,7 @@ async function crawlFiles(entrypoint: string) {
             compiler.options.output.enums_output,
             compiler.options.output.structures_output,
             compiler.options.output.requests_output,
-            compiler.options.output.responses_output,
-            compiler.options.output.endpoints_output
+            compiler.options.output.responses_output
         ];
         for (const pathToWrite of toWrite) {
             await mkdirp(path.resolve(compiler.options.output.output_dir, pathToWrite));
