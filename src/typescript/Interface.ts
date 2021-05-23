@@ -66,8 +66,8 @@ export class InterfaceStructure extends Structure {
     }
 
     serialize() {
-        return prependCommentLines(this.section.serialize())
-            + "\nexport interface " + this.name + " {\n"
+        return  (this.compiler.options.comments ? prependCommentLines(this.section.serialize()) + "\n" : "")
+            + "export interface " + this.name + " {\n"
             + this.entries.map(entry => entry.serialize() + ";").join("\n")
             + "\n}";
     }

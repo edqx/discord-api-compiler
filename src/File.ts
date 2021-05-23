@@ -26,7 +26,7 @@ export class OutputFile {
         const to_filename = path.basename(file.filename);
         const relative = path.posix.relative(from_dirname, to_dirname);
         
-        let joined = path.posix.join(relative, path.basename(to_filename, ".ts"));
+        let joined = path.posix.join(relative, path.basename(path.basename(to_filename, ".ts"), ".js"));
 
         if (!joined.startsWith(".")) {
             joined = "./" + joined;

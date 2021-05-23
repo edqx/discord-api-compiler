@@ -18,6 +18,8 @@ export class Compiler {
 
     constructor(options: Partial<CompilerOptions>, public readonly sections: MarkdownSection[]) {
         this.options = {
+            typings: true,
+            comments: true,
             ...options,
             output: {
                 single_file: false,
@@ -26,7 +28,7 @@ export class Compiler {
                 structures_output: "interfaces",
                 requests_output: "requests",
                 responses_output: "responses",
-                endpoints_output: "endpoints.ts",
+                endpoints_output: "endpoints",
                 ...options.output
             }
         };
@@ -49,7 +51,7 @@ export class Compiler {
             return this.createFile(this.options.output.output_dir);
         }
 
-        const file = new OutputFile(filename);
+        const file = new OutputFile(filename + (this.options.typings ? ".ts" : ".js"));
         this.files.set(filename, file);
         return file;
     }
@@ -101,7 +103,7 @@ export class Compiler {
             const file = this.createFile(
                 path.join(
                     this.options.output.structures_output,
-                    interfaceName + ".ts"
+                    interfaceName
                 )
             );
 
@@ -124,7 +126,7 @@ export class Compiler {
             const file = this.createFile(
                 path.join(
                     this.options.output.enums_output,
-                    enumName + ".ts"
+                    enumName
                 )
             );
 

@@ -1,5 +1,7 @@
 {
     "output": {
         "output_dir": "output"
-    }
+    },
+    "typings": true,
+    "comments": true
 }

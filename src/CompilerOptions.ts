@@ -37,11 +37,24 @@ export interface OutputOptions {
 
     /**
      * File to emit all endpoint declarations to, relative to the output directory.
-     * @default "endpoints.ts"
+     * @default "endpoints"
      */
     endpoints_output: string;
 }
 
 export interface CompilerOptions {
+    /**
+     * Output options for each type of structure.
+     */
     output: OutputOptions;
+
+    /**
+     * Whether to emit typescript type declarations.
+     */
+    typings: boolean;
+
+    /**
+     * Whether to emit detailed comments.
+     */
+    comments: boolean;
 }

@@ -66,7 +66,7 @@ async function crawlFiles(entrypoint: string) {
         }
     }
 
-    const endpointOutputFile = compiler.createFile("endpoints.ts");
+    const endpointOutputFile = compiler.createFile(compiler.options.output.endpoints_output);
     const endpointStructure = new EndpointStructure(
         compiler,
         endpointOutputFile,

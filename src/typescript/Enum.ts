@@ -25,8 +25,8 @@ export class EnumStructure extends Structure {
     }
 
     serialize() {
-        return prependCommentLines(this.section.serialize())
-            + "\nexport enum " + this.name + " {\n"
+        return (this.compiler.options.comments ? prependCommentLines(this.section.serialize()) + "\n" : "")
+            + "export enum " + this.name + " {\n"
             + this.entries.map(entry => "    " + entry[0] + " = " + entry[1]).join(",\n")
             + "\n}";
     }

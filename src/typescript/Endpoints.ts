@@ -104,7 +104,7 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("requests/" + this.codename + "JsonParams.ts");
+                const file = this.compiler.createFile("requests/" + this.codename + "JsonParams");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -133,7 +133,7 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("requests/" + this.codename + "QueryParams.ts");
+                const file = this.compiler.createFile("requests/" + this.codename + "QueryParams");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -162,7 +162,7 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("responses/" + this.codename + "Response.ts");
+                const file = this.compiler.createFile("responses/" + this.codename + "Response");
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -220,24 +220,28 @@ export class EndpointStructure extends Structure {
     ) {
         super(compiler, file, null, name);
 
-        for (const request of this.requests) {
-            const jsonParamsStructure = request.findJsonParamsStructure();
-            const queryParamsStructure = request.findQueryParamsStructure();
-            const responseStructure = request.findResponse();
-    
-            if (jsonParamsStructure)
-                this.file.registerImport(jsonParamsStructure);
-                
-            if (queryParamsStructure)
-                this.file.registerImport(queryParamsStructure);
-                
-            if (responseStructure)
-                this.file.registerImport(responseStructure);
+        if (this.compiler.options.typings) {
+            for (const request of this.requests) {
+                const jsonParamsStructure = request.findJsonParamsStructure();
+                const queryParamsStructure = request.findQueryParamsStructure();
+                const responseStructure = request.findResponse();
+        
+                if (jsonParamsStructure)
+                    this.file.registerImport(jsonParamsStructure);
+                    
+                if (queryParamsStructure)
+                    this.file.registerImport(queryParamsStructure);
+                    
+                if (responseStructure)
+                    this.file.registerImport(responseStructure);
+            }
         }
     }
 
     serialize() {
-        let endpointText = `type DeclareEndpoint<
+        let endpointText = "";
+        
+        if (this.compiler.options.typings) endpointText += `type DeclareEndpoint<
     JSONParams extends Record<string, any> = {},
     QueryParams extends Record<string, any> = {},
     ResponseType extends Record<string, any> = {}
@@ -253,32 +257,38 @@ export type ExtractQueryParams<
 
 export type ExtractResponseType<
     T extends DeclareEndpoint<any, any, any>
-> = T extends DeclareEndpoint<any, any, infer X> ? X: never
+> = T extends DeclareEndpoint<any, any, infer X> ? X: never\n\n`;
 
-export const ApiEndpoints = {\n`;
+        endpointText += "export const ApiEndpoints = {\n";
     
         for (const request of this.requests) {
-            endpointText += indentMultilineString(prependCommentLines(request.section.serialize()));
-            endpointText += "\n    " + request.codename + ": ";
-            endpointText += "(("
-                + (request.params.map(param => param.name + ": string").join(", "))
+            if (this.compiler.options.comments) endpointText += indentMultilineString(prependCommentLines(request.section.serialize())) + "\n";
+            endpointText += "    " + request.codename + ": ";
+            if (this.compiler.options.typings) endpointText += "(";
+            endpointText += "("
+                + (request.params.map(param => param.name + (this.compiler.options.typings ? ": string" : "")).join(", "))
                 + ") => ";
             endpointText += "`/" + request.endpoint.parts.map(part =>
-                part.type === "param" ? "${" + part.name + "}" : part.name).join("/") + "`)";
+                part.type === "param" ? "${" + part.name + "}" : part.name).join("/") + "`";
+            if (this.compiler.options.typings) endpointText += ")";
 
-            endpointText += " as DeclareEndpoint<";
-            endpointText += request.jsonParamsStructure
-                ? request.jsonParamsStructure.name
-                : "{}";
-            endpointText += ", ";
-            endpointText += request.queryParamsStructure
-                ? request.queryParamsStructure.name
-                : "{}";
-            endpointText += ", ";
-            endpointText += request.responseStructure
-                ? request.responseStructure.name
-                : "{}";
-            endpointText += ">,\n";
+            if (this.compiler.options.typings) {
+                endpointText += " as DeclareEndpoint<";
+                endpointText += request.jsonParamsStructure
+                    ? request.jsonParamsStructure.name
+                    : "{}";
+                endpointText += ", ";
+                endpointText += request.queryParamsStructure
+                    ? request.queryParamsStructure.name
+                    : "{}";
+                endpointText += ", ";
+                endpointText += request.responseStructure
+                    ? request.responseStructure.name
+                    : "{}";
+                endpointText += ">";
+            }
+
+            endpointText += ",\n";
         }
 
         endpointText += "}";
