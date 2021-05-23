@@ -61,6 +61,8 @@ export class Endpoint {
     }
 }
 
+const returnsRegex = /Returns( \`?\d+\`? and)? (an?|the( (new|updated|created))?) \`?(?<object>.+?)\`?( objects?)?( on success)?(\.|,)/;
+
 export class DocumentedRequest {
     public jsonParamsStructure?: BaseStructure|null;
     public queryParamsStructure?: BaseStructure|null;
@@ -190,27 +192,73 @@ export class DocumentedRequest {
         if (structure) return structure;
 
         const haystack = this.section.getTextChildren().map(child => child.text).join(" ");
-        const matched = /Returns( \`?\d+\`? and)? (an?|the (new|updated)?) \`?(?<object>.+?)\`?( objects?)?( on success)?(?=\.|,)/.exec(haystack);
+        const all_occurences = haystack.match(RegExp(returnsRegex, "g"));
 
-        if (matched) {
-            const object = matched.groups?.object;
-
-            if (!object)
-                return null;
-
-            const stripped = object.replace(" object", "").replace(/(on )?success/, "").trim();
-
-            const resolved = this.compiler.resolveType(stripped);
-            const resolvedStructure = resolved.getRootSymbol().ref;
-
-            if (resolvedStructure instanceof BaseStructure) {
-                this.responseSymbol = resolved;
-
-                return resolved;
+        if (all_occurences) {
+            const last_occurence = all_occurences[all_occurences.length - 1];
+            const matched = returnsRegex.exec(last_occurence);
+    
+            if (matched) {
+                const object = matched.groups?.object;
+    
+                if (!object)
+                    return null;
+    
+                const stripped = object.replace(" object", "").replace(/(on )?success/, "").trim();
+    
+                const resolved = this.compiler.resolveType(stripped);
+                const resolvedStructure = resolved.getRootSymbol().ref;
+    
+                if (resolvedStructure instanceof BaseStructure) {
+                    this.responseSymbol = resolved;
+    
+                    return resolved;
+                }
             }
         }
 
         return null;
+    }
+
+    serialize() {
+        let endpointText = "";
+
+        if (this.compiler.options.comments) endpointText += indentMultilineString(prependCommentLines(this.section.serialize())) + "\n";
+        endpointText += "    " + this.getCodeFriendlyName() + ": ";
+        if (this.compiler.options.typings) endpointText += "(";
+
+        const params = this.getEndpointParams();
+
+        if (params.length) {
+            endpointText += "(\n        "
+                + (this.getEndpointParams().map(param => param.name + (this.compiler.options.typings ? ": string" : "")).join(",\n        "))
+                + "\n    ) => ";
+        } else {
+            endpointText += "() => ";
+        }
+
+        endpointText += "`/" + this.endpoint.parts.map(part =>
+            part.type === "param" ? "${" + part.name + "}" : part.name).join("/") + "`";
+
+        if (this.compiler.options.typings) {
+            endpointText += ")"
+
+            endpointText += " as DeclareEndpoint<";
+            endpointText += this.jsonParamsStructure
+                ? this.jsonParamsStructure.name
+                : "{}";
+            endpointText += ", ";
+            endpointText += this.queryParamsStructure
+                ? this.queryParamsStructure.name
+                : "{}";
+            endpointText += ", ";
+            endpointText += this.responseSymbol
+                ? this.responseSymbol.serialize()
+                : "{}";
+            endpointText += ">";
+        }
+
+        return endpointText
     }
 }
 
@@ -268,37 +316,7 @@ export type ExtractResponseType<
 > = T extends DeclareEndpoint<any, any, infer X> ? X: never\n\n`;
 
         endpointText += "export const ApiEndpoints = {\n";
-    
-        for (const request of this.requests) {
-            if (this.compiler.options.comments) endpointText += indentMultilineString(prependCommentLines(request.section.serialize())) + "\n";
-            endpointText += "    " + request.getCodeFriendlyName() + ": ";
-            if (this.compiler.options.typings) endpointText += "(";
-            endpointText += "("
-                + (request.getEndpointParams().map(param => param.name + (this.compiler.options.typings ? ": string" : "")).join(", "))
-                + ") => ";
-            endpointText += "`/" + request.endpoint.parts.map(part =>
-                part.type === "param" ? "${" + part.name + "}" : part.name).join("/") + "`";
-            if (this.compiler.options.typings) endpointText += ")";
-
-            if (this.compiler.options.typings) {
-                endpointText += " as DeclareEndpoint<";
-                endpointText += request.jsonParamsStructure
-                    ? request.jsonParamsStructure.name
-                    : "{}";
-                endpointText += ", ";
-                endpointText += request.queryParamsStructure
-                    ? request.queryParamsStructure.name
-                    : "{}";
-                endpointText += ", ";
-                endpointText += request.responseSymbol
-                    ? request.responseSymbol.serialize()
-                    : "{}";
-                endpointText += ">";
-            }
-
-            endpointText += ",\n";
-        }
-
+        endpointText += this.requests.map(request => request.serialize()).join(",\n");
         endpointText += "}";
 
         return endpointText;

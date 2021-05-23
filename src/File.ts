@@ -48,12 +48,21 @@ export class OutputFile {
 
         const imports = [...this.imports];
         imports.sort((a, b) => {
-            if (a.name < b.name) return -1;
-            if (b.name < a.name) return 1;
+            const aRelative = this.getRelativeImport(a.file);
+            const bRelative = this.getRelativeImport(b.file);
+            if (aRelative < bRelative) return -1;
+            if (bRelative < aRelative) return 1;
             return 0;
         });
 
-        for (const imp of imports) {
+        for (let i = 0; i < imports.length; i++) {
+            const imp = imports[i];
+            const last = imports[i - 1];
+            if (last) {
+                if (path.dirname(imp.file.filename) !== path.dirname(last.file.filename)) {
+                    out += "\n";
+                }
+            }
             out += `import { ${imp.name} } from "${this.getRelativeImport(imp.file)}";\n`;
         }
 

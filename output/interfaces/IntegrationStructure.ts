@@ -1,6 +1,7 @@
+import { IntegrationExpireBehaviors } from "../enums/IntegrationExpireBehaviors";
+
 import { IntegrationAccountStructure } from "./IntegrationAccountStructure";
 import { IntegrationApplicationStructure } from "./IntegrationApplicationStructure";
-import { IntegrationExpireBehaviors } from "../enums/IntegrationExpireBehaviors";
 import { UserStructure } from "./UserStructure";
 
 /**

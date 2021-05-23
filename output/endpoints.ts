@@ -1,11 +1,29 @@
-import { AddGuildMemberJsonParams } from "./requests/AddGuildMemberJsonParams";
 import { ApplicationCommand } from "./interfaces/ApplicationCommand";
+import { ApplicationStructure } from "./interfaces/ApplicationStructure";
 import { AuditLogStructure } from "./interfaces/AuditLogStructure";
 import { BanStructure } from "./interfaces/BanStructure";
-import { BeginGuildPruneJsonParams } from "./requests/BeginGuildPruneJsonParams";
-import { BulkDeleteMessagesJsonParams } from "./requests/BulkDeleteMessagesJsonParams";
 import { ChannelStructure } from "./interfaces/ChannelStructure";
 import { ConnectionStructure } from "./interfaces/ConnectionStructure";
+import { EmojiStructure } from "./interfaces/EmojiStructure";
+import { FollowedChannelStructure } from "./interfaces/FollowedChannelStructure";
+import { GuildApplicationCommandPermissions } from "./interfaces/GuildApplicationCommandPermissions";
+import { GuildMemberStructure } from "./interfaces/GuildMemberStructure";
+import { GuildPreviewStructure } from "./interfaces/GuildPreviewStructure";
+import { GuildStructure } from "./interfaces/GuildStructure";
+import { GuildTemplateStructure } from "./interfaces/GuildTemplateStructure";
+import { GuildWidgetStructure } from "./interfaces/GuildWidgetStructure";
+import { IntegrationStructure } from "./interfaces/IntegrationStructure";
+import { InviteStructure } from "./interfaces/InviteStructure";
+import { MessageStructure } from "./interfaces/MessageStructure";
+import { RoleStructure } from "./interfaces/RoleStructure";
+import { UserStructure } from "./interfaces/UserStructure";
+import { VoiceRegionStructure } from "./interfaces/VoiceRegionStructure";
+import { WebhookStructure } from "./interfaces/WebhookStructure";
+import { WelcomeScreenStructure } from "./interfaces/WelcomeScreenStructure";
+
+import { AddGuildMemberJsonParams } from "./requests/AddGuildMemberJsonParams";
+import { BeginGuildPruneJsonParams } from "./requests/BeginGuildPruneJsonParams";
+import { BulkDeleteMessagesJsonParams } from "./requests/BulkDeleteMessagesJsonParams";
 import { CreateChannelInviteJsonParams } from "./requests/CreateChannelInviteJsonParams";
 import { CreateDMJsonParams } from "./requests/CreateDMJsonParams";
 import { CreateGlobalApplicationCommandJsonParams } from "./requests/CreateGlobalApplicationCommandJsonParams";
@@ -27,42 +45,25 @@ import { EditGlobalApplicationCommandJsonParams } from "./requests/EditGlobalApp
 import { EditGuildApplicationCommandJsonParams } from "./requests/EditGuildApplicationCommandJsonParams";
 import { EditMessageJsonParams } from "./requests/EditMessageJsonParams";
 import { EditWebhookMessageJsonParams } from "./requests/EditWebhookMessageJsonParams";
-import { EmojiStructure } from "./interfaces/EmojiStructure";
 import { ExecuteGitHubCompatibleWebhookQueryParams } from "./requests/ExecuteGitHubCompatibleWebhookQueryParams";
 import { ExecuteSlackCompatibleWebhookQueryParams } from "./requests/ExecuteSlackCompatibleWebhookQueryParams";
 import { ExecuteWebhookJsonParams } from "./requests/ExecuteWebhookJsonParams";
 import { ExecuteWebhookQueryParams } from "./requests/ExecuteWebhookQueryParams";
 import { FollowNewsChannelJsonParams } from "./requests/FollowNewsChannelJsonParams";
-import { FollowedChannelStructure } from "./interfaces/FollowedChannelStructure";
 import { GetChannelMessagesQueryParams } from "./requests/GetChannelMessagesQueryParams";
-import { GetCurrentAuthorizationInformationResponse } from "./responses/GetCurrentAuthorizationInformationResponse";
 import { GetCurrentUserGuildsQueryParams } from "./requests/GetCurrentUserGuildsQueryParams";
 import { GetGatewayBotJsonParams } from "./requests/GetGatewayBotJsonParams";
-import { GetGatewayBotResponse } from "./responses/GetGatewayBotResponse";
 import { GetGuildAuditLogQueryParams } from "./requests/GetGuildAuditLogQueryParams";
 import { GetGuildPruneCountQueryParams } from "./requests/GetGuildPruneCountQueryParams";
 import { GetGuildQueryParams } from "./requests/GetGuildQueryParams";
-import { GetGuildResponse } from "./responses/GetGuildResponse";
 import { GetGuildWidgetImageQueryParams } from "./requests/GetGuildWidgetImageQueryParams";
 import { GetInviteQueryParams } from "./requests/GetInviteQueryParams";
 import { GetReactionsQueryParams } from "./requests/GetReactionsQueryParams";
 import { GroupDMAddRecipientJsonParams } from "./requests/GroupDMAddRecipientJsonParams";
-import { GuildApplicationCommandPermissions } from "./interfaces/GuildApplicationCommandPermissions";
-import { GuildMemberStructure } from "./interfaces/GuildMemberStructure";
-import { GuildStructure } from "./interfaces/GuildStructure";
-import { GuildTemplateStructure } from "./interfaces/GuildTemplateStructure";
-import { GuildWidgetStructure } from "./interfaces/GuildWidgetStructure";
-import { IntegrationStructure } from "./interfaces/IntegrationStructure";
-import { InviteStructure } from "./interfaces/InviteStructure";
-import { ListActiveThreadsResponse } from "./responses/ListActiveThreadsResponse";
 import { ListGuildMembersQueryParams } from "./requests/ListGuildMembersQueryParams";
 import { ListJoinedPrivateArchivedThreadsQueryParams } from "./requests/ListJoinedPrivateArchivedThreadsQueryParams";
-import { ListJoinedPrivateArchivedThreadsResponse } from "./responses/ListJoinedPrivateArchivedThreadsResponse";
 import { ListPrivateArchivedThreadsQueryParams } from "./requests/ListPrivateArchivedThreadsQueryParams";
-import { ListPrivateArchivedThreadsResponse } from "./responses/ListPrivateArchivedThreadsResponse";
 import { ListPublicArchivedThreadsQueryParams } from "./requests/ListPublicArchivedThreadsQueryParams";
-import { ListPublicArchivedThreadsResponse } from "./responses/ListPublicArchivedThreadsResponse";
-import { MessageStructure } from "./interfaces/MessageStructure";
 import { ModifyChannelJsonParams } from "./requests/ModifyChannelJsonParams";
 import { ModifyCurrentUserJsonParams } from "./requests/ModifyCurrentUserJsonParams";
 import { ModifyCurrentUserNickJsonParams } from "./requests/ModifyCurrentUserNickJsonParams";
@@ -74,17 +75,20 @@ import { ModifyGuildRoleJsonParams } from "./requests/ModifyGuildRoleJsonParams"
 import { ModifyGuildRolePositionsJsonParams } from "./requests/ModifyGuildRolePositionsJsonParams";
 import { ModifyGuildTemplateJsonParams } from "./requests/ModifyGuildTemplateJsonParams";
 import { ModifyWebhookJsonParams } from "./requests/ModifyWebhookJsonParams";
-import { RoleStructure } from "./interfaces/RoleStructure";
 import { SearchGuildMembersQueryParams } from "./requests/SearchGuildMembersQueryParams";
 import { StartThreadwithMessageJsonParams } from "./requests/StartThreadwithMessageJsonParams";
 import { StartThreadwithoutMessageJsonParams } from "./requests/StartThreadwithoutMessageJsonParams";
 import { UpdateCurrentUserVoiceStateJsonParams } from "./requests/UpdateCurrentUserVoiceStateJsonParams";
 import { UpdateStageInstanceJsonParams } from "./requests/UpdateStageInstanceJsonParams";
 import { UpdateUserVoiceStateJsonParams } from "./requests/UpdateUserVoiceStateJsonParams";
-import { UserStructure } from "./interfaces/UserStructure";
-import { VoiceRegionStructure } from "./interfaces/VoiceRegionStructure";
-import { WebhookStructure } from "./interfaces/WebhookStructure";
-import { WelcomeScreenStructure } from "./interfaces/WelcomeScreenStructure";
+
+import { GetCurrentAuthorizationInformationResponse } from "./responses/GetCurrentAuthorizationInformationResponse";
+import { GetGatewayBotResponse } from "./responses/GetGatewayBotResponse";
+import { GetGuildResponse } from "./responses/GetGuildResponse";
+import { ListActiveThreadsResponse } from "./responses/ListActiveThreadsResponse";
+import { ListJoinedPrivateArchivedThreadsResponse } from "./responses/ListJoinedPrivateArchivedThreadsResponse";
+import { ListPrivateArchivedThreadsResponse } from "./responses/ListPrivateArchivedThreadsResponse";
+import { ListPublicArchivedThreadsResponse } from "./responses/ListPublicArchivedThreadsResponse";
 
 type DeclareEndpoint<
     JSONParams extends Record<string, any> = {},
@@ -140,7 +144,9 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetEntitlements: ((applicationid: string) => `/applications/${applicationid}/entitlements`) as DeclareEndpoint<{}, {}, {}>,
+    GetEntitlements: ((
+        applicationid: string
+    ) => `/applications/${applicationid}/entitlements`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/game/sdk/store#get-entitlement-%-get-#applications#{application.id#docs/game/sdk/sdk/starter/guide#get-set-up}#entitlements#{entitlement.id#docs/game/sdk/store#data-models-entitlement-struct}
      * 
@@ -171,7 +177,10 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetEntitlement: ((applicationid: string, entitlementid: string) => `/applications/${applicationid}/entitlements/${entitlementid}`) as DeclareEndpoint<{}, {}, {}>,
+    GetEntitlement: ((
+        applicationid: string,
+        entitlementid: string
+    ) => `/applications/${applicationid}/entitlements/${entitlementid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/game/sdk/store#get-skus-%-get-#applications#{application.id#docs/game/sdk/sdk/starter/guide#get-set-up}#skus
      * 
@@ -210,7 +219,9 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetSKUs: ((applicationid: string) => `/applications/${applicationid}/skus`) as DeclareEndpoint<{}, {}, {}>,
+    GetSKUs: ((
+        applicationid: string
+    ) => `/applications/${applicationid}/skus`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/game/sdk/store#consume-sku-%-post-#applications#{application.id#docs/game/sdk/sdk/starter/guide#get-set-up}#entitlements#{entitlement.id#docs/game/sdk/store#data-models-entitlement-struct}#consume
      * 
@@ -227,7 +238,10 @@ export const ApiEndpoints = {
      * // Returns 204 No Content
      * ```
      */
-    ConsumeSKU: ((applicationid: string, entitlementid: string) => `/applications/${applicationid}/entitlements/${entitlementid}/consume`) as DeclareEndpoint<{}, {}, {}>,
+    ConsumeSKU: ((
+        applicationid: string,
+        entitlementid: string
+    ) => `/applications/${applicationid}/entitlements/${entitlementid}/consume`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/game/sdk/store#delete-test-entitlement-%-delete-#applications#{application.id#docs/game/sdk/sdk/starter/guide#get-set-up}#entitlements#{entitlement.id#docs/game/sdk/store#data-models-entitlement-struct}
      * 
@@ -245,7 +259,10 @@ export const ApiEndpoints = {
      * // Returns 204 No Content
      * ```
      */
-    DeleteTestEntitlement: ((applicationid: string, entitlementid: string) => `/applications/${applicationid}/entitlements/${entitlementid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteTestEntitlement: ((
+        applicationid: string,
+        entitlementid: string
+    ) => `/applications/${applicationid}/entitlements/${entitlementid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/game/sdk/store#create-purchase-discount-%-put-#store#skus#{sku.id#docs/game/sdk/store#data-models-sku-struct}#discounts#{user.id#docs/resources/user#user-object}
      * 
@@ -267,7 +284,10 @@ export const ApiEndpoints = {
      * // Returns 204 No Content
      * ```
      */
-    CreatePurchaseDiscount: ((skuid: string, userid: string) => `/store/skus/${skuid}/discounts/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    CreatePurchaseDiscount: ((
+        skuid: string,
+        userid: string
+    ) => `/store/skus/${skuid}/discounts/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/game/sdk/store#delete-purchase-discount-%-delete-#store#skus#{sku.id#docs/game/sdk/store#data-models-sku-struct}#discounts#{user.id#docs/resources/user#user-object}
      * 
@@ -285,7 +305,10 @@ export const ApiEndpoints = {
      * // Returns 204 No Content
      * ```
      */
-    DeletePurchaseDiscount: ((skuid: string, userid: string) => `/store/skus/${skuid}/discounts/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeletePurchaseDiscount: ((
+        skuid: string,
+        userid: string
+    ) => `/store/skus/${skuid}/discounts/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#get-global-application-commands-%-get-#applications#{application.id#docs/resources/application#application-object}#commands
      * 
@@ -293,7 +316,9 @@ export const ApiEndpoints = {
      * [ApplicationCommand](#DOCS_INTERACTIONS_SLASH_COMMANDS/applicationcommand) 
      * objects.
      */
-    GetGlobalApplicationCommands: ((applicationid: string) => `/applications/${applicationid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
+    GetGlobalApplicationCommands: ((
+        applicationid: string
+    ) => `/applications/${applicationid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#create-global-application-command-%-post-#applications#{application.id#docs/resources/application#application-object}#commands
      * 
@@ -305,7 +330,9 @@ export const ApiEndpoints = {
      * Creating a command with the same name as an existing command for your 
      * application will overwrite the old command.
      */
-    CreateGlobalApplicationCommand: ((applicationid: string) => `/applications/${applicationid}/commands`) as DeclareEndpoint<CreateGlobalApplicationCommandJsonParams, {}, ApplicationCommand>,
+    CreateGlobalApplicationCommand: ((
+        applicationid: string
+    ) => `/applications/${applicationid}/commands`) as DeclareEndpoint<CreateGlobalApplicationCommandJsonParams, {}, ApplicationCommand>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#get-global-application-command-%-get-#applications#{application.id#docs/resources/application#application-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}
      * 
@@ -313,7 +340,10 @@ export const ApiEndpoints = {
      * [ApplicationCommand](#DOCS_INTERACTIONS_SLASH_COMMANDS/applicationcommand) 
      * object.
      */
-    GetGlobalApplicationCommand: ((applicationid: string, commandid: string) => `/applications/${applicationid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, ApplicationCommand>,
+    GetGlobalApplicationCommand: ((
+        applicationid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, ApplicationCommand>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#edit-global-application-command-%-patch-#applications#{application.id#docs/resources/application#application-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}
      * 
@@ -324,13 +354,19 @@ export const ApiEndpoints = {
      * 
      * All parameters for this endpoint are optional.
      */
-    EditGlobalApplicationCommand: ((applicationid: string, commandid: string) => `/applications/${applicationid}/commands/${commandid}`) as DeclareEndpoint<EditGlobalApplicationCommandJsonParams, {}, ApplicationCommand>,
+    EditGlobalApplicationCommand: ((
+        applicationid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/commands/${commandid}`) as DeclareEndpoint<EditGlobalApplicationCommandJsonParams, {}, ApplicationCommand>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#delete-global-application-command-%-delete-#applications#{application.id#docs/resources/application#application-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}
      * 
      * Deletes a global command. Returns `204`.
      */
-    DeleteGlobalApplicationCommand: ((applicationid: string, commandid: string) => `/applications/${applicationid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGlobalApplicationCommand: ((
+        applicationid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#get-guild-application-commands-%-get-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands
      * 
@@ -339,7 +375,10 @@ export const ApiEndpoints = {
      * [ApplicationCommand](#DOCS_INTERACTIONS_SLASH_COMMANDS/applicationcommand) 
      * objects.
      */
-    GetGuildApplicationCommands: ((applicationid: string, guildid: string) => `/applications/${applicationid}/guilds/${guildid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
+    GetGuildApplicationCommands: ((
+        applicationid: string,
+        guildid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#bulk-overwrite-global-application-commands-%-put-#applications#{application.id#docs/resources/application#application-object}#commands
      * 
@@ -350,7 +389,9 @@ export const ApiEndpoints = {
      * objects. Commands that do not already exist will count toward daily application 
      * command create limits.
      */
-    BulkOverwriteGlobalApplicationCommands: ((applicationid: string) => `/applications/${applicationid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
+    BulkOverwriteGlobalApplicationCommands: ((
+        applicationid: string
+    ) => `/applications/${applicationid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#create-guild-application-command-%-post-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands
      * 
@@ -363,7 +404,10 @@ export const ApiEndpoints = {
      * Creating a command with the same name as an existing command for your 
      * application will overwrite the old command.
      */
-    CreateGuildApplicationCommand: ((applicationid: string, guildid: string) => `/applications/${applicationid}/guilds/${guildid}/commands`) as DeclareEndpoint<CreateGuildApplicationCommandJsonParams, {}, ApplicationCommand>,
+    CreateGuildApplicationCommand: ((
+        applicationid: string,
+        guildid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands`) as DeclareEndpoint<CreateGuildApplicationCommandJsonParams, {}, ApplicationCommand>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#get-guild-application-command-%-get-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}
      * 
@@ -371,7 +415,11 @@ export const ApiEndpoints = {
      * [ApplicationCommand](#DOCS_INTERACTIONS_SLASH_COMMANDS/applicationcommand) 
      * object.
      */
-    GetGuildApplicationCommand: ((applicationid: string, guildid: string, commandid: string) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, ApplicationCommand>,
+    GetGuildApplicationCommand: ((
+        applicationid: string,
+        guildid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, ApplicationCommand>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#edit-guild-application-command-%-patch-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}
      * 
@@ -382,13 +430,21 @@ export const ApiEndpoints = {
      * 
      * All parameters for this endpoint are optional.
      */
-    EditGuildApplicationCommand: ((applicationid: string, guildid: string, commandid: string) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}`) as DeclareEndpoint<EditGuildApplicationCommandJsonParams, {}, ApplicationCommand>,
+    EditGuildApplicationCommand: ((
+        applicationid: string,
+        guildid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}`) as DeclareEndpoint<EditGuildApplicationCommandJsonParams, {}, ApplicationCommand>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#delete-guild-application-command-%-delete-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}
      * 
      * Delete a guild command. Returns `204` on success.
      */
-    DeleteGuildApplicationCommand: ((applicationid: string, guildid: string, commandid: string) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuildApplicationCommand: ((
+        applicationid: string,
+        guildid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#bulk-overwrite-guild-application-commands-%-put-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands
      * 
@@ -397,34 +453,49 @@ export const ApiEndpoints = {
      * [ApplicationCommand](#DOCS_INTERACTIONS_SLASH_COMMANDS/applicationcommand) 
      * objects.
      */
-    BulkOverwriteGuildApplicationCommands: ((applicationid: string, guildid: string) => `/applications/${applicationid}/guilds/${guildid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
+    BulkOverwriteGuildApplicationCommands: ((
+        applicationid: string,
+        guildid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands`) as DeclareEndpoint<{}, {}, ApplicationCommand[]>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#create-interaction-response-%-post-#interactions#{interaction.id#docs/interactions/slash/commands#interaction}#{interaction.token#docs/interactions/slash/commands#interaction}#callback
      * 
      * Create a response to an Interaction from the gateway. Takes an [Interaction 
      * response](#DOCS_INTERACTIONS_SLASH_COMMANDS/interaction-response).
      */
-    CreateInteractionResponse: ((interactionid: string, interactiontoken: string) => `/interactions/${interactionid}/${interactiontoken}/callback`) as DeclareEndpoint<{}, {}, {}>,
+    CreateInteractionResponse: ((
+        interactionid: string,
+        interactiontoken: string
+    ) => `/interactions/${interactionid}/${interactiontoken}/callback`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#get-original-interaction-response-%-get-#webhooks#{application.id#docs/resources/application#application-object}#{interaction.token#docs/interactions/slash/commands#interaction}#messages#@original
      * 
      * Returns the initial Interaction response. Functions the same as [Get Webhook 
      * Message](#DOCS_RESOURCES_WEBHOOK/get-webhook-message).
      */
-    GetOriginalInteractionResponse: ((applicationid: string, interactiontoken: string) => `/webhooks/${applicationid}/${interactiontoken}/messages/@original`) as DeclareEndpoint<{}, {}, {}>,
+    GetOriginalInteractionResponse: ((
+        applicationid: string,
+        interactiontoken: string
+    ) => `/webhooks/${applicationid}/${interactiontoken}/messages/@original`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#edit-original-interaction-response-%-patch-#webhooks#{application.id#docs/resources/application#application-object}#{interaction.token#docs/interactions/slash/commands#interaction}#messages#@original
      * 
      * Edits the initial Interaction response. Functions the same as [Edit Webhook 
      * Message](#DOCS_RESOURCES_WEBHOOK/edit-webhook-message).
      */
-    EditOriginalInteractionResponse: ((applicationid: string, interactiontoken: string) => `/webhooks/${applicationid}/${interactiontoken}/messages/@original`) as DeclareEndpoint<{}, {}, {}>,
+    EditOriginalInteractionResponse: ((
+        applicationid: string,
+        interactiontoken: string
+    ) => `/webhooks/${applicationid}/${interactiontoken}/messages/@original`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#delete-original-interaction-response-%-delete-#webhooks#{application.id#docs/resources/application#application-object}#{interaction.token#docs/interactions/slash/commands#interaction}#messages#@original
      * 
      * Deletes the initial Interaction response. Returns `204` on success.
      */
-    DeleteOriginalInteractionResponse: ((applicationid: string, interactiontoken: string) => `/webhooks/${applicationid}/${interactiontoken}/messages/@original`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteOriginalInteractionResponse: ((
+        applicationid: string,
+        interactiontoken: string
+    ) => `/webhooks/${applicationid}/${interactiontoken}/messages/@original`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#create-followup-message-%-post-#webhooks#{application.id#docs/resources/application#application-object}#{interaction.token#docs/interactions/slash/commands#interaction}
      * 
@@ -434,20 +505,31 @@ export const ApiEndpoints = {
      * `thread_id` query parameter is not required (and is furthermore ignored) when 
      * using this endpoint for interaction followups.
      */
-    CreateFollowupMessage: ((applicationid: string, interactiontoken: string) => `/webhooks/${applicationid}/${interactiontoken}`) as DeclareEndpoint<{}, {}, {}>,
+    CreateFollowupMessage: ((
+        applicationid: string,
+        interactiontoken: string
+    ) => `/webhooks/${applicationid}/${interactiontoken}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#edit-followup-message-%-patch-#webhooks#{application.id#docs/resources/application#application-object}#{interaction.token#docs/interactions/slash/commands#interaction}#messages#{message.id#docs/resources/channel#message-object}
      * 
      * Edits a followup message for an Interaction. Functions the same as [Edit Webhook 
      * Message](#DOCS_RESOURCES_WEBHOOK/edit-webhook-message).
      */
-    EditFollowupMessage: ((applicationid: string, interactiontoken: string, messageid: string) => `/webhooks/${applicationid}/${interactiontoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    EditFollowupMessage: ((
+        applicationid: string,
+        interactiontoken: string,
+        messageid: string
+    ) => `/webhooks/${applicationid}/${interactiontoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#delete-followup-message-%-delete-#webhooks#{application.id#docs/resources/application#application-object}#{interaction.token#docs/interactions/slash/commands#interaction}#messages#{message.id#docs/resources/channel#message-object}
      * 
      * Deletes a followup message for an Interaction. Returns `204` on success.
      */
-    DeleteFollowupMessage: ((applicationid: string, interactiontoken: string, messageid: string) => `/webhooks/${applicationid}/${interactiontoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteFollowupMessage: ((
+        applicationid: string,
+        interactiontoken: string,
+        messageid: string
+    ) => `/webhooks/${applicationid}/${interactiontoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#get-guild-application-command-permissions-%-get-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands#permissions
      * 
@@ -456,7 +538,10 @@ export const ApiEndpoints = {
      * [GuildApplicationCommandPermissions](#DOCS_INTERACTIONS_SLASH_COMMANDS/guildapplicationcommandpermissions) 
      * objects.
      */
-    GetGuildApplicationCommandPermissions: ((applicationid: string, guildid: string) => `/applications/${applicationid}/guilds/${guildid}/commands/permissions`) as DeclareEndpoint<{}, {}, GuildApplicationCommandPermissions[]>,
+    GetGuildApplicationCommandPermissions: ((
+        applicationid: string,
+        guildid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands/permissions`) as DeclareEndpoint<{}, {}, GuildApplicationCommandPermissions[]>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#get-application-command-permissions-%-get-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}#permissions
      * 
@@ -465,7 +550,11 @@ export const ApiEndpoints = {
      * [GuildApplicationCommandPermissions](#DOCS_INTERACTIONS_SLASH_COMMANDS/guildapplicationcommandpermissions) 
      * object.
      */
-    GetApplicationCommandPermissions: ((applicationid: string, guildid: string, commandid: string) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}/permissions`) as DeclareEndpoint<{}, {}, GuildApplicationCommandPermissions>,
+    GetApplicationCommandPermissions: ((
+        applicationid: string,
+        guildid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}/permissions`) as DeclareEndpoint<{}, {}, GuildApplicationCommandPermissions>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#edit-application-command-permissions-%-put-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands#{command.id#docs/interactions/slash/commands#applicationcommand}#permissions
      * 
@@ -477,7 +566,11 @@ export const ApiEndpoints = {
      * Deleting or renaming a command will permanently delete all permissions for that 
      * command
      */
-    EditApplicationCommandPermissions: ((applicationid: string, guildid: string, commandid: string) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}/permissions`) as DeclareEndpoint<EditApplicationCommandPermissionsJsonParams, {}, {}>,
+    EditApplicationCommandPermissions: ((
+        applicationid: string,
+        guildid: string,
+        commandid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands/${commandid}/permissions`) as DeclareEndpoint<EditApplicationCommandPermissionsJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/interactions/slash/commands#batch-edit-application-command-permissions-%-put-#applications#{application.id#docs/resources/application#application-object}#guilds#{guild.id#docs/resources/guild#guild-object}#commands#permissions
      * 
@@ -526,14 +619,19 @@ export const ApiEndpoints = {
      * r = requests.put(url, headers=headers, json=json)
      * ```
      */
-    BatchEditApplicationCommandPermissions: ((applicationid: string, guildid: string) => `/applications/${applicationid}/guilds/${guildid}/commands/permissions`) as DeclareEndpoint<{}, {}, {}>,
+    BatchEditApplicationCommandPermissions: ((
+        applicationid: string,
+        guildid: string
+    ) => `/applications/${applicationid}/guilds/${guildid}/commands/permissions`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/audit/log#get-guild-audit-log-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#audit-logs
      * 
      * Returns an [audit log](#DOCS_RESOURCES_AUDIT_LOG/audit-log-object) object for 
      * the guild. Requires the 'VIEW_AUDIT_LOG' permission.
      */
-    GetGuildAuditLog: ((guildid: string) => `/guilds/${guildid}/audit-logs`) as DeclareEndpoint<{}, GetGuildAuditLogQueryParams, AuditLogStructure>,
+    GetGuildAuditLog: ((
+        guildid: string
+    ) => `/guilds/${guildid}/audit-logs`) as DeclareEndpoint<{}, GetGuildAuditLogQueryParams, AuditLogStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-channel-%-get-#channels#{channel.id#docs/resources/channel#channel-object}
      * 
@@ -542,7 +640,9 @@ export const ApiEndpoints = {
      * member](#DOCS_RESOURCES_CHANNEL/thread-member-object) object is included in the 
      * returned result.
      */
-    GetChannel: ((channelid: string) => `/channels/${channelid}`) as DeclareEndpoint<{}, {}, ChannelStructure>,
+    GetChannel: ((
+        channelid: string
+    ) => `/channels/${channelid}`) as DeclareEndpoint<{}, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#modify-channel-%-patch-#channels#{channel.id#docs/resources/channel#channel-object}
      * 
@@ -550,7 +650,9 @@ export const ApiEndpoints = {
      * [channel](#DOCS_RESOURCES_CHANNEL/channel-object) on success, and a 400 BAD 
      * REQUEST on invalid parameters. All JSON parameters are optional.
      */
-    ModifyChannel: ((channelid: string) => `/channels/${channelid}`) as DeclareEndpoint<ModifyChannelJsonParams, {}, ChannelStructure>,
+    ModifyChannel: ((
+        channelid: string
+    ) => `/channels/${channelid}`) as DeclareEndpoint<ModifyChannelJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete#close-channel-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}
      * 
@@ -571,7 +673,9 @@ export const ApiEndpoints = {
      * For Community guilds, the Rules or Guidelines channel and the Community Updates 
      * channel cannot be deleted.
      */
-    DeleteChannel: ((channelid: string) => `/channels/${channelid}`) as DeclareEndpoint<{}, {}, ChannelStructure>,
+    DeleteChannel: ((
+        channelid: string
+    ) => `/channels/${channelid}`) as DeclareEndpoint<{}, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-channel-messages-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#messages
      * 
@@ -585,7 +689,9 @@ export const ApiEndpoints = {
      * The before, after, and around keys are mutually exclusive, only one may be 
      * passed at a time.
      */
-    GetChannelMessages: ((channelid: string) => `/channels/${channelid}/messages`) as DeclareEndpoint<{}, GetChannelMessagesQueryParams, MessageStructure[]>,
+    GetChannelMessages: ((
+        channelid: string
+    ) => `/channels/${channelid}/messages`) as DeclareEndpoint<{}, GetChannelMessagesQueryParams, MessageStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-channel-message-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}
      * 
@@ -594,7 +700,10 @@ export const ApiEndpoints = {
      * current user. Returns a [message](#DOCS_RESOURCES_CHANNEL/message-object) object 
      * on success.
      */
-    GetChannelMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    GetChannelMessage: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<{}, {}, MessageStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#create-message-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#messages
      * 
@@ -638,7 +747,9 @@ export const ApiEndpoints = {
      * --boundary--
      * ```
      */
-    CreateMessage: ((channelid: string) => `/channels/${channelid}/messages`) as DeclareEndpoint<CreateMessageJsonParams, {}, MessageStructure>,
+    CreateMessage: ((
+        channelid: string
+    ) => `/channels/${channelid}/messages`) as DeclareEndpoint<CreateMessageJsonParams, {}, MessageStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#crosspost-message-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#crosspost
      * 
@@ -648,7 +759,10 @@ export const ApiEndpoints = {
      * present for the current user.
      * Returns a [message](#DOCS_RESOURCES_CHANNEL/message-object) object.
      */
-    CrosspostMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}/crosspost`) as DeclareEndpoint<{}, {}, MessageStructure>,
+    CrosspostMessage: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/messages/${messageid}/crosspost`) as DeclareEndpoint<{}, {}, MessageStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#create-reaction-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#reactions#{emoji#docs/resources/emoji#emoji-object}#@me
      * 
@@ -662,7 +776,11 @@ export const ApiEndpoints = {
      * fail with `10014: Unknown Emoji`. To use custom emoji, you must encode it in the 
      * format `name:id` with the emoji name and emoji id.
      */
-    CreateReaction: ((channelid: string, messageid: string, emoji: string) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}/@me`) as DeclareEndpoint<{}, {}, {}>,
+    CreateReaction: ((
+        channelid: string,
+        messageid: string,
+        emoji: string
+    ) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}/@me`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete-own-reaction-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#reactions#{emoji#docs/resources/emoji#emoji-object}#@me
      * 
@@ -673,7 +791,11 @@ export const ApiEndpoints = {
      * fail with `10014: Unknown Emoji`. To use custom emoji, you must encode it in the 
      * format `name:id` with the emoji name and emoji id.
      */
-    DeleteOwnReaction: ((channelid: string, messageid: string, emoji: string) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}/@me`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteOwnReaction: ((
+        channelid: string,
+        messageid: string,
+        emoji: string
+    ) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}/@me`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete-user-reaction-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#reactions#{emoji#docs/resources/emoji#emoji-object}#{user.id#docs/resources/user#user-object}
      * 
@@ -685,7 +807,12 @@ export const ApiEndpoints = {
      * fail with `10014: Unknown Emoji`. To use custom emoji, you must encode it in the 
      * format `name:id` with the emoji name and emoji id.
      */
-    DeleteUserReaction: ((channelid: string, messageid: string, emoji: string, userid: string) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteUserReaction: ((
+        channelid: string,
+        messageid: string,
+        emoji: string,
+        userid: string
+    ) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-reactions-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#reactions#{emoji#docs/resources/emoji#emoji-object}
      * 
@@ -696,7 +823,11 @@ export const ApiEndpoints = {
      * fail with `10014: Unknown Emoji`. To use custom emoji, you must encode it in the 
      * format `name:id` with the emoji name and emoji id.
      */
-    GetReactions: ((channelid: string, messageid: string, emoji: string) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}`) as DeclareEndpoint<{}, GetReactionsQueryParams, UserStructure[]>,
+    GetReactions: ((
+        channelid: string,
+        messageid: string,
+        emoji: string
+    ) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}`) as DeclareEndpoint<{}, GetReactionsQueryParams, UserStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete-all-reactions-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#reactions
      * 
@@ -704,7 +835,10 @@ export const ApiEndpoints = {
      * permission to be present on the current user. Fires a [Message Reaction Remove 
      * All](#DOCS_TOPICS_GATEWAY/message-reaction-remove-all) Gateway event.
      */
-    DeleteAllReactions: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}/reactions`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteAllReactions: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/messages/${messageid}/reactions`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#reactions#{emoji#docs/resources/emoji#emoji-object}
      * 
@@ -717,7 +851,11 @@ export const ApiEndpoints = {
      * fail with `10014: Unknown Emoji`. To use custom emoji, you must encode it in the 
      * format `name:id` with the emoji name and emoji id.
      */
-    DeleteAllReactionsforEmoji: ((channelid: string, messageid: string, emoji: string) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteAllReactionsforEmoji: ((
+        channelid: string,
+        messageid: string,
+        emoji: string
+    ) => `/channels/${channelid}/messages/${messageid}/reactions/${emoji}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#edit-message-%-patch-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}
      * 
@@ -751,7 +889,10 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional and nullable.
      */
-    EditMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<EditMessageJsonParams, {}, MessageStructure>,
+    EditMessage: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<EditMessageJsonParams, {}, MessageStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete-message-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}
      * 
@@ -760,7 +901,10 @@ export const ApiEndpoints = {
      * `MANAGE_MESSAGES` permission. Returns a 204 empty response on success. Fires a 
      * [Message Delete](#DOCS_TOPICS_GATEWAY/message-delete) Gateway event.
      */
-    DeleteMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteMessage: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#bulk-delete-messages-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#messages#bulk-delete
      * 
@@ -775,7 +919,9 @@ export const ApiEndpoints = {
      * 400 BAD REQUEST if any message provided is older than that or if any duplicate 
      * message IDs are provided.
      */
-    BulkDeleteMessages: ((channelid: string) => `/channels/${channelid}/messages/bulk-delete`) as DeclareEndpoint<BulkDeleteMessagesJsonParams, {}, {}>,
+    BulkDeleteMessages: ((
+        channelid: string
+    ) => `/channels/${channelid}/messages/bulk-delete`) as DeclareEndpoint<BulkDeleteMessagesJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#edit-channel-permissions-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#permissions#{overwrite.id#docs/resources/channel#overwrite-object}
      * 
@@ -786,7 +932,10 @@ export const ApiEndpoints = {
      * response on success. For more information about permissions, see 
      * [permissions](#DOCS_TOPICS_PERMISSIONS/permissions).
      */
-    EditChannelPermissions: ((channelid: string, overwriteid: string) => `/channels/${channelid}/permissions/${overwriteid}`) as DeclareEndpoint<EditChannelPermissionsJsonParams, {}, {}>,
+    EditChannelPermissions: ((
+        channelid: string,
+        overwriteid: string
+    ) => `/channels/${channelid}/permissions/${overwriteid}`) as DeclareEndpoint<EditChannelPermissionsJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-channel-invites-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#invites
      * 
@@ -795,7 +944,9 @@ export const ApiEndpoints = {
      * channel. Only usable for guild channels. Requires the `MANAGE_CHANNELS` 
      * permission.
      */
-    GetChannelInvites: ((channelid: string) => `/channels/${channelid}/invites`) as DeclareEndpoint<{}, {}, InviteStructure[]>,
+    GetChannelInvites: ((
+        channelid: string
+    ) => `/channels/${channelid}/invites`) as DeclareEndpoint<{}, {}, InviteStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/channel#create-channel-invite-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#invites
      * 
@@ -807,7 +958,9 @@ export const ApiEndpoints = {
      * object. Fires an [Invite Create](#DOCS_TOPICS_GATEWAY/invite-create) Gateway 
      * event.
      */
-    CreateChannelInvite: ((channelid: string) => `/channels/${channelid}/invites`) as DeclareEndpoint<CreateChannelInviteJsonParams, {}, InviteStructure>,
+    CreateChannelInvite: ((
+        channelid: string
+    ) => `/channels/${channelid}/invites`) as DeclareEndpoint<CreateChannelInviteJsonParams, {}, InviteStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#delete-channel-permission-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#permissions#{overwrite.id#docs/resources/channel#overwrite-object}
      * 
@@ -816,7 +969,10 @@ export const ApiEndpoints = {
      * empty response on success. For more information about permissions, see 
      * [permissions](#DOCS_TOPICS_PERMISSIONS/permissions)
      */
-    DeleteChannelPermission: ((channelid: string, overwriteid: string) => `/channels/${channelid}/permissions/${overwriteid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteChannelPermission: ((
+        channelid: string,
+        overwriteid: string
+    ) => `/channels/${channelid}/permissions/${overwriteid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#follow-news-channel-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#followers
      * 
@@ -824,7 +980,9 @@ export const ApiEndpoints = {
      * `MANAGE_WEBHOOKS` permission in the target channel. Returns a [followed 
      * channel](#DOCS_RESOURCES_CHANNEL/followed-channel-object) object.
      */
-    FollowNewsChannel: ((channelid: string) => `/channels/${channelid}/followers`) as DeclareEndpoint<FollowNewsChannelJsonParams, {}, FollowedChannelStructure>,
+    FollowNewsChannel: ((
+        channelid: string
+    ) => `/channels/${channelid}/followers`) as DeclareEndpoint<FollowNewsChannelJsonParams, {}, FollowedChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#trigger-typing-indicator-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#typing
      * 
@@ -835,14 +993,18 @@ export const ApiEndpoints = {
      * on success. Fires a [Typing Start](#DOCS_TOPICS_GATEWAY/typing-start) Gateway 
      * event.
      */
-    TriggerTypingIndicator: ((channelid: string) => `/channels/${channelid}/typing`) as DeclareEndpoint<{}, {}, {}>,
+    TriggerTypingIndicator: ((
+        channelid: string
+    ) => `/channels/${channelid}/typing`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#get-pinned-messages-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#pins
      * 
      * Returns all pinned messages in the channel as an array of 
      * [message](#DOCS_RESOURCES_CHANNEL/message-object) objects.
      */
-    GetPinnedMessages: ((channelid: string) => `/channels/${channelid}/pins`) as DeclareEndpoint<{}, {}, {}>,
+    GetPinnedMessages: ((
+        channelid: string
+    ) => `/channels/${channelid}/pins`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#pin-message-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#pins#{message.id#docs/resources/channel#message-object}
      * 
@@ -851,26 +1013,38 @@ export const ApiEndpoints = {
      * 
      * The max pinned messages is 50.
      */
-    PinMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/pins/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    PinMessage: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/pins/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#unpin-message-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#pins#{message.id#docs/resources/channel#message-object}
      * 
      * Unpin a message in a channel. Requires the `MANAGE_MESSAGES` permission. Returns 
      * a 204 empty response on success.
      */
-    UnpinMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/pins/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    UnpinMessage: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/pins/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#recipients#{user.id#docs/resources/user#user-object}
      * 
      * Adds a recipient to a Group DM using their access token.
      */
-    GroupDMAddRecipient: ((channelid: string, userid: string) => `/channels/${channelid}/recipients/${userid}`) as DeclareEndpoint<GroupDMAddRecipientJsonParams, {}, {}>,
+    GroupDMAddRecipient: ((
+        channelid: string,
+        userid: string
+    ) => `/channels/${channelid}/recipients/${userid}`) as DeclareEndpoint<GroupDMAddRecipientJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#recipients#{user.id#docs/resources/user#user-object}
      * 
      * Removes a recipient from a Group DM.
      */
-    GroupDMRemoveRecipient: ((channelid: string, userid: string) => `/channels/${channelid}/recipients/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    GroupDMRemoveRecipient: ((
+        channelid: string,
+        userid: string
+    ) => `/channels/${channelid}/recipients/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#start-thread-with-message-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#messages#{message.id#docs/resources/channel#message-object}#threads
      * 
@@ -883,7 +1057,10 @@ export const ApiEndpoints = {
      * created thread will be the same as the id of the message, and as such a message 
      * can only have a single thread created from it.
      */
-    StartThreadwithMessage: ((channelid: string, messageid: string) => `/channels/${channelid}/messages/${messageid}/threads`) as DeclareEndpoint<StartThreadwithMessageJsonParams, {}, ChannelStructure>,
+    StartThreadwithMessage: ((
+        channelid: string,
+        messageid: string
+    ) => `/channels/${channelid}/messages/${messageid}/threads`) as DeclareEndpoint<StartThreadwithMessageJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#start-thread-without-message-%-post-#channels#{channel.id#docs/resources/channel#channel-object}#threads
      * 
@@ -893,7 +1070,9 @@ export const ApiEndpoints = {
      * REQUEST on invalid parameters. Fires a [Thread 
      * Create](#DOCS_TOPICS_GATEWAY/thread-create) Gateway event.
      */
-    StartThreadwithoutMessage: ((channelid: string) => `/channels/${channelid}/threads`) as DeclareEndpoint<StartThreadwithoutMessageJsonParams, {}, ChannelStructure>,
+    StartThreadwithoutMessage: ((
+        channelid: string
+    ) => `/channels/${channelid}/threads`) as DeclareEndpoint<StartThreadwithoutMessageJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/channel#join-thread-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#@me
      * 
@@ -901,7 +1080,9 @@ export const ApiEndpoints = {
      * Returns a 204 empty response on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    JoinThread: ((channelid: string) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, {}>,
+    JoinThread: ((
+        channelid: string
+    ) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#add-thread-member-%-put-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#{user.id#docs/resources/user#user-object}
      * 
@@ -910,7 +1091,10 @@ export const ApiEndpoints = {
      * on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    AddThreadMember: ((channelid: string, userid: string) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    AddThreadMember: ((
+        channelid: string,
+        userid: string
+    ) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#leave-thread-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#@me
      * 
@@ -918,7 +1102,9 @@ export const ApiEndpoints = {
      * archived. Returns a 204 empty response on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    LeaveThread: ((channelid: string) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, {}>,
+    LeaveThread: ((
+        channelid: string
+    ) => `/channels/${channelid}/thread-members/@me`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#remove-thread-member-%-delete-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members#{user.id#docs/resources/user#user-object}
      * 
@@ -927,7 +1113,10 @@ export const ApiEndpoints = {
      * archived. Returns a 204 empty response on success. Fires a [Thread Members 
      * Update](#DOCS_TOPICS_GATEWAY/thread-members-update) Gateway event.
      */
-    RemoveThreadMember: ((channelid: string, userid: string) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveThreadMember: ((
+        channelid: string,
+        userid: string
+    ) => `/channels/${channelid}/thread-members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#list-thread-members-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#thread-members
      * 
@@ -938,7 +1127,9 @@ export const ApiEndpoints = {
      * Intent](#DOCS_TOPICS_GATEWAY/privileged-intents) is enabled for your 
      * application.
      */
-    ListThreadMembers: ((channelid: string) => `/channels/${channelid}/thread-members`) as DeclareEndpoint<{}, {}, {}>,
+    ListThreadMembers: ((
+        channelid: string
+    ) => `/channels/${channelid}/thread-members`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/channel#list-active-threads-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#threads#active
      * 
@@ -946,7 +1137,9 @@ export const ApiEndpoints = {
      * Threads are ordered by their `id`, in descending order. Requires the 
      * `READ_MESSAGE_HISTORY` permission.
      */
-    ListActiveThreads: ((channelid: string) => `/channels/${channelid}/threads/active`) as DeclareEndpoint<{}, {}, ListActiveThreadsResponse>,
+    ListActiveThreads: ((
+        channelid: string
+    ) => `/channels/${channelid}/threads/active`) as DeclareEndpoint<{}, {}, ListActiveThreadsResponse>,
     /**
      * https://discord.com/developers/docs/resources/channel#list-public-archived-threads-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#threads#archived#public
      * 
@@ -958,7 +1151,9 @@ export const ApiEndpoints = {
      * `GUILD_NEWS_THREAD`. Threads are ordered by `archive_timestamp`, in descending 
      * order. Requires the `READ_MESSAGE_HISTORY` permission.
      */
-    ListPublicArchivedThreads: ((channelid: string) => `/channels/${channelid}/threads/archived/public`) as DeclareEndpoint<{}, ListPublicArchivedThreadsQueryParams, ListPublicArchivedThreadsResponse>,
+    ListPublicArchivedThreads: ((
+        channelid: string
+    ) => `/channels/${channelid}/threads/archived/public`) as DeclareEndpoint<{}, ListPublicArchivedThreadsQueryParams, ListPublicArchivedThreadsResponse>,
     /**
      * https://discord.com/developers/docs/resources/channel#list-private-archived-threads-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#threads#archived#private
      * 
@@ -968,7 +1163,9 @@ export const ApiEndpoints = {
      * descending order. Requires both the `READ_MESSAGE_HISTORY` and `MANAGE_THREADS` 
      * permissions.
      */
-    ListPrivateArchivedThreads: ((channelid: string) => `/channels/${channelid}/threads/archived/private`) as DeclareEndpoint<{}, ListPrivateArchivedThreadsQueryParams, ListPrivateArchivedThreadsResponse>,
+    ListPrivateArchivedThreads: ((
+        channelid: string
+    ) => `/channels/${channelid}/threads/archived/private`) as DeclareEndpoint<{}, ListPrivateArchivedThreadsQueryParams, ListPrivateArchivedThreadsResponse>,
     /**
      * https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#users#@me#threads#archived#private
      * 
@@ -977,21 +1174,28 @@ export const ApiEndpoints = {
      * `GUILD_PRIVATE_THREAD`, and the user has joined. Threads are ordered by their 
      * `id`, in descending order. Requires the `READ_MESSAGE_HISTORY` permission.
      */
-    ListJoinedPrivateArchivedThreads: ((channelid: string) => `/channels/${channelid}/users/@me/threads/archived/private`) as DeclareEndpoint<{}, ListJoinedPrivateArchivedThreadsQueryParams, ListJoinedPrivateArchivedThreadsResponse>,
+    ListJoinedPrivateArchivedThreads: ((
+        channelid: string
+    ) => `/channels/${channelid}/users/@me/threads/archived/private`) as DeclareEndpoint<{}, ListJoinedPrivateArchivedThreadsQueryParams, ListJoinedPrivateArchivedThreadsResponse>,
     /**
      * https://discord.com/developers/docs/resources/emoji#list-guild-emojis-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#emojis
      * 
      * Returns a list of [emoji](#DOCS_RESOURCES_EMOJI/emoji-object) objects for the 
      * given guild.
      */
-    ListGuildEmojis: ((guildid: string) => `/guilds/${guildid}/emojis`) as DeclareEndpoint<{}, {}, EmojiStructure[]>,
+    ListGuildEmojis: ((
+        guildid: string
+    ) => `/guilds/${guildid}/emojis`) as DeclareEndpoint<{}, {}, EmojiStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/emoji#get-guild-emoji-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#emojis#{emoji.id#docs/resources/emoji#emoji-object}
      * 
      * Returns an [emoji](#DOCS_RESOURCES_EMOJI/emoji-object) object for the given 
      * guild and emoji IDs.
      */
-    GetGuildEmoji: ((guildid: string, emojiid: string) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<{}, {}, EmojiStructure>,
+    GetGuildEmoji: ((
+        guildid: string,
+        emojiid: string
+    ) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<{}, {}, EmojiStructure>,
     /**
      * https://discord.com/developers/docs/resources/emoji#create-guild-emoji-%-post-#guilds#{guild.id#docs/resources/guild#guild-object}#emojis
      * 
@@ -1005,7 +1209,9 @@ export const ApiEndpoints = {
      * an error message, but not a [JSON status 
      * code](#DOCS_TOPICS_OPCODES_AND_STATUS_CODES/json).
      */
-    CreateGuildEmoji: ((guildid: string) => `/guilds/${guildid}/emojis`) as DeclareEndpoint<CreateGuildEmojiJsonParams, {}, EmojiStructure>,
+    CreateGuildEmoji: ((
+        guildid: string
+    ) => `/guilds/${guildid}/emojis`) as DeclareEndpoint<CreateGuildEmojiJsonParams, {}, EmojiStructure>,
     /**
      * https://discord.com/developers/docs/resources/emoji#modify-guild-emoji-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#emojis#{emoji.id#docs/resources/emoji#emoji-object}
      * 
@@ -1015,7 +1221,10 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional.
      */
-    ModifyGuildEmoji: ((guildid: string, emojiid: string) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<ModifyGuildEmojiJsonParams, {}, EmojiStructure>,
+    ModifyGuildEmoji: ((
+        guildid: string,
+        emojiid: string
+    ) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<ModifyGuildEmojiJsonParams, {}, EmojiStructure>,
     /**
      * https://discord.com/developers/docs/resources/emoji#delete-guild-emoji-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#emojis#{emoji.id#docs/resources/emoji#emoji-object}
      * 
@@ -1023,7 +1232,10 @@ export const ApiEndpoints = {
      * Content` on success. Fires a [Guild Emojis 
      * Update](#DOCS_TOPICS_GATEWAY/guild-emojis-update) Gateway event.
      */
-    DeleteGuildEmoji: ((guildid: string, emojiid: string) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuildEmoji: ((
+        guildid: string,
+        emojiid: string
+    ) => `/guilds/${guildid}/emojis/${emojiid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#create-guild-%-post-#guilds
      * 
@@ -1133,7 +1345,9 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetGuild: ((guildid: string) => `/guilds/${guildid}`) as DeclareEndpoint<{}, GetGuildQueryParams, GetGuildResponse>,
+    GetGuild: ((
+        guildid: string
+    ) => `/guilds/${guildid}`) as DeclareEndpoint<{}, GetGuildQueryParams, GetGuildResponse>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-preview-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#preview
      * 
@@ -1141,7 +1355,9 @@ export const ApiEndpoints = {
      * for the given id. If the user is not in the guild, then the guild must be 
      * Discoverable.
      */
-    GetGuildPreview: ((guildid: string) => `/guilds/${guildid}/preview`) as DeclareEndpoint<{}, {}, {}>,
+    GetGuildPreview: ((
+        guildid: string
+    ) => `/guilds/${guildid}/preview`) as DeclareEndpoint<{}, {}, GuildPreviewStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}
      * 
@@ -1151,7 +1367,9 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional
      */
-    ModifyGuild: ((guildid: string) => `/guilds/${guildid}`) as DeclareEndpoint<ModifyGuildJsonParams, {}, GuildStructure>,
+    ModifyGuild: ((
+        guildid: string
+    ) => `/guilds/${guildid}`) as DeclareEndpoint<ModifyGuildJsonParams, {}, GuildStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#delete-guild-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}
      * 
@@ -1159,14 +1377,18 @@ export const ApiEndpoints = {
      * success. Fires a [Guild Delete](#DOCS_TOPICS_GATEWAY/guild-delete) Gateway 
      * event.
      */
-    DeleteGuild: ((guildid: string) => `/guilds/${guildid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuild: ((
+        guildid: string
+    ) => `/guilds/${guildid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-channels-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#channels
      * 
      * Returns a list of guild [channel](#DOCS_RESOURCES_CHANNEL/channel-object) 
      * objects. Does not include threads.
      */
-    GetGuildChannels: ((guildid: string) => `/guilds/${guildid}/channels`) as DeclareEndpoint<{}, {}, ChannelStructure[]>,
+    GetGuildChannels: ((
+        guildid: string
+    ) => `/guilds/${guildid}/channels`) as DeclareEndpoint<{}, {}, ChannelStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#create-guild-channel-%-post-#guilds#{guild.id#docs/resources/guild#guild-object}#channels
      * 
@@ -1180,7 +1402,9 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional excluding 'name'
      */
-    CreateGuildChannel: ((guildid: string) => `/guilds/${guildid}/channels`) as DeclareEndpoint<CreateGuildChannelJsonParams, {}, ChannelStructure>,
+    CreateGuildChannel: ((
+        guildid: string
+    ) => `/guilds/${guildid}/channels`) as DeclareEndpoint<CreateGuildChannelJsonParams, {}, ChannelStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#channels
      * 
@@ -1195,14 +1419,19 @@ export const ApiEndpoints = {
      * Only channels to be modified are required, with the minimum being a swap between 
      * at least two channels.
      */
-    ModifyGuildChannelPositions: ((guildid: string) => `/guilds/${guildid}/channels`) as DeclareEndpoint<ModifyGuildChannelPositionsJsonParams, {}, {}>,
+    ModifyGuildChannelPositions: ((
+        guildid: string
+    ) => `/guilds/${guildid}/channels`) as DeclareEndpoint<ModifyGuildChannelPositionsJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-member-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}
      * 
      * Returns a [guild member](#DOCS_RESOURCES_GUILD/guild-member-object) object for 
      * the specified user.
      */
-    GetGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<{}, {}, GuildMemberStructure>,
+    GetGuildMember: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<{}, {}, GuildMemberStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#list-guild-members-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#members
      * 
@@ -1215,7 +1444,9 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional
      */
-    ListGuildMembers: ((guildid: string) => `/guilds/${guildid}/members`) as DeclareEndpoint<{}, ListGuildMembersQueryParams, GuildMemberStructure[]>,
+    ListGuildMembers: ((
+        guildid: string
+    ) => `/guilds/${guildid}/members`) as DeclareEndpoint<{}, ListGuildMembersQueryParams, GuildMemberStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#search-guild-members-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#members#search
      * 
@@ -1224,7 +1455,9 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint except for `query` are optional
      */
-    SearchGuildMembers: ((guildid: string) => `/guilds/${guildid}/members/search`) as DeclareEndpoint<{}, SearchGuildMembersQueryParams, (GuildMemberStructure|any)[]>,
+    SearchGuildMembers: ((
+        guildid: string
+    ) => `/guilds/${guildid}/members/search`) as DeclareEndpoint<{}, SearchGuildMembersQueryParams, (GuildMemberStructure|any)[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#add-guild-member-%-put-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}
      * 
@@ -1246,7 +1479,10 @@ export const ApiEndpoints = {
      * used for authorization), and the bot must be a member of the guild with 
      * `CREATE_INSTANT_INVITE` permission.
      */
-    AddGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<AddGuildMemberJsonParams, {}, GuildMemberStructure>,
+    AddGuildMember: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<AddGuildMemberJsonParams, {}, GuildMemberStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-member-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}
      * 
@@ -1261,7 +1497,10 @@ export const ApiEndpoints = {
      * to channels, the API user _must_ have permissions to both connect to the channel 
      * and have the `MOVE_MEMBERS` permission.
      */
-    ModifyGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<ModifyGuildMemberJsonParams, {}, GuildMemberStructure>,
+    ModifyGuildMember: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<ModifyGuildMemberJsonParams, {}, GuildMemberStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-current-user-nick-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#members#@me#nick
      * 
@@ -1269,7 +1508,9 @@ export const ApiEndpoints = {
      * nickname on success. Fires a [Guild Member 
      * Update](#DOCS_TOPICS_GATEWAY/guild-member-update) Gateway event.
      */
-    ModifyCurrentUserNick: ((guildid: string) => `/guilds/${guildid}/members/@me/nick`) as DeclareEndpoint<ModifyCurrentUserNickJsonParams, {}, {}>,
+    ModifyCurrentUserNick: ((
+        guildid: string
+    ) => `/guilds/${guildid}/members/@me/nick`) as DeclareEndpoint<ModifyCurrentUserNickJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#add-guild-member-role-%-put-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}#roles#{role.id#docs/topics/permissions#role-object}
      * 
@@ -1278,7 +1519,11 @@ export const ApiEndpoints = {
      * Fires a [Guild Member Update](#DOCS_TOPICS_GATEWAY/guild-member-update) Gateway 
      * event.
      */
-    AddGuildMemberRole: ((guildid: string, userid: string, roleid: string) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
+    AddGuildMemberRole: ((
+        guildid: string,
+        userid: string,
+        roleid: string
+    ) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#remove-guild-member-role-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}#roles#{role.id#docs/topics/permissions#role-object}
      * 
@@ -1287,7 +1532,11 @@ export const ApiEndpoints = {
      * Fires a [Guild Member Update](#DOCS_TOPICS_GATEWAY/guild-member-update) Gateway 
      * event.
      */
-    RemoveGuildMemberRole: ((guildid: string, userid: string, roleid: string) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveGuildMemberRole: ((
+        guildid: string,
+        userid: string,
+        roleid: string
+    ) => `/guilds/${guildid}/members/${userid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#remove-guild-member-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#members#{user.id#docs/resources/user#user-object}
      * 
@@ -1295,21 +1544,29 @@ export const ApiEndpoints = {
      * empty response on success. Fires a [Guild Member 
      * Remove](#DOCS_TOPICS_GATEWAY/guild-member-remove) Gateway event.
      */
-    RemoveGuildMember: ((guildid: string, userid: string) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveGuildMember: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/members/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-bans-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#bans
      * 
      * Returns a list of [ban](#DOCS_RESOURCES_GUILD/ban-object) objects for the users 
      * banned from this guild. Requires the `BAN_MEMBERS` permission.
      */
-    GetGuildBans: ((guildid: string) => `/guilds/${guildid}/bans`) as DeclareEndpoint<{}, {}, BanStructure[]>,
+    GetGuildBans: ((
+        guildid: string
+    ) => `/guilds/${guildid}/bans`) as DeclareEndpoint<{}, {}, BanStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-ban-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#bans#{user.id#docs/resources/user#user-object}
      * 
      * Returns a [ban](#DOCS_RESOURCES_GUILD/ban-object) object for the given user or a 
      * 404 not found if the ban cannot be found. Requires the `BAN_MEMBERS` permission.
      */
-    GetGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, BanStructure|any>,
+    GetGuildBan: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, BanStructure|any>,
     /**
      * https://discord.com/developers/docs/resources/guild#create-guild-ban-%-put-#guilds#{guild.id#docs/resources/guild#guild-object}#bans#{user.id#docs/resources/user#user-object}
      * 
@@ -1321,7 +1578,10 @@ export const ApiEndpoints = {
      * Supplying a reason in the JSON body will override `X-Audit-Log-Reason` header if 
      * both are provided.
      */
-    CreateGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<CreateGuildBanJsonParams, {}, {}>,
+    CreateGuildBan: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<CreateGuildBanJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#remove-guild-ban-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#bans#{user.id#docs/resources/user#user-object}
      * 
@@ -1329,14 +1589,19 @@ export const ApiEndpoints = {
      * empty response on success. Fires a [Guild Ban 
      * Remove](#DOCS_TOPICS_GATEWAY/guild-ban-remove) Gateway event.
      */
-    RemoveGuildBan: ((guildid: string, userid: string) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, {}>,
+    RemoveGuildBan: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/bans/${userid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-roles-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#roles
      * 
      * Returns a list of [role](#DOCS_TOPICS_PERMISSIONS/role-object) objects for the 
      * guild.
      */
-    GetGuildRoles: ((guildid: string) => `/guilds/${guildid}/roles`) as DeclareEndpoint<{}, {}, RoleStructure[]>,
+    GetGuildRoles: ((
+        guildid: string
+    ) => `/guilds/${guildid}/roles`) as DeclareEndpoint<{}, {}, RoleStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#create-guild-role-%-post-#guilds#{guild.id#docs/resources/guild#guild-object}#roles
      * 
@@ -1346,7 +1611,9 @@ export const ApiEndpoints = {
      * Role Create](#DOCS_TOPICS_GATEWAY/guild-role-create) Gateway event. All JSON 
      * params are optional.
      */
-    CreateGuildRole: ((guildid: string) => `/guilds/${guildid}/roles`) as DeclareEndpoint<CreateGuildRoleJsonParams, {}, RoleStructure>,
+    CreateGuildRole: ((
+        guildid: string
+    ) => `/guilds/${guildid}/roles`) as DeclareEndpoint<CreateGuildRoleJsonParams, {}, RoleStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-role-positions-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#roles
      * 
@@ -1357,7 +1624,9 @@ export const ApiEndpoints = {
      * Update](#DOCS_TOPICS_GATEWAY/guild-role-update) Gateway events.
      * This endpoint takes a JSON array of parameters in the following format:
      */
-    ModifyGuildRolePositions: ((guildid: string) => `/guilds/${guildid}/roles`) as DeclareEndpoint<ModifyGuildRolePositionsJsonParams, {}, RoleStructure[]>,
+    ModifyGuildRolePositions: ((
+        guildid: string
+    ) => `/guilds/${guildid}/roles`) as DeclareEndpoint<ModifyGuildRolePositionsJsonParams, {}, RoleStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-role-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#roles#{role.id#docs/topics/permissions#role-object}
      * 
@@ -1367,7 +1636,10 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional and nullable.
      */
-    ModifyGuildRole: ((guildid: string, roleid: string) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<ModifyGuildRoleJsonParams, {}, RoleStructure>,
+    ModifyGuildRole: ((
+        guildid: string,
+        roleid: string
+    ) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<ModifyGuildRoleJsonParams, {}, RoleStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#delete-guild-role-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#roles#{role.id#docs/topics/permissions#role-object}
      * 
@@ -1375,7 +1647,10 @@ export const ApiEndpoints = {
      * response on success. Fires a [Guild Role 
      * Delete](#DOCS_TOPICS_GATEWAY/guild-role-delete) Gateway event.
      */
-    DeleteGuildRole: ((guildid: string, roleid: string) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuildRole: ((
+        guildid: string,
+        roleid: string
+    ) => `/guilds/${guildid}/roles/${roleid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-prune-count-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#prune
      * 
@@ -1386,7 +1661,9 @@ export const ApiEndpoints = {
      * inactive user that has a subset of the provided role(s) will be counted in the 
      * prune and users with additional roles will not.
      */
-    GetGuildPruneCount: ((guildid: string) => `/guilds/${guildid}/prune`) as DeclareEndpoint<{}, GetGuildPruneCountQueryParams, {}>,
+    GetGuildPruneCount: ((
+        guildid: string
+    ) => `/guilds/${guildid}/prune`) as DeclareEndpoint<{}, GetGuildPruneCountQueryParams, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#begin-guild-prune-%-post-#guilds#{guild.id#docs/resources/guild#guild-object}#prune
      * 
@@ -1404,7 +1681,9 @@ export const ApiEndpoints = {
      * Supplying a reason in the JSON body will override `X-Audit-Log-Reason` header if 
      * both are provided.
      */
-    BeginGuildPrune: ((guildid: string) => `/guilds/${guildid}/prune`) as DeclareEndpoint<BeginGuildPruneJsonParams, {}, {}>,
+    BeginGuildPrune: ((
+        guildid: string
+    ) => `/guilds/${guildid}/prune`) as DeclareEndpoint<BeginGuildPruneJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-voice-regions-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#regions
      * 
@@ -1412,7 +1691,9 @@ export const ApiEndpoints = {
      * objects for the guild. Unlike the similar `/voice` route, this returns VIP 
      * servers when the guild is VIP-enabled.
      */
-    GetGuildVoiceRegions: ((guildid: string) => `/guilds/${guildid}/regions`) as DeclareEndpoint<{}, {}, VoiceRegionStructure[]>,
+    GetGuildVoiceRegions: ((
+        guildid: string
+    ) => `/guilds/${guildid}/regions`) as DeclareEndpoint<{}, {}, VoiceRegionStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-invites-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#invites
      * 
@@ -1420,14 +1701,18 @@ export const ApiEndpoints = {
      * [invite metadata](#DOCS_RESOURCES_INVITE/invite-metadata-object)) for the guild. 
      * Requires the `MANAGE_GUILD` permission.
      */
-    GetGuildInvites: ((guildid: string) => `/guilds/${guildid}/invites`) as DeclareEndpoint<{}, {}, InviteStructure[]>,
+    GetGuildInvites: ((
+        guildid: string
+    ) => `/guilds/${guildid}/invites`) as DeclareEndpoint<{}, {}, InviteStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-integrations-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#integrations
      * 
      * Returns a list of [integration](#DOCS_RESOURCES_GUILD/integration-object) 
      * objects for the guild. Requires the `MANAGE_GUILD` permission.
      */
-    GetGuildIntegrations: ((guildid: string) => `/guilds/${guildid}/integrations`) as DeclareEndpoint<{}, {}, IntegrationStructure[]>,
+    GetGuildIntegrations: ((
+        guildid: string
+    ) => `/guilds/${guildid}/integrations`) as DeclareEndpoint<{}, {}, IntegrationStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild#delete-guild-integration-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#integrations#{integration.id#docs/resources/guild#integration-object}
      * 
@@ -1437,14 +1722,19 @@ export const ApiEndpoints = {
      * response on success. Fires a [Guild Integrations 
      * Update](#DOCS_TOPICS_GATEWAY/guild-integrations-update) Gateway event.
      */
-    DeleteGuildIntegration: ((guildid: string, integrationid: string) => `/guilds/${guildid}/integrations/${integrationid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuildIntegration: ((
+        guildid: string,
+        integrationid: string
+    ) => `/guilds/${guildid}/integrations/${integrationid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-widget-settings-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#widget
      * 
      * Returns a [guild widget](#DOCS_RESOURCES_GUILD/guild-widget-object) object. 
      * Requires the `MANAGE_GUILD` permission.
      */
-    GetGuildWidgetSettings: ((guildid: string) => `/guilds/${guildid}/widget`) as DeclareEndpoint<{}, {}, GuildWidgetStructure>,
+    GetGuildWidgetSettings: ((
+        guildid: string
+    ) => `/guilds/${guildid}/widget`) as DeclareEndpoint<{}, {}, GuildWidgetStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-widget-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#widget
      * 
@@ -1453,7 +1743,9 @@ export const ApiEndpoints = {
      * `MANAGE_GUILD` permission. Returns the updated [guild 
      * widget](#DOCS_RESOURCES_GUILD/guild-widget-object) object.
      */
-    ModifyGuildWidget: ((guildid: string) => `/guilds/${guildid}/widget`) as DeclareEndpoint<{}, {}, GuildWidgetStructure>,
+    ModifyGuildWidget: ((
+        guildid: string
+    ) => `/guilds/${guildid}/widget`) as DeclareEndpoint<{}, {}, GuildWidgetStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-widget-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#widget.json
      * 
@@ -1491,7 +1783,9 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetGuildWidget: ((guildid: string) => `/guilds/${guildid}/widget.json`) as DeclareEndpoint<{}, {}, {}>,
+    GetGuildWidget: ((
+        guildid: string
+    ) => `/guilds/${guildid}/widget.json`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-vanity-url-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#vanity-url
      * 
@@ -1507,7 +1801,9 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetGuildVanityURL: ((guildid: string) => `/guilds/${guildid}/vanity-url`) as DeclareEndpoint<{}, {}, Partial<InviteStructure>>,
+    GetGuildVanityURL: ((
+        guildid: string
+    ) => `/guilds/${guildid}/vanity-url`) as DeclareEndpoint<{}, {}, Partial<InviteStructure>>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-widget-image-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#widget.png
      * 
@@ -1516,14 +1812,18 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional.
      */
-    GetGuildWidgetImage: ((guildid: string) => `/guilds/${guildid}/widget.png`) as DeclareEndpoint<{}, GetGuildWidgetImageQueryParams, {}>,
+    GetGuildWidgetImage: ((
+        guildid: string
+    ) => `/guilds/${guildid}/widget.png`) as DeclareEndpoint<{}, GetGuildWidgetImageQueryParams, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#welcome-screen
      * 
      * Returns the [Welcome Screen](#DOCS_RESOURCES_GUILD/welcome-screen-object) object 
      * for the guild.
      */
-    GetGuildWelcomeScreen: ((guildid: string) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<{}, {}, {}>,
+    GetGuildWelcomeScreen: ((
+        guildid: string
+    ) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<{}, {}, WelcomeScreenStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#welcome-screen
      * 
@@ -1534,26 +1834,35 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional and nullable
      */
-    ModifyGuildWelcomeScreen: ((guildid: string) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<{}, {}, WelcomeScreenStructure>,
+    ModifyGuildWelcomeScreen: ((
+        guildid: string
+    ) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<{}, {}, WelcomeScreenStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#update-current-user-voice-state-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#voice-states#@me
      * 
      * Updates the current user's voice state.
      */
-    UpdateCurrentUserVoiceState: ((guildid: string) => `/guilds/${guildid}/voice-states/@me`) as DeclareEndpoint<UpdateCurrentUserVoiceStateJsonParams, {}, {}>,
+    UpdateCurrentUserVoiceState: ((
+        guildid: string
+    ) => `/guilds/${guildid}/voice-states/@me`) as DeclareEndpoint<UpdateCurrentUserVoiceStateJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild#update-user-voice-state-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#voice-states#{user.id#docs/resources/user#user-object}
      * 
      * Updates another user's voice state.
      */
-    UpdateUserVoiceState: ((guildid: string, userid: string) => `/guilds/${guildid}/voice-states/${userid}`) as DeclareEndpoint<UpdateUserVoiceStateJsonParams, {}, {}>,
+    UpdateUserVoiceState: ((
+        guildid: string,
+        userid: string
+    ) => `/guilds/${guildid}/voice-states/${userid}`) as DeclareEndpoint<UpdateUserVoiceStateJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#get-guild-template-%-get-#guilds#templates#{template.code#docs/resources/guild/template#guild-template-object}
      * 
      * Returns a [guild template](#DOCS_RESOURCES_GUILD_TEMPLATE/guild-template-object) 
      * object for the given code.
      */
-    GetGuildTemplate: ((templatecode: string) => `/guilds/templates/${templatecode}`) as DeclareEndpoint<{}, {}, GuildTemplateStructure>,
+    GetGuildTemplate: ((
+        templatecode: string
+    ) => `/guilds/templates/${templatecode}`) as DeclareEndpoint<{}, {}, GuildTemplateStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#create-guild-from-guild-template-%-post-#guilds#templates#{template.code#docs/resources/guild/template#guild-template-object}
      * 
@@ -1563,7 +1872,9 @@ export const ApiEndpoints = {
      * 
      * This endpoint can be used only by bots in less than 10 guilds.
      */
-    CreateGuildfromGuildTemplate: ((templatecode: string) => `/guilds/templates/${templatecode}`) as DeclareEndpoint<CreateGuildfromGuildTemplateJsonParams, {}, GuildStructure>,
+    CreateGuildfromGuildTemplate: ((
+        templatecode: string
+    ) => `/guilds/templates/${templatecode}`) as DeclareEndpoint<CreateGuildfromGuildTemplateJsonParams, {}, GuildStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#get-guild-templates-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#templates
      * 
@@ -1571,7 +1882,9 @@ export const ApiEndpoints = {
      * template](#DOCS_RESOURCES_GUILD_TEMPLATE/guild-template-object) objects. 
      * Requires the `MANAGE_GUILD` permission.
      */
-    GetGuildTemplates: ((guildid: string) => `/guilds/${guildid}/templates`) as DeclareEndpoint<{}, {}, GuildTemplateStructure[]>,
+    GetGuildTemplates: ((
+        guildid: string
+    ) => `/guilds/${guildid}/templates`) as DeclareEndpoint<{}, {}, GuildTemplateStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#create-guild-template-%-post-#guilds#{guild.id#docs/resources/guild#guild-object}#templates
      * 
@@ -1580,7 +1893,9 @@ export const ApiEndpoints = {
      * template](#DOCS_RESOURCES_GUILD_TEMPLATE/guild-template-object) object on 
      * success.
      */
-    CreateGuildTemplate: ((guildid: string) => `/guilds/${guildid}/templates`) as DeclareEndpoint<CreateGuildTemplateJsonParams, {}, {}>,
+    CreateGuildTemplate: ((
+        guildid: string
+    ) => `/guilds/${guildid}/templates`) as DeclareEndpoint<CreateGuildTemplateJsonParams, {}, GuildTemplateStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#sync-guild-template-%-put-#guilds#{guild.id#docs/resources/guild#guild-object}#templates#{template.code#docs/resources/guild/template#guild-template-object}
      * 
@@ -1589,7 +1904,10 @@ export const ApiEndpoints = {
      * template](#DOCS_RESOURCES_GUILD_TEMPLATE/guild-template-object) object on 
      * success.
      */
-    SyncGuildTemplate: ((guildid: string, templatecode: string) => `/guilds/${guildid}/templates/${templatecode}`) as DeclareEndpoint<{}, {}, {}>,
+    SyncGuildTemplate: ((
+        guildid: string,
+        templatecode: string
+    ) => `/guilds/${guildid}/templates/${templatecode}`) as DeclareEndpoint<{}, {}, GuildTemplateStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#modify-guild-template-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#templates#{template.code#docs/resources/guild/template#guild-template-object}
      * 
@@ -1598,7 +1916,10 @@ export const ApiEndpoints = {
      * template](#DOCS_RESOURCES_GUILD_TEMPLATE/guild-template-object) object on 
      * success.
      */
-    ModifyGuildTemplate: ((guildid: string, templatecode: string) => `/guilds/${guildid}/templates/${templatecode}`) as DeclareEndpoint<ModifyGuildTemplateJsonParams, {}, {}>,
+    ModifyGuildTemplate: ((
+        guildid: string,
+        templatecode: string
+    ) => `/guilds/${guildid}/templates/${templatecode}`) as DeclareEndpoint<ModifyGuildTemplateJsonParams, {}, GuildTemplateStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild/template#delete-guild-template-%-delete-#guilds#{guild.id#docs/resources/guild#guild-object}#templates#{template.code#docs/resources/guild/template#guild-template-object}
      * 
@@ -1606,14 +1927,19 @@ export const ApiEndpoints = {
      * deleted [guild template](#DOCS_RESOURCES_GUILD_TEMPLATE/guild-template-object) 
      * object on success.
      */
-    DeleteGuildTemplate: ((guildid: string, templatecode: string) => `/guilds/${guildid}/templates/${templatecode}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteGuildTemplate: ((
+        guildid: string,
+        templatecode: string
+    ) => `/guilds/${guildid}/templates/${templatecode}`) as DeclareEndpoint<{}, {}, GuildTemplateStructure>,
     /**
      * https://discord.com/developers/docs/resources/invite#get-invite-%-get-#invites#{invite.code#docs/resources/invite#invite-object}
      * 
      * Returns an [invite](#DOCS_RESOURCES_INVITE/invite-object) object for the given 
      * code.
      */
-    GetInvite: ((invitecode: string) => `/invites/${invitecode}`) as DeclareEndpoint<{}, GetInviteQueryParams, InviteStructure>,
+    GetInvite: ((
+        invitecode: string
+    ) => `/invites/${invitecode}`) as DeclareEndpoint<{}, GetInviteQueryParams, InviteStructure>,
     /**
      * https://discord.com/developers/docs/resources/invite#delete-invite-%-delete-#invites#{invite.code#docs/resources/invite#invite-object}
      * 
@@ -1622,7 +1948,9 @@ export const ApiEndpoints = {
      * Returns an [invite](#DOCS_RESOURCES_INVITE/invite-object) object on success. 
      * Fires a [Invite Delete](#DOCS_TOPICS_GATEWAY/invite-delete) Gateway event.
      */
-    DeleteInvite: ((invitecode: string) => `/invites/${invitecode}`) as DeclareEndpoint<{}, {}, InviteStructure>,
+    DeleteInvite: ((
+        invitecode: string
+    ) => `/invites/${invitecode}`) as DeclareEndpoint<{}, {}, InviteStructure>,
     /**
      * https://discord.com/developers/docs/resources/stage/instance#create-stage-instance-%-post-#stage-instances
      * 
@@ -1635,21 +1963,27 @@ export const ApiEndpoints = {
      * 
      * Gets the stage instance associated with the Stage channel, if it exists.
      */
-    GetStageInstance: ((channelid: string) => `/stage-instances/${channelid}`) as DeclareEndpoint<{}, {}, {}>,
+    GetStageInstance: ((
+        channelid: string
+    ) => `/stage-instances/${channelid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/stage/instance#update-stage-instance-%-patch-#stage-instances#{channel.id#docs/resources/channel#channel-object}
      * 
      * Updates fields of an existing Stage instance.
      * Requires the user to be a moderator of the Stage channel.
      */
-    UpdateStageInstance: ((channelid: string) => `/stage-instances/${channelid}`) as DeclareEndpoint<UpdateStageInstanceJsonParams, {}, {}>,
+    UpdateStageInstance: ((
+        channelid: string
+    ) => `/stage-instances/${channelid}`) as DeclareEndpoint<UpdateStageInstanceJsonParams, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/stage/instance#delete-stage-instance-%-delete-#stage-instances#{channel.id#docs/resources/channel#channel-object}
      * 
      * Deletes the Stage instance.
      * Requires the user to be a moderator of the Stage channel.
      */
-    DeleteStageInstance: ((channelid: string) => `/stage-instances/${channelid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteStageInstance: ((
+        channelid: string
+    ) => `/stage-instances/${channelid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/user#get-current-user-%-get-#users#@me
      * 
@@ -1658,13 +1992,15 @@ export const ApiEndpoints = {
      * object _without_ an email, and optionally the `email` scope, which returns the 
      * object _with_ an email.
      */
-    GetCurrentUser: (() => `/users/@me`) as DeclareEndpoint<{}, {}, {}>,
+    GetCurrentUser: (() => `/users/@me`) as DeclareEndpoint<{}, {}, UserStructure>,
     /**
      * https://discord.com/developers/docs/resources/user#get-user-%-get-#users#{user.id#docs/resources/user#user-object}
      * 
      * Returns a [user](#DOCS_RESOURCES_USER/user-object) object for a given user ID.
      */
-    GetUser: ((userid: string) => `/users/${userid}`) as DeclareEndpoint<{}, {}, UserStructure>,
+    GetUser: ((
+        userid: string
+    ) => `/users/${userid}`) as DeclareEndpoint<{}, {}, UserStructure>,
     /**
      * https://discord.com/developers/docs/resources/user#modify-current-user-%-patch-#users#@me
      * 
@@ -1698,7 +2034,9 @@ export const ApiEndpoints = {
      * 
      * Leave a guild. Returns a 204 empty response on success.
      */
-    LeaveGuild: ((guildid: string) => `/users/@me/guilds/${guildid}`) as DeclareEndpoint<{}, {}, {}>,
+    LeaveGuild: ((
+        guildid: string
+    ) => `/users/@me/guilds/${guildid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/user#create-dm-%-post-#users#@me#channels
      * 
@@ -1746,35 +2084,46 @@ export const ApiEndpoints = {
      * following additional stipulations:
      * - Webhook names cannot be: 'clyde'
      */
-    CreateWebhook: ((channelid: string) => `/channels/${channelid}/webhooks`) as DeclareEndpoint<CreateWebhookJsonParams, {}, WebhookStructure>,
+    CreateWebhook: ((
+        channelid: string
+    ) => `/channels/${channelid}/webhooks`) as DeclareEndpoint<CreateWebhookJsonParams, {}, WebhookStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#get-channel-webhooks-%-get-#channels#{channel.id#docs/resources/channel#channel-object}#webhooks
      * 
      * Returns a list of channel [webhook](#DOCS_RESOURCES_WEBHOOK/webhook-object) 
      * objects. Requires the `MANAGE_WEBHOOKS` permission.
      */
-    GetChannelWebhooks: ((channelid: string) => `/channels/${channelid}/webhooks`) as DeclareEndpoint<{}, {}, WebhookStructure[]>,
+    GetChannelWebhooks: ((
+        channelid: string
+    ) => `/channels/${channelid}/webhooks`) as DeclareEndpoint<{}, {}, WebhookStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/webhook#get-guild-webhooks-%-get-#guilds#{guild.id#docs/resources/guild#guild-object}#webhooks
      * 
      * Returns a list of guild [webhook](#DOCS_RESOURCES_WEBHOOK/webhook-object) 
      * objects. Requires the `MANAGE_WEBHOOKS` permission.
      */
-    GetGuildWebhooks: ((guildid: string) => `/guilds/${guildid}/webhooks`) as DeclareEndpoint<{}, {}, WebhookStructure[]>,
+    GetGuildWebhooks: ((
+        guildid: string
+    ) => `/guilds/${guildid}/webhooks`) as DeclareEndpoint<{}, {}, WebhookStructure[]>,
     /**
      * https://discord.com/developers/docs/resources/webhook#get-webhook-%-get-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}
      * 
      * Returns the new [webhook](#DOCS_RESOURCES_WEBHOOK/webhook-object) object for the 
      * given id.
      */
-    GetWebhook: ((webhookid: string) => `/webhooks/${webhookid}`) as DeclareEndpoint<{}, {}, WebhookStructure>,
+    GetWebhook: ((
+        webhookid: string
+    ) => `/webhooks/${webhookid}`) as DeclareEndpoint<{}, {}, WebhookStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#get-webhook-with-token-%-get-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}
      * 
      * Same as above, except this call does not require authentication and returns no 
      * user in the webhook object.
      */
-    GetWebhookwithToken: ((webhookid: string, webhooktoken: string) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
+    GetWebhookwithToken: ((
+        webhookid: string,
+        webhooktoken: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#modify-webhook-%-patch-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}
      * 
@@ -1783,7 +2132,9 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional
      */
-    ModifyWebhook: ((webhookid: string) => `/webhooks/${webhookid}`) as DeclareEndpoint<ModifyWebhookJsonParams, {}, WebhookStructure>,
+    ModifyWebhook: ((
+        webhookid: string
+    ) => `/webhooks/${webhookid}`) as DeclareEndpoint<ModifyWebhookJsonParams, {}, WebhookStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token-%-patch-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}
      * 
@@ -1791,20 +2142,28 @@ export const ApiEndpoints = {
      * a `channel_id` parameter in the body, and does not return a user in the webhook 
      * object.
      */
-    ModifyWebhookwithToken: ((webhookid: string, webhooktoken: string) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
+    ModifyWebhookwithToken: ((
+        webhookid: string,
+        webhooktoken: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#delete-webhook-%-delete-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}
      * 
      * Delete a webhook permanently. Requires the `MANAGE_WEBHOOKS` permission. Returns 
      * a 204 NO CONTENT response on success.
      */
-    DeleteWebhook: ((webhookid: string) => `/webhooks/${webhookid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteWebhook: ((
+        webhookid: string
+    ) => `/webhooks/${webhookid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token-%-delete-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}
      * 
      * Same as above, except this call does not require authentication.
      */
-    DeleteWebhookwithToken: ((webhookid: string, webhooktoken: string) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteWebhookwithToken: ((
+        webhookid: string,
+        webhooktoken: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#execute-webhook-%-post-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}
      * 
@@ -1822,22 +2181,35 @@ export const ApiEndpoints = {
      * **If you supply a `payload_json` form value, all fields except for `file` fields 
      * will be ignored in the form data**.
      */
-    ExecuteWebhook: ((webhookid: string, webhooktoken: string) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<ExecuteWebhookJsonParams, ExecuteWebhookQueryParams, {}>,
+    ExecuteWebhook: ((
+        webhookid: string,
+        webhooktoken: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<ExecuteWebhookJsonParams, ExecuteWebhookQueryParams, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#execute-slack-compatible-webhook-%-post-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}#slack
      */
-    ExecuteSlackCompatibleWebhook: ((webhookid: string, webhooktoken: string) => `/webhooks/${webhookid}/${webhooktoken}/slack`) as DeclareEndpoint<{}, ExecuteSlackCompatibleWebhookQueryParams, {}>,
+    ExecuteSlackCompatibleWebhook: ((
+        webhookid: string,
+        webhooktoken: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}/slack`) as DeclareEndpoint<{}, ExecuteSlackCompatibleWebhookQueryParams, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#execute-github-compatible-webhook-%-post-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}#github
      */
-    ExecuteGitHubCompatibleWebhook: ((webhookid: string, webhooktoken: string) => `/webhooks/${webhookid}/${webhooktoken}/github`) as DeclareEndpoint<{}, ExecuteGitHubCompatibleWebhookQueryParams, {}>,
+    ExecuteGitHubCompatibleWebhook: ((
+        webhookid: string,
+        webhooktoken: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}/github`) as DeclareEndpoint<{}, ExecuteGitHubCompatibleWebhookQueryParams, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#get-webhook-message-%-get-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}#messages#{message.id#docs/resources/channel#message-object}
      * 
      * Returns a previously-sent webhook message from the same token. Returns a 
      * [message](#DOCS_RESOURCES_CHANNEL/message-object) object on success.
      */
-    GetWebhookMessage: ((webhookid: string, webhooktoken: string, messageid: string) => `/webhooks/${webhookid}/${webhooktoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    GetWebhookMessage: ((
+        webhookid: string,
+        webhooktoken: string,
+        messageid: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, MessageStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#edit-webhook-message-%-patch-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}#messages#{message.id#docs/resources/channel#message-object}
      * 
@@ -1864,14 +2236,22 @@ export const ApiEndpoints = {
      * 
      * All parameters to this endpoint are optional and nullable.
      */
-    EditWebhookMessage: ((webhookid: string, webhooktoken: string, messageid: string) => `/webhooks/${webhookid}/${webhooktoken}/messages/${messageid}`) as DeclareEndpoint<EditWebhookMessageJsonParams, {}, MessageStructure>,
+    EditWebhookMessage: ((
+        webhookid: string,
+        webhooktoken: string,
+        messageid: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}/messages/${messageid}`) as DeclareEndpoint<EditWebhookMessageJsonParams, {}, MessageStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#delete-webhook-message-%-delete-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}#messages#{message.id#docs/resources/channel#message-object}
      * 
      * Deletes a message that was created by the webhook. Returns a 204 NO CONTENT 
      * response on success.
      */
-    DeleteWebhookMessage: ((webhookid: string, webhooktoken: string, messageid: string) => `/webhooks/${webhookid}/${webhooktoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
+    DeleteWebhookMessage: ((
+        webhookid: string,
+        webhooktoken: string,
+        messageid: string
+    ) => `/webhooks/${webhookid}/${webhooktoken}/messages/${messageid}`) as DeclareEndpoint<{}, {}, {}>,
     /**
      * https://discord.com/developers/docs/topics/gateway#get-gateway-%-get-#gateway
      * 
@@ -1923,7 +2303,7 @@ export const ApiEndpoints = {
      * Returns the bot's [application](#DOCS_RESOURCES_APPLICATION/application-object) 
      * object without `flags`.
      */
-    GetCurrentBotApplicationInformation: (() => `/oauth2/applications/@me`) as DeclareEndpoint<{}, {}, {}>,
+    GetCurrentBotApplicationInformation: (() => `/oauth2/applications/@me`) as DeclareEndpoint<{}, {}, ApplicationStructure>,
     /**
      * https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-%-get-#oauth2#@me
      * 
@@ -1959,5 +2339,4 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetCurrentAuthorizationInformation: (() => `/oauth2/@me`) as DeclareEndpoint<{}, {}, GetCurrentAuthorizationInformationResponse>,
-}
+    GetCurrentAuthorizationInformation: (() => `/oauth2/@me`) as DeclareEndpoint<{}, {}, GetCurrentAuthorizationInformationResponse>}

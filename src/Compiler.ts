@@ -62,8 +62,6 @@ export class Compiler {
 
         this.structures = new Map;
         this.files = new Map;
-
-        this.generateLinksRecursive(this.sections);
     }
 
     createFile(filename: string): OutputFile {
@@ -232,7 +230,7 @@ export class Compiler {
         return new BasicSymbol("any");
     }
     
-    generateLinksRecursive(sections: MarkdownPart[]) {
+    generateLinksRecursive(sections: MarkdownPart[] = this.sections) {
         for (const section of sections) {
             if (section instanceof MarkdownSection) {
                 this.links.set(section.getLink(), section);

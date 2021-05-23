@@ -1,10 +1,11 @@
+import { MessageInteraction } from "../enums/MessageInteraction";
+
 import { ApplicationStructure } from "./ApplicationStructure";
 import { AttachmentStructure } from "./AttachmentStructure";
 import { ChannelMentionStructure } from "./ChannelMentionStructure";
 import { EmbedStructure } from "./EmbedStructure";
 import { GuildMemberStructure } from "./GuildMemberStructure";
 import { MessageActivityStructure } from "./MessageActivityStructure";
-import { MessageInteraction } from "../enums/MessageInteraction";
 import { MessageReferenceStructure } from "./MessageReferenceStructure";
 import { MessageStickerStructure } from "./MessageStickerStructure";
 import { ReactionStructure } from "./ReactionStructure";
