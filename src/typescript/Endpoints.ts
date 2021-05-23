@@ -337,7 +337,7 @@ export type ExtractResponseType<
 
         endpointText += "export const ApiEndpoints = {\n";
         endpointText += this.requests.map(request => request.serialize()).join(",\n");
-        endpointText += "}";
+        endpointText += "\n}";
 
         return endpointText;
     }

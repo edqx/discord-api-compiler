@@ -2339,4 +2339,5 @@ export const ApiEndpoints = {
      * }
      * ```
      */
-    GetCurrentAuthorizationInformation: (() => `/oauth2/@me`) as DeclareEndpoint<{}, {}, GetCurrentAuthorizationInformationResponse>}
+    GetCurrentAuthorizationInformation: (() => `/oauth2/@me`) as DeclareEndpoint<{}, {}, GetCurrentAuthorizationInformationResponse>
+}
