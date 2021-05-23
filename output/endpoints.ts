@@ -2123,7 +2123,7 @@ export const ApiEndpoints = {
     GetWebhookwithToken: ((
         webhookid: string,
         webhooktoken: string
-    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
+    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, WebhookStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#modify-webhook-%-patch-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}
      * 
@@ -2145,7 +2145,7 @@ export const ApiEndpoints = {
     ModifyWebhookwithToken: ((
         webhookid: string,
         webhooktoken: string
-    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<{}, {}, {}>,
+    ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<ModifyWebhookJsonParams, {}, WebhookStructure>,
     /**
      * https://discord.com/developers/docs/resources/webhook#delete-webhook-%-delete-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}
      * 

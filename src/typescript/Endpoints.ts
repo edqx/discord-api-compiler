@@ -76,6 +76,15 @@ export class DocumentedRequest {
         public readonly endpoint: Endpoint
     ) {}
 
+    static parse(compiler: Compiler, section: MarkdownSection) {
+        const [ endpoint_name, full_request ] = section.title.split(" % ");
+        const [ verb, endpoint ] = full_request.split(" ");
+    
+        const parsed_endpoint = Endpoint.parse(endpoint);
+
+        return new DocumentedRequest(compiler, section, endpoint_name, verb, parsed_endpoint);
+    }
+
     getCodeFriendlyName() {
         return this.name
             .split(" ")
@@ -89,13 +98,8 @@ export class DocumentedRequest {
             .filter(part => part.type === "param");
     }
 
-    static parse(compiler: Compiler, section: MarkdownSection) {
-        const [ endpoint_name, full_request ] = section.title.split(" % ");
-        const [ verb, endpoint ] = full_request.split(" ");
-    
-        const parsed_endpoint = Endpoint.parse(endpoint);
-
-        return new DocumentedRequest(compiler, section, endpoint_name, verb, parsed_endpoint);
+    getDescription() {
+        return this.section.getTextChildren().map(child => child.text).join(" ");
     }
 
     findJsonParamsStructure() {
@@ -191,7 +195,7 @@ export class DocumentedRequest {
 
         if (structure) return structure;
 
-        const haystack = this.section.getTextChildren().map(child => child.text).join(" ");
+        const haystack = this.getDescription();
         const all_occurences = haystack.match(RegExp(returnsRegex, "g"));
 
         if (all_occurences) {
@@ -272,7 +276,19 @@ export class EndpointStructure extends BaseStructure {
         super(compiler, file, null, name);
 
         if (this.compiler.options.typings) {
-            for (const request of this.requests) {
+            for (let i = 0; i < this.requests.length; i++) {
+                const request = this.requests[i];
+
+                if (request.getDescription().toLowerCase().includes("same as above")) {
+                    const last = this.requests[i - 1];
+                    if (last) {
+                        request.jsonParamsStructure = last.jsonParamsStructure;
+                        request.queryParamsStructure = last.queryParamsStructure;
+                        request.responseSymbol = last.responseSymbol;
+                        continue;
+                    }
+                }
+
                 const jsonParamsStructure = request.findJsonParamsStructure();
                 const queryParamsStructure = request.findQueryParamsStructure();
                 const responseSymbol = request.findResponseSymbol();
