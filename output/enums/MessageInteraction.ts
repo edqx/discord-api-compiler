@@ -5,8 +5,8 @@
  * when the message is a response to an Interaction.
  */
 export enum MessageInteraction {
-    id = snowflake,
-    type = InteractionType,
-    name = string,
-    user = [user object](#DOCS_RESOURCES_USER/user-object)
+    Id = snowflake,
+    Type = InteractionType,
+    Name = string,
+    User = [user object](#DOCS_RESOURCES_USER/user-object)
 }

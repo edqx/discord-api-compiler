@@ -15,6 +15,7 @@ import { NullableSymbol } from "./typescript/symbols/Nullable";
 import { OrSymbol } from "./typescript/symbols/Or";
 import { PartialSymbol } from "./typescript/symbols/Partial";
 import { BaseSymbol } from "./typescript/symbols/Symbol";
+import { makeCodeFriendly } from "./util/makeCodeFriendly";
 
 const knownTypes: Record<string, string> = {
     "string": "string",
@@ -120,7 +121,7 @@ export class Compiler {
 
         if (resolvedInterface) {
             const [ resolvedSection, table ] = resolvedInterface;
-            const interfaceName = resolvedSection.title.replace(/\W/g, "");
+            const interfaceName = makeCodeFriendly(resolvedSection.title);
 
             const cached = this.structures.get(interfaceName);
 
@@ -150,7 +151,7 @@ export class Compiler {
         
         if (resolvedEnum) {
             const [ resolvedSection, table ] = resolvedEnum;
-            const enumName = resolvedSection.title.replace(/\W/g, "");
+            const enumName = makeCodeFriendly(resolvedSection.title);
             
             const cached = this.structures.get(enumName);
 

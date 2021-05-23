@@ -2,6 +2,7 @@ import { Compiler } from "../Compiler";
 import { OutputFile } from "../File";
 import { MarkdownSection } from "../markdown/Section";
 import { indentMultilineString } from "../util/indentMultilineString";
+import { makeCodeFriendly } from "../util/makeCodeFriendly";
 import { prependCommentLines } from "../util/prependCommentLines";
 import { InterfaceStructure, InterfaceStructureEntry } from "./Interface";
 import { BaseStructure } from "./Structure";
@@ -86,15 +87,7 @@ export class DocumentedRequest {
     }
 
     getCodeFriendlyName() {
-        return this.name
-            .split(" ")
-            .map(word => {
-                const stripped = word.split("/")[0];
-
-                return stripped[0].toUpperCase() + stripped.substr(1);
-            })
-            .join("")
-            .replace(/\W/g, "")
+        return makeCodeFriendly(this.name);
     }
 
     getEndpointParams() {

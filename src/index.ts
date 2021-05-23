@@ -105,17 +105,26 @@ async function crawlFiles(entrypoint: string) {
     await rimraf("output");
 
     process.stdout.write("Serialize and write structures - 0.000s.");
+    if (!compiler.options.output.single_file) {
+        const toWrite: string[] = [
+            compiler.options.output.enums_output,
+            compiler.options.output.structures_output,
+            compiler.options.output.requests_output,
+            compiler.options.output.responses_output,
+            compiler.options.output.endpoints_output
+        ];
+        for (const pathToWrite of toWrite) {
+            await mkdirp(path.resolve(compiler.options.output.output_dir, pathToWrite));
+        }
+    }
     const beginWrite = Date.now();
     for (const [ , file ] of compiler.files) {
-        await mkdirp(path.dirname(OutputFile.resolve(compiler, file)));
-
         const serialized = file.serialize();
         await fs.writeFile(OutputFile.resolve(compiler, file), serialized, "utf8");
     }
+    await fs.writeFile(path.resolve(process.cwd(), "output.json"), JSON.stringify(sections, null, 4), "utf8");
     const tookWrite = ((Date.now() - beginWrite) / 1000).toFixed(3);
     process.stdout.clearLine(0);
     process.stdout.cursorTo(0); 
     console.log("Serialize and write structures - " + tookWrite + "s.");
-
-    await fs.writeFile(path.resolve(process.cwd(), "output.json"), JSON.stringify(sections, null, 4), "utf8");
 })();
