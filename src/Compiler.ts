@@ -48,12 +48,12 @@ export class Compiler {
             comments: true,
             ...options,
             output: {
-                single_file: false,
+                single_file: "",
                 output_dir: "output",
-                enums_output: "enums",
-                structures_output: "interfaces",
-                requests_output: "requests",
-                responses_output: "responses",
+                enums_output: "enums/%s.ts",
+                structures_output: "interfaces/%s.ts",
+                requests_output: "requests/%s.ts",
+                responses_output: "responses/%s.ts",
                 endpoints_output: "endpoints",
                 ...options.output
             }
@@ -71,11 +71,11 @@ export class Compiler {
             return cached;
         }
 
-        if (this.options.output.single_file && filename !== this.options.output.output_dir) {
-            return this.createFile(this.options.output.output_dir);
+        if (this.options.output.single_file && filename !== this.options.output.single_file) {
+            return this.createFile(this.options.output.single_file);
         }
 
-        const file = new OutputFile(filename + (this.options.typings ? ".ts" : ".js"));
+        const file = new OutputFile(filename);
         this.files.set(filename, file);
         return file;
     }
@@ -129,12 +129,7 @@ export class Compiler {
                 return cached;
             }
 
-            const file = this.createFile(
-                path.join(
-                    this.options.output.structures_output,
-                    interfaceName
-                )
-            );
+            const file = this.createFile(this.options.output.structures_output.replace("%s", interfaceName));
 
             const interfaceStructure = new InterfaceStructure(
                 this,
@@ -159,12 +154,7 @@ export class Compiler {
                 return cached;
             }
 
-            const file = this.createFile(
-                path.join(
-                    this.options.output.enums_output,
-                    enumName
-                )
-            );
+            const file = this.createFile(this.options.output.enums_output.replace("%s", enumName));
 
             const enumStructure = new EnumStructure(
                 this,

@@ -7,6 +7,29 @@
             {
                 "file": "Change_Log.md",
                 "type": "section",
+                "link": "#DOCS_CHANGE_LOG/buttons-and-message-components",
+                "children": [
+                    {
+                        "file": "Change_Log.md",
+                        "type": "section",
+                        "link": "#DOCS_CHANGE_LOG/may-26,-2021",
+                        "children": [
+                            {
+                                "file": "Change_Log.md",
+                                "type": "text",
+                                "text": "Message components are now available with our first two components: a layout-based `ActionRow` and...buttons!\nYou can now include buttons on messages sent by your app, whether they're bot messages or responses to interactions. [Learn more about message components](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/).\nThe addition of message components means new fields and response types:\n- An optional `components` field has been added to the [message object](#DOCS_RESOURCES_CHANNEL/message-object)\n- New response types `6` and `7` have been added for [interaction responses](#DOCS_INTERACTIONS_SLASH_COMMANDS/interaction-response-interactioncallbacktype), valid only for component-based interactions"
+                            }
+                        ],
+                        "level": 4,
+                        "title": "May 26, 2021"
+                    }
+                ],
+                "level": 2,
+                "title": "Buttons and Message Components"
+            },
+            {
+                "file": "Change_Log.md",
+                "type": "section",
                 "link": "#DOCS_CHANGE_LOG/api-v9",
                 "children": [
                     {
@@ -17,7 +40,7 @@
                             {
                                 "file": "Change_Log.md",
                                 "type": "text",
-                                "text": "API v9 is now available.\nAPI v9 includes supports for [threads](#DOCS_TOPICS_THREADS), an upcoming feature.  Older API versions will not receive any Gateway Events for threads, so it is important to update soon!  We've prepared a [migration guide](#DOCS_TOPICS_THREADS) to help make the upgrade process very straightforward.\nThis documentation is being published early so bots can have at least two months to upgrade before threads launch.\nAdditionally, API v9 also removes the `/channels/:id/messages/:id/suppress-embeds` route."
+                                "text": "API v9 is now available.\nAPI v9 includes support for [threads](#DOCS_TOPICS_THREADS), an upcoming feature.  Older API versions will not receive any Gateway Events for threads, so it is important to update soon!  We've prepared a [migration guide](#DOCS_TOPICS_THREADS) to help make the upgrade process very straightforward.\nThis documentation is being published early so bots can have at least two months to upgrade before threads launch.\nAdditionally, API v9 also removes the `/channels/:id/messages/:id/suppress-embeds` route."
                             }
                         ],
                         "level": 4,
@@ -17724,6 +17747,326 @@
         "title": "Users"
     },
     {
+        "file": "interactions\\Message_Components.md",
+        "type": "section",
+        "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/message-components",
+        "children": [
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "text",
+                "text": "Message components--we'll call them \"components\" moving forward--are a framework for adding interactive elements to the messages your app or bot sends. They're accessible, customizable, and easy to use.\nThere are several different types of components; this documentation will outline the basics of this new framework and each example."
+            },
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "section",
+                "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/what-are-components",
+                "children": [
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "text",
+                        "text": "Components are a new field on the [message object](#DOCS_RESOURCES_CHANNEL/message-object), so you can use them whether you're sending messages or responding to a [slash command](#DOCS_INTERACTIONS_SLASH_COMMANDS/) or other interaction.\nThe top-level `components` field is an array of `ActionRow` components."
+                    },
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "code",
+                        "language": "json",
+                        "code": "{\n    \"content\": \"This is a message with components\",\n    \"components\": [\n        {\n            \"type\": 1,\n            \"components\": []\n        }\n    ]\n}"
+                    }
+                ],
+                "level": 2,
+                "title": "What are Components"
+            },
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "section",
+                "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/component-object",
+                "children": [
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "table",
+                        "headers": [
+                            "field",
+                            "type",
+                            "description",
+                            "valid for"
+                        ],
+                        "rows": [
+                            {
+                                "field": "type",
+                                "type": "int",
+                                "description": "[component type](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/component-types)",
+                                "valid for": "all types"
+                            },
+                            {
+                                "field": "style?",
+                                "type": "int",
+                                "description": "one of [button styles](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons-button-styles)",
+                                "valid for": "[Buttons](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons)"
+                            },
+                            {
+                                "field": "label?",
+                                "type": "string",
+                                "description": "text that appears on the button, max 80 characters",
+                                "valid for": "[Buttons](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons)"
+                            },
+                            {
+                                "field": "emoji?",
+                                "type": "partial [emoji](#DOCS_RESOURCES_EMOJI/emoji-object)",
+                                "description": "`name`, `id`, and `animated`",
+                                "valid for": "[Buttons](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons)"
+                            },
+                            {
+                                "field": "custom_id?",
+                                "type": "string",
+                                "description": "a developer-defined identifier for the button, max 100 characters",
+                                "valid for": "[Buttons](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons)"
+                            },
+                            {
+                                "field": "url?",
+                                "type": "string",
+                                "description": "a url for link-style buttons",
+                                "valid for": "[Buttons](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons)"
+                            },
+                            {
+                                "field": "disabled?",
+                                "type": "bool",
+                                "description": "whether the button is disabled, default `false`",
+                                "valid for": "[Buttons](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons)"
+                            }
+                        ]
+                    }
+                ],
+                "level": 2,
+                "title": "Component Object"
+            },
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "section",
+                "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/component-types",
+                "children": [
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "table",
+                        "headers": [
+                            "type",
+                            "name",
+                            "description"
+                        ],
+                        "rows": [
+                            {
+                                "type": "1",
+                                "name": "ActionRow",
+                                "description": "A container for other components"
+                            },
+                            {
+                                "type": "2",
+                                "name": "Button",
+                                "description": "A clickable button"
+                            }
+                        ]
+                    }
+                ],
+                "level": 2,
+                "title": "Component Types"
+            },
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "section",
+                "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/actionrow",
+                "children": [
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "text",
+                        "text": "An `ActionRow` is a non-interactive container component for other types of components. It has a `type: 1` and a sub-array of `components` of other types.\n- You can have up to 5 `ActionRows` per message\n- An `ActionRow` cannot contain another `ActionRow`"
+                    },
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "code",
+                        "language": "json",
+                        "code": "{\n    \"content\": \"This is a message with components\",\n    \"components\": [\n        {\n            \"type\": 1,\n            \"components\": [\n                {\n                    \"type\": 2,\n                    \"label\": \"Click me!\",\n                    \"style\": 1,\n                    \"custom_id\": \"click_one\"\n                }\n            ]\n\n        }\n    ]\n}"
+                    }
+                ],
+                "level": 2,
+                "title": "ActionRow"
+            },
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "section",
+                "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/responding-to-a-component-interaction",
+                "children": [
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "text",
+                        "text": "Responding to a user interacting with a component is the same as other interaction types, like slash commands. You can simply ACK the request, send a followup message, or edit the original message to something new. Check out [Responding to An Interaction](#DOCS_INTERACTIONS_SLASH_COMMANDS/responding-to-an-interaction) and [interaction response](#DOCS_INTERACTIONS_SLASH_COMMANDS/interaction-response) for more."
+                    }
+                ],
+                "level": 2,
+                "title": "Responding to a Component Interaction"
+            },
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "section",
+                "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/custom-id",
+                "children": [
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "text",
+                        "text": "Message components, aside from `ActionRows`, have a mandatory `custom_id` field. This field is defined by the developer when sending the component payload, and is returned in the interaction payload sent when a user interacts with the component. For example, if you set `custom_id: click_me` on a button, you'll receive an interaction containing `custom_id: click_me` when a user clicks that button.\n`custom_id` is unique per component; one button can have a different `custom_id` than another button on the same message. This field is a string of max 100 characters, and can be used flexibly to maintain state or pass through other important data."
+                    }
+                ],
+                "level": 2,
+                "title": "Custom Id"
+            },
+            {
+                "file": "interactions\\Message_Components.md",
+                "type": "section",
+                "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons",
+                "children": [
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "text",
+                        "text": "Buttons are interactive components that render on messages. They can be clicked by users, and send an [interaction](#DOCS_INTERACTIONS_SLASH_COMMANDS/interaction) to your app when clicked.\n- Buttons must be sent inside an `ActionRow`\n- An `ActionRow` can contain up to 5 buttons"
+                    },
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "section",
+                        "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/button-object",
+                        "children": [
+                            {
+                                "file": "interactions\\Message_Components.md",
+                                "type": "table",
+                                "headers": [
+                                    "field",
+                                    "type",
+                                    "description"
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "type",
+                                        "type": "int",
+                                        "description": "`2` for a button"
+                                    },
+                                    {
+                                        "field": "style",
+                                        "type": "int",
+                                        "description": "one of [button styles](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/buttons-button-styles)"
+                                    },
+                                    {
+                                        "field": "label?",
+                                        "type": "string",
+                                        "description": "text the appears on the button, max 80 characters"
+                                    },
+                                    {
+                                        "field": "emoji?",
+                                        "type": "partial [emoji](#DOCS_RESOURCES_EMOJI/emoji-object)",
+                                        "description": "`name`, `id`, and `animated`"
+                                    },
+                                    {
+                                        "field": "custom_id?",
+                                        "type": "string",
+                                        "description": "a developer-defined identifier for the button, max 100 characters"
+                                    },
+                                    {
+                                        "field": "url?",
+                                        "type": "string",
+                                        "description": "a url for link-style buttons"
+                                    },
+                                    {
+                                        "field": "disabled?",
+                                        "type": "bool",
+                                        "description": "whether the button is disabled, default `false`"
+                                    }
+                                ]
+                            },
+                            {
+                                "file": "interactions\\Message_Components.md",
+                                "type": "text",
+                                "text": "Buttons come in a variety of styles to convey different types of actions. These styles also define what fields are valid for a button.\n- Non-link buttons **must** have a `custom_id`, and cannot have a `url`\n- Link buttons **must** have a `url`, and cannot have a `custom_id`\n- Link buttons do not send an [interaction](#DOCS_INTERACTIONS_SLASH_COMMANDS/interaction) to your app when clicked"
+                            }
+                        ],
+                        "level": 6,
+                        "title": "Button Object"
+                    },
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "section",
+                        "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/button-styles",
+                        "children": [
+                            {
+                                "file": "interactions\\Message_Components.md",
+                                "type": "table",
+                                "headers": [
+                                    "name",
+                                    "value",
+                                    "color",
+                                    "required field"
+                                ],
+                                "rows": [
+                                    {
+                                        "name": "Primary",
+                                        "value": "1",
+                                        "color": "blurple",
+                                        "required field": "`custom_id`"
+                                    },
+                                    {
+                                        "name": "Secondary",
+                                        "value": "2",
+                                        "color": "grey",
+                                        "required field": "`custom_id`"
+                                    },
+                                    {
+                                        "name": "Success",
+                                        "value": "3",
+                                        "color": "green",
+                                        "required field": "`custom_id`"
+                                    },
+                                    {
+                                        "name": "Danger",
+                                        "value": "4",
+                                        "color": "red",
+                                        "required field": "`custom_id`"
+                                    },
+                                    {
+                                        "name": "Link",
+                                        "value": "5",
+                                        "color": "grey, navigates to a URL",
+                                        "required field": "`url`"
+                                    }
+                                ]
+                            },
+                            {
+                                "file": "interactions\\Message_Components.md",
+                                "type": "text",
+                                "text": "![An image showing the different button styles](button-styles.png)\nWhen a user clicks on a button, your app will receive an [interaction](#DOCS_INTERACTIONS_SLASH_COMMANDS/interactions) including the message the button was on:"
+                            }
+                        ],
+                        "level": 6,
+                        "title": "Button Styles"
+                    },
+                    {
+                        "file": "interactions\\Message_Components.md",
+                        "type": "section",
+                        "link": "#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/button-interaction",
+                        "children": [
+                            {
+                                "file": "interactions\\Message_Components.md",
+                                "type": "code",
+                                "language": "json",
+                                "code": "{\n    \"version\": 1,\n    \"type\": 3,\n    \"token\": \"unique_interaction_token\",\n    \"message\": {\n        \"type\": 0,\n        \"tts\": false,\n        \"timestamp\": \"2021-05-19T02:12:51.710000+00:00\",\n        \"pinned\": false,\n        \"mentions\": [],\n        \"mention_roles\": [],\n        \"mention_everyone\": false,\n        \"id\": \"844397162624450620\",\n        \"flags\": 0,\n        \"embeds\": [],\n        \"edited_timestamp\": null,\n        \"content\": \"This is a message with components.\",\n        \"components\": [\n            {\n                \"type\": 1,\n                \"components\": [\n                    {\n                        \"type\": 2,\n                        \"label\": \"Click me!\",\n                        \"style\": 1,\n                        \"custom_id\": \"click_one\"\n                    }\n                ]\n            }\n        ],\n        \"channel_id\": \"345626669114982402\",\n        \"author\": {\n            \"username\": \"Mason\",\n            \"public_flags\": 131141,\n            \"id\": \"53908232506183680\",\n            \"discriminator\": \"1337\",\n            \"avatar\": \"a_d5efa99b3eeaa7dd43acca82f5692432\"\n        },\n        \"attachments\": []\n    },\n    \"member\": {\n        \"user\": {\n            \"username\": \"Mason\",\n            \"public_flags\": 131141,\n            \"id\": \"53908232506183680\",\n            \"discriminator\": \"1337\",\n            \"avatar\": \"a_d5efa99b3eeaa7dd43acca82f5692432\"\n        },\n        \"roles\": [\n            \"290926798626357999\"\n        ],\n        \"premium_since\": null,\n        \"permissions\": \"17179869183\",\n        \"pending\": false,\n        \"nick\": null,\n        \"mute\": false,\n        \"joined_at\": \"2017-03-13T19:19:14.040000+00:00\",\n        \"is_pending\": false,\n        \"deaf\": false,\n        \"avatar\": null\n    },\n    \"id\": \"846462639134605312\",\n    \"guild_id\": \"290926798626357999\",\n    \"data\": {\n        \"custom_id\": \"click_one\",\n        \"component_type\": 2\n    },\n    \"channel_id\": \"345626669114982999\",\n    \"application_id\": \"290926444748734465\"\n}"
+                            }
+                        ],
+                        "level": 6,
+                        "title": "Button Interaction"
+                    }
+                ],
+                "level": 2,
+                "title": "Buttons"
+            }
+        ],
+        "level": 1,
+        "title": "Message Components"
+    },
+    {
         "file": "interactions\\Slash_Commands.md",
         "type": "section",
         "link": "#DOCS_INTERACTIONS_SLASH_COMMANDS/slash-commands",
@@ -19177,6 +19520,11 @@
                                 "field": "version",
                                 "type": "int",
                                 "description": "read-only property, always `1`"
+                            },
+                            {
+                                "field": "message?",
+                                "type": "[message](#DOCS_RESOURCES_CHANNEL/message-object) object",
+                                "description": "for components, the message they were attached to"
                             }
                         ]
                     },
@@ -19205,6 +19553,10 @@
                                     {
                                         "name": "ApplicationCommand",
                                         "value": "2"
+                                    },
+                                    {
+                                        "name": "MessageComponent",
+                                        "value": "3"
                                     }
                                 ]
                             }
@@ -19245,6 +19597,16 @@
                                         "field": "options?",
                                         "type": "array of ApplicationCommandInteractionDataOption",
                                         "description": "the params + values from the user"
+                                    },
+                                    {
+                                        "field": "custom_id",
+                                        "type": "string",
+                                        "description": "for components, the [`custom_id`](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/custom-id) of the component"
+                                    },
+                                    {
+                                        "field": "component_type",
+                                        "type": "int",
+                                        "description": "for components, the [type](DOCS_INTERACTIONS_MESSAGE_COMPONENTS/component-types) of the component"
                                     }
                                 ]
                             }
@@ -19268,22 +19630,22 @@
                                 "rows": [
                                     {
                                         "field": "users?",
-                                        "type": "JSON of ID: User",
+                                        "type": "Map of Snowflakes to [User Objects](#DOCS_RESOURCES_USER/user-object)",
                                         "description": "the IDs and User objects"
                                     },
                                     {
                                         "field": "members?\\*",
-                                        "type": "JSON of ID: Member",
+                                        "type": "Map of Snowflakes to [Partial Member Objects](#DOCS_RESOURCES_GUILD/guild-member-object)",
                                         "description": "the IDs and partial Member objects"
                                     },
                                     {
                                         "field": "roles?",
-                                        "type": "JSON of ID: Role",
+                                        "type": "Map of Snowflakes to [Role Objects](#DOCS_TOPICS_PERMISSIONS/role-object)",
                                         "description": "the IDs and Role objects"
                                     },
                                     {
                                         "field": "channels?\\*\\*",
-                                        "type": "JSON of ID: Channel",
+                                        "type": "Map of Snowflakes to [Partial Channel Objects](#DOCS_RESOURCES_CHANNEL/channel-object)",
                                         "description": "the IDs and partial Channel objects"
                                     }
                                 ]
@@ -19405,8 +19767,23 @@
                                         "name": "DeferredChannelMessageWithSource",
                                         "value": "5",
                                         "description": "ACK an interaction and edit a response later, the user sees a loading state"
+                                    },
+                                    {
+                                        "name": "DeferredUpdateMessage\\*",
+                                        "value": "6",
+                                        "description": "for components, ACK an interaction and edit the original message later; the user does not see a loading state"
+                                    },
+                                    {
+                                        "name": "UpdateMessage\\*",
+                                        "value": "7",
+                                        "description": "for components, edit the message the component was attached to"
                                     }
                                 ]
+                            },
+                            {
+                                "file": "interactions\\Slash_Commands.md",
+                                "type": "text",
+                                "text": "\\* Only valid for [component-based](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS/) interactions"
                             }
                         ],
                         "level": 6,
@@ -19455,6 +19832,11 @@
                                         "name": "flags?",
                                         "value": "int",
                                         "description": "set to `64` to make your response ephemeral"
+                                    },
+                                    {
+                                        "name": "components?",
+                                        "value": "array of [components](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS)",
+                                        "description": "message components"
                                     }
                                 ]
                             }
@@ -21114,6 +21496,11 @@
                                         "field": "thread?",
                                         "type": "[channel](#DOCS_RESOURCES_CHANNEL/channel) object",
                                         "description": "the thread that was started from this message, includes [thread member](#DOCS_RESOURCES_CHANNEL/thread-member-object) object"
+                                    },
+                                    {
+                                        "field": "components?",
+                                        "type": "[component](#DOCS_INTERACTIONS_MESSAGE_COMPONENTS) object",
+                                        "description": "sent if the message contains components like buttons, action rows, or other interactive components"
                                     }
                                 ]
                             },
@@ -24745,9 +25132,9 @@
                                         "description": "the welcome screen of a Community guild, shown to new members, returned in an [Invite](#DOCS_RESOURCES_INVITE/invite-object)'s guild object"
                                     },
                                     {
-                                        "field": "nsfw",
-                                        "type": "boolean",
-                                        "description": "true if this guild is [designated as NSFW](https://support.discord.com/hc/en-us/articles/1500005389362-NSFW-Server-Designation)"
+                                        "field": "nsfw_level",
+                                        "type": "integer",
+                                        "description": "[guild NSFW level](#DOCS_RESOURCES_GUILD/guild-object-guild-nsfw-level)"
                                     },
                                     {
                                         "field": "stage_instances? \\*",
@@ -24904,6 +25291,41 @@
                         ],
                         "level": 6,
                         "title": "Verification Level"
+                    },
+                    {
+                        "file": "resources\\Guild.md",
+                        "type": "section",
+                        "link": "#DOCS_RESOURCES_GUILD/guild-object-guild-nsfw-level",
+                        "children": [
+                            {
+                                "file": "resources\\Guild.md",
+                                "type": "table",
+                                "headers": [
+                                    "level",
+                                    "value"
+                                ],
+                                "rows": [
+                                    {
+                                        "level": "DEFAULT",
+                                        "value": "0"
+                                    },
+                                    {
+                                        "level": "EXPLICIT",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "level": "SAFE",
+                                        "value": "2"
+                                    },
+                                    {
+                                        "level": "AGE_RESTRICTED",
+                                        "value": "3"
+                                    }
+                                ]
+                            }
+                        ],
+                        "level": 6,
+                        "title": "Guild NSFW Level"
                     },
                     {
                         "file": "resources\\Guild.md",
@@ -27334,29 +27756,38 @@
                     },
                     {
                         "file": "resources\\Guild.md",
-                        "type": "table",
-                        "headers": [
-                            "field",
-                            "type",
-                            "description"
-                        ],
-                        "rows": [
+                        "type": "section",
+                        "link": "#DOCS_RESOURCES_GUILD/json-params",
+                        "children": [
                             {
-                                "field": "enabled",
-                                "type": "boolean",
-                                "description": "whether the welcome screen is enabled"
-                            },
-                            {
-                                "field": "welcome_channels",
-                                "type": "array of [welcome screen channel](#DOCS_RESOURCES_GUILD/welcome-screen-object-welcome-screen-channel-structure) objects",
-                                "description": "channels linked in the welcome screen and their display options"
-                            },
-                            {
-                                "field": "description",
-                                "type": "string",
-                                "description": "the server description to show in the welcome screen"
+                                "file": "resources\\Guild.md",
+                                "type": "table",
+                                "headers": [
+                                    "field",
+                                    "type",
+                                    "description"
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "enabled",
+                                        "type": "boolean",
+                                        "description": "whether the welcome screen is enabled"
+                                    },
+                                    {
+                                        "field": "welcome_channels",
+                                        "type": "array of [welcome screen channel](#DOCS_RESOURCES_GUILD/welcome-screen-object-welcome-screen-channel-structure) objects",
+                                        "description": "channels linked in the welcome screen and their display options"
+                                    },
+                                    {
+                                        "field": "description",
+                                        "type": "string",
+                                        "description": "the server description to show in the welcome screen"
+                                    }
+                                ]
                             }
-                        ]
+                        ],
+                        "level": 6,
+                        "title": "JSON Params"
                     }
                 ],
                 "level": 2,
@@ -28109,6 +28540,16 @@
                                         "field": "topic",
                                         "type": "string",
                                         "description": "The topic of the Stage instance (1-120 characters)"
+                                    },
+                                    {
+                                        "field": "privacy_level",
+                                        "type": "integer",
+                                        "description": "The [privacy level](#DOCS_RESOURCES_STAGE_INSTANCE/stage-instance-object-privacy-level) of the Stage instance"
+                                    },
+                                    {
+                                        "field": "discoverable_disabled",
+                                        "type": "boolean",
+                                        "description": "Whether or not Stage discovery is disabled"
                                     }
                                 ]
                             }
@@ -28119,13 +28560,43 @@
                     {
                         "file": "resources\\Stage_Instance.md",
                         "type": "section",
+                        "link": "#DOCS_RESOURCES_STAGE_INSTANCE/stage-instance-object-privacy-level",
+                        "children": [
+                            {
+                                "file": "resources\\Stage_Instance.md",
+                                "type": "table",
+                                "headers": [
+                                    "level",
+                                    "value",
+                                    "description"
+                                ],
+                                "rows": [
+                                    {
+                                        "level": "PUBLIC",
+                                        "value": "1",
+                                        "description": "The Stage instance is visible publicly, such as on Stage discovery."
+                                    },
+                                    {
+                                        "level": "GUILD_ONLY",
+                                        "value": "2",
+                                        "description": "The Stage instance is visible to only guild members."
+                                    }
+                                ]
+                            }
+                        ],
+                        "level": 6,
+                        "title": "Privacy Level"
+                    },
+                    {
+                        "file": "resources\\Stage_Instance.md",
+                        "type": "section",
                         "link": "#DOCS_RESOURCES_STAGE_INSTANCE/stage-instance-object-example-stage-instance",
                         "children": [
                             {
                                 "file": "resources\\Stage_Instance.md",
                                 "type": "code",
                                 "language": "json",
-                                "code": "{\n  \"id\": \"840647391636226060\",\n  \"guild_id\": \"197038439483310086\",\n  \"channel_id\": \"733488538393510049\",\n  \"topic\": \"Testing Testing, 123\"\n}"
+                                "code": "{\n  \"id\": \"840647391636226060\",\n  \"guild_id\": \"197038439483310086\",\n  \"channel_id\": \"733488538393510049\",\n  \"topic\": \"Testing Testing, 123\",\n  \"privacy_level\": 1,\n  \"discoverable_disabled\": false\n}"
                             }
                         ],
                         "level": 6,
@@ -28143,7 +28614,7 @@
                     {
                         "file": "resources\\Stage_Instance.md",
                         "type": "text",
-                        "text": "Below are some definitions related to stages.\n- **Liveness:** A Stage channel is considered _live_ when there is an associated stage instance. Conversely, a Stage channel is _not live_ when there is no associated stage instance.\n- **Speakers:** A participant of a Stage channel is a _speaker_ when their [voice state](#DOCS_RESOURCES_VOICE/voice-state-object)\n  is not `suppress`ed, and has no `request_to_speak_timestamp`.\n- **Moderators**: A member of the guild is a _moderator_ of a Stage channel if they have all of the following [permissions](#DOCS_TOPICS_PERMISSIONS/permissions):\n  - `MANAGE_CHANNELS`\n  - `MUTE_MEMBERS`\n  - `MOVE_MEMBERS`\n- **Topic**: This is the blurb that gets shown below the channel's name, among other places."
+                        "text": "Below are some definitions related to stages.\n- **Liveness:** A Stage channel is considered _live_ when there is an associated stage instance. Conversely, a Stage channel is _not live_ when there is no associated stage instance.\n- **Speakers:** A participant of a Stage channel is a _speaker_ when their [voice state](#DOCS_RESOURCES_VOICE/voice-state-object)\n  is not `suppress`ed, and has no `request_to_speak_timestamp`.\n- **Moderators**: A member of the guild is a _moderator_ of a Stage channel if they have all of the following [permissions](#DOCS_TOPICS_PERMISSIONS/permissions):\n  - `MANAGE_CHANNELS`\n  - `MUTE_MEMBERS`\n  - `MOVE_MEMBERS`\n- **Topic**: This is the blurb that gets shown below the channel's name, among other places.\n- **Public**: A Stage instance is public when it has a `privacy_level` of `PUBLIC`. While a guild has a public Stage instance:\n  - The guild will be lurkable.\n  - Lurkers may join any Stage channel with a public Stage instance."
                     }
                 ],
                 "level": 2,
@@ -28196,6 +28667,11 @@
                                         "field": "topic",
                                         "type": "string",
                                         "description": "The topic of the Stage instance (1-120 characters)"
+                                    },
+                                    {
+                                        "field": "privacy_level?",
+                                        "type": "integer",
+                                        "description": "The [privacy level](#DOCS_RESOURCES_STAGE_INSTANCE/stage-instance-object-privacy-level) of the Stage instance (default GUILD_ONLY)"
                                     }
                                 ]
                             }
@@ -28246,9 +28722,14 @@
                                 ],
                                 "rows": [
                                     {
-                                        "field": "topic",
+                                        "field": "topic?",
                                         "type": "string",
                                         "description": "The topic of the Stage instance (1-120 characters)"
+                                    },
+                                    {
+                                        "field": "privacy_level?",
+                                        "type": "integer",
+                                        "description": "The [privacy level](#DOCS_RESOURCES_STAGE_INSTANCE/stage-instance-object-privacy-level) of the Stage instance"
                                     }
                                 ]
                             }
@@ -29338,7 +29819,7 @@
                                         "description": "name of the webhook (1-80 characters)"
                                     },
                                     {
-                                        "field": "avatar",
+                                        "field": "avatar?",
                                         "type": "?[image data](#DOCS_REFERENCE/image-data)",
                                         "description": "image for the default webhook avatar"
                                     }
@@ -29647,45 +30128,9 @@
                 "children": [
                     {
                         "file": "resources\\Webhook.md",
-                        "type": "section",
-                        "link": "#DOCS_RESOURCES_WEBHOOK/query-string-params",
-                        "children": [
-                            {
-                                "file": "resources\\Webhook.md",
-                                "type": "table",
-                                "headers": [
-                                    "field",
-                                    "type",
-                                    "description",
-                                    "required"
-                                ],
-                                "rows": [
-                                    {
-                                        "field": "wait",
-                                        "type": "boolean",
-                                        "description": "waits for server confirmation of message send before response (defaults to `true`; when `false` a message that is not saved does not return an error)",
-                                        "required": "false"
-                                    }
-                                ]
-                            },
-                            {
-                                "file": "resources\\Webhook.md",
-                                "type": "text",
-                                "text": "Refer to [Slack's documentation](https://api.slack.com/incoming-webhooks) for more information. We do not support Slack's `channel`, `icon_emoji`, `mrkdwn`, or `mrkdwn_in` properties."
-                            }
-                        ],
-                        "level": 6,
-                        "title": "Query String Params"
-                    }
-                ],
-                "level": 2,
-                "title": "Execute Slack-Compatible Webhook % POST /webhooks/{webhook.id#DOCS_RESOURCES_WEBHOOK/webhook-object}/{webhook.token#DOCS_RESOURCES_WEBHOOK/webhook-object}/slack"
-            },
-            {
-                "file": "resources\\Webhook.md",
-                "type": "section",
-                "link": "#DOCS_RESOURCES_WEBHOOK/execute-github-compatible-webhook-%-post-/webhooks/{webhook.id#docs_resources_webhook/webhook-object}/{webhook.token#docs_resources_webhook/webhook-object}/github",
-                "children": [
+                        "type": "text",
+                        "text": "Refer to [Slack's documentation](https://api.slack.com/incoming-webhooks) for more information. We do not support Slack's `channel`, `icon_emoji`, `mrkdwn`, or `mrkdwn_in` properties."
+                    },
                     {
                         "file": "resources\\Webhook.md",
                         "type": "section",
@@ -29708,11 +30153,47 @@
                                         "required": "false"
                                     }
                                 ]
-                            },
+                            }
+                        ],
+                        "level": 6,
+                        "title": "Query String Params"
+                    }
+                ],
+                "level": 2,
+                "title": "Execute Slack-Compatible Webhook % POST /webhooks/{webhook.id#DOCS_RESOURCES_WEBHOOK/webhook-object}/{webhook.token#DOCS_RESOURCES_WEBHOOK/webhook-object}/slack"
+            },
+            {
+                "file": "resources\\Webhook.md",
+                "type": "section",
+                "link": "#DOCS_RESOURCES_WEBHOOK/execute-github-compatible-webhook-%-post-/webhooks/{webhook.id#docs_resources_webhook/webhook-object}/{webhook.token#docs_resources_webhook/webhook-object}/github",
+                "children": [
+                    {
+                        "file": "resources\\Webhook.md",
+                        "type": "text",
+                        "text": "Add a new webhook to your GitHub repo (in the repo's settings), and use this endpoint as the \"Payload URL.\" You can choose what events your Discord channel receives by choosing the \"Let me select individual events\" option and selecting individual events for the new webhook you're configuring."
+                    },
+                    {
+                        "file": "resources\\Webhook.md",
+                        "type": "section",
+                        "link": "#DOCS_RESOURCES_WEBHOOK/query-string-params",
+                        "children": [
                             {
                                 "file": "resources\\Webhook.md",
-                                "type": "text",
-                                "text": "Add a new webhook to your GitHub repo (in the repo's settings), and use this endpoint as the \"Payload URL.\" You can choose what events your Discord channel receives by choosing the \"Let me select individual events\" option and selecting individual events for the new webhook you're configuring."
+                                "type": "table",
+                                "headers": [
+                                    "field",
+                                    "type",
+                                    "description",
+                                    "required"
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "wait",
+                                        "type": "boolean",
+                                        "description": "waits for server confirmation of message send before response (defaults to `true`; when `false` a message that is not saved does not return an error)",
+                                        "required": "false"
+                                    }
+                                ]
                             }
                         ],
                         "level": 6,
@@ -32060,7 +32541,7 @@
                                     {
                                         "file": "topics\\Gateway.md",
                                         "type": "text",
-                                        "text": "If the payload is valid, the gateway will respond with a [Ready](#DOCS_TOPICS_GATEWAY/ready) event. Your client is now considered in a \"connected\" state. Clients are limited by [maximum concurrency](#DOCS_TOPICS_GATEWAY/session-start-limit-object) when [Identify](#DOCS_TOPICS_GATEWAY/identify)ing; if they exceed this limit, the gateway will respond with an [Opcode 9 Invalid Session](#DOCS_TOPICS_GATEWAY/invalid-session). It is important to note that although the ready event contains a large portion of the required initial state, some information (such as guilds and their members) is sent asynchronously (see [Guild Create](#DOCS_TOPICS_GATEWAY/guild-create) event)."
+                                        "text": "If the payload is valid, the gateway will respond with a [Ready](#DOCS_TOPICS_GATEWAY/ready) event. Your client is now considered in a \"connected\" state. Clients are limited by [maximum concurrency](#DOCS_TOPICS_GATEWAY/session-start-limit-object) when [Identifying](#DOCS_TOPICS_GATEWAY/identify); if they exceed this limit, the gateway will respond with an [Opcode 9 Invalid Session](#DOCS_TOPICS_GATEWAY/invalid-session). It is important to note that although the ready event contains a large portion of the required initial state, some information (such as guilds and their members) is sent asynchronously (see [Guild Create](#DOCS_TOPICS_GATEWAY/guild-create) event)."
                                     },
                                     {
                                         "file": "topics\\Gateway.md",
@@ -36762,7 +37243,7 @@
                                     {
                                         "code": "4001",
                                         "description": "Unknown opcode",
-                                        "explanation": "You sent an invalid [Gateway opcode](#DOCS_TOPICS_GATEWAY/payloads-and-opcodes) or an invalid payload for an opcode. Don't do that!"
+                                        "explanation": "You sent an invalid [Gateway opcode](#DOCS_TOPICS_OPCODES_AND_STATUS_CODES/gateway-opcodes) or an invalid payload for an opcode. Don't do that!"
                                     },
                                     {
                                         "code": "4002",
@@ -36948,27 +37429,27 @@
                                     {
                                         "code": "4001",
                                         "description": "Unknown opcode",
-                                        "explanation": "You sent an invalid [opcode](#DOCS_RESOURCES_VOICE_CONNECTIONS/voice-events-voice-opcodes)."
+                                        "explanation": "You sent an invalid [opcode](#DOCS_TOPICS_OPCODES_AND_STATUS_CODES/voice-opcodes)."
                                     },
                                     {
                                         "code": "4002",
                                         "description": "Failed to decode payload",
-                                        "explanation": "You sent a invalid payload in your [identifying](#DOCS_TOPICS_GATEWAY/gateway-identify) to the Gateway."
+                                        "explanation": "You sent a invalid payload in your [identifying](#DOCS_TOPICS_GATEWAY/identify) to the Gateway."
                                     },
                                     {
                                         "code": "4003",
                                         "description": "Not authenticated",
-                                        "explanation": "You sent a payload before [identifying](#DOCS_TOPICS_GATEWAY/gateway-identify) with the Gateway."
+                                        "explanation": "You sent a payload before [identifying](#DOCS_TOPICS_GATEWAY/identify) with the Gateway."
                                     },
                                     {
                                         "code": "4004",
                                         "description": "Authentication failed",
-                                        "explanation": "The token you sent in your [identify](#DOCS_TOPICS_GATEWAY/gateway-identify) payload is incorrect."
+                                        "explanation": "The token you sent in your [identify](#DOCS_TOPICS_GATEWAY/identify) payload is incorrect."
                                     },
                                     {
                                         "code": "4005",
                                         "description": "Already authenticated",
-                                        "explanation": "You sent more than one [identify](#DOCS_TOPICS_GATEWAY/gateway-identify) payload. Stahp."
+                                        "explanation": "You sent more than one [identify](#DOCS_TOPICS_GATEWAY/identify) payload. Stahp."
                                     },
                                     {
                                         "code": "4006",
@@ -36988,7 +37469,7 @@
                                     {
                                         "code": "4012",
                                         "description": "Unknown protocol",
-                                        "explanation": "We didn't recognize the [protocol](#DOCS_RESOURCES_VOICE_CONNECTIONS/establishing-a-voice-udp-connection-example-select-protocol-payload) you sent."
+                                        "explanation": "We didn't recognize the [protocol](#DOCS_TOPICS_VOICE_CONNECTIONS/establishing-a-voice-udp-connection-example-select-protocol-payload) you sent."
                                     },
                                     {
                                         "code": "4014",
@@ -36998,12 +37479,12 @@
                                     {
                                         "code": "4015",
                                         "description": "Voice server crashed",
-                                        "explanation": "The server crashed. Our bad! Try [resuming](#DOCS_RESOURCES_VOICE_CONNECTIONS/resuming-voice-connection)."
+                                        "explanation": "The server crashed. Our bad! Try [resuming](#DOCS_TOPICS_VOICE_CONNECTIONS/resuming-voice-connection)."
                                     },
                                     {
                                         "code": "4016",
                                         "description": "Unknown encryption mode",
-                                        "explanation": "We didn't recognize your [encryption](#DOCS_RESOURCES_VOICE_CONNECTIONS/encrypting-and-sending-voice)."
+                                        "explanation": "We didn't recognize your [encryption](#DOCS_TOPICS_VOICE_CONNECTIONS/encrypting-and-sending-voice)."
                                     }
                                 ]
                             }
@@ -37076,7 +37557,7 @@
                                     },
                                     {
                                         "code": "429 (TOO MANY REQUESTS)",
-                                        "meaning": "You are being rate limited, see [Rate Limits](#DOCS_TOPICS_RATE_LIMITS/rate-limits)."
+                                        "meaning": "You are being rate limited, see [Rate Limits](#DOCS_TOPICS_RATE_LIMITS)."
                                     },
                                     {
                                         "code": "502 (GATEWAY UNAVAILABLE)",
@@ -37908,7 +38389,7 @@
                                 "permission": "USE_VAD",
                                 "value": "`0x0002000000` `(1 << 25)`",
                                 "description": "Allows for using voice-activity-detection in a voice channel",
-                                "channel type": "V, S"
+                                "channel type": "V"
                             },
                             {
                                 "permission": "CHANGE_NICKNAME",

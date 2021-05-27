@@ -1,94 +1,3830 @@
-import { ApplicationCommand } from "./interfaces/ApplicationCommand";
-import { ApplicationStructure } from "./interfaces/ApplicationStructure";
-import { AuditLogStructure } from "./interfaces/AuditLogStructure";
-import { BanStructure } from "./interfaces/BanStructure";
-import { ChannelStructure } from "./interfaces/ChannelStructure";
-import { ConnectionStructure } from "./interfaces/ConnectionStructure";
-import { EmojiStructure } from "./interfaces/EmojiStructure";
-import { FollowedChannelStructure } from "./interfaces/FollowedChannelStructure";
-import { GuildApplicationCommandPermissions } from "./interfaces/GuildApplicationCommandPermissions";
-import { GuildMemberStructure } from "./interfaces/GuildMemberStructure";
-import { GuildPreviewStructure } from "./interfaces/GuildPreviewStructure";
-import { GuildStructure } from "./interfaces/GuildStructure";
-import { GuildTemplateStructure } from "./interfaces/GuildTemplateStructure";
-import { GuildWidgetStructure } from "./interfaces/GuildWidgetStructure";
-import { IntegrationStructure } from "./interfaces/IntegrationStructure";
-import { InviteStructure } from "./interfaces/InviteStructure";
-import { MessageStructure } from "./interfaces/MessageStructure";
-import { RoleStructure } from "./interfaces/RoleStructure";
-import { UserStructure } from "./interfaces/UserStructure";
-import { VoiceRegionStructure } from "./interfaces/VoiceRegionStructure";
-import { WebhookStructure } from "./interfaces/WebhookStructure";
-import { WelcomeScreenStructure } from "./interfaces/WelcomeScreenStructure";
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#applicationcommand
+ * 
+ * An application command is the base "command" model that belongs to an 
+ * application. This is what you are creating when you `POST` a new command.
+ * 
+ * A command, or each individual subcommand, can have a maximum of 25 `options`
+ * 
+ * Required `options` must be listed before optional options
+ */
+export interface ApplicationCommand {
+    /**
+     * Unique id of the command.
+     */
+    id: string;
+    /**
+     * Unique id of the parent application.
+     */
+    application_id: string;
+    /**
+     * 1-32 lowercase character name matching `^[\w-]{1,32}$`.
+     */
+    name: string;
+    /**
+     * 1-100 character description.
+     */
+    description: string;
+    /**
+     * The parameters for the command.
+     */
+    options?: ApplicationCommandOption[];
+    /**
+     * Whether the command is enabled by default when the app is added to a guild.
+     */
+    default_permission?: boolean;
+}
 
-import { AddGuildMemberJsonParams } from "./requests/AddGuildMemberJsonParams";
-import { BeginGuildPruneJsonParams } from "./requests/BeginGuildPruneJsonParams";
-import { BulkDeleteMessagesJsonParams } from "./requests/BulkDeleteMessagesJsonParams";
-import { CreateChannelInviteJsonParams } from "./requests/CreateChannelInviteJsonParams";
-import { CreateDMJsonParams } from "./requests/CreateDMJsonParams";
-import { CreateGlobalApplicationCommandJsonParams } from "./requests/CreateGlobalApplicationCommandJsonParams";
-import { CreateGroupDMJsonParams } from "./requests/CreateGroupDMJsonParams";
-import { CreateGuildApplicationCommandJsonParams } from "./requests/CreateGuildApplicationCommandJsonParams";
-import { CreateGuildBanJsonParams } from "./requests/CreateGuildBanJsonParams";
-import { CreateGuildChannelJsonParams } from "./requests/CreateGuildChannelJsonParams";
-import { CreateGuildEmojiJsonParams } from "./requests/CreateGuildEmojiJsonParams";
-import { CreateGuildFromGuildTemplateJsonParams } from "./requests/CreateGuildFromGuildTemplateJsonParams";
-import { CreateGuildJsonParams } from "./requests/CreateGuildJsonParams";
-import { CreateGuildRoleJsonParams } from "./requests/CreateGuildRoleJsonParams";
-import { CreateGuildTemplateJsonParams } from "./requests/CreateGuildTemplateJsonParams";
-import { CreateMessageJsonParams } from "./requests/CreateMessageJsonParams";
-import { CreateStageInstanceJsonParams } from "./requests/CreateStageInstanceJsonParams";
-import { CreateWebhookJsonParams } from "./requests/CreateWebhookJsonParams";
-import { EditApplicationCommandPermissionsJsonParams } from "./requests/EditApplicationCommandPermissionsJsonParams";
-import { EditChannelPermissionsJsonParams } from "./requests/EditChannelPermissionsJsonParams";
-import { EditGlobalApplicationCommandJsonParams } from "./requests/EditGlobalApplicationCommandJsonParams";
-import { EditGuildApplicationCommandJsonParams } from "./requests/EditGuildApplicationCommandJsonParams";
-import { EditMessageJsonParams } from "./requests/EditMessageJsonParams";
-import { EditWebhookMessageJsonParams } from "./requests/EditWebhookMessageJsonParams";
-import { ExecuteGitHubCompatibleWebhookQueryParams } from "./requests/ExecuteGitHubCompatibleWebhookQueryParams";
-import { ExecuteSlackCompatibleWebhookQueryParams } from "./requests/ExecuteSlackCompatibleWebhookQueryParams";
-import { ExecuteWebhookJsonParams } from "./requests/ExecuteWebhookJsonParams";
-import { ExecuteWebhookQueryParams } from "./requests/ExecuteWebhookQueryParams";
-import { FollowNewsChannelJsonParams } from "./requests/FollowNewsChannelJsonParams";
-import { GetChannelMessagesQueryParams } from "./requests/GetChannelMessagesQueryParams";
-import { GetCurrentUserGuildsQueryParams } from "./requests/GetCurrentUserGuildsQueryParams";
-import { GetGatewayBotJsonParams } from "./requests/GetGatewayBotJsonParams";
-import { GetGuildAuditLogQueryParams } from "./requests/GetGuildAuditLogQueryParams";
-import { GetGuildPruneCountQueryParams } from "./requests/GetGuildPruneCountQueryParams";
-import { GetGuildQueryParams } from "./requests/GetGuildQueryParams";
-import { GetGuildWidgetImageQueryParams } from "./requests/GetGuildWidgetImageQueryParams";
-import { GetInviteQueryParams } from "./requests/GetInviteQueryParams";
-import { GetReactionsQueryParams } from "./requests/GetReactionsQueryParams";
-import { GroupDMAddRecipientJsonParams } from "./requests/GroupDMAddRecipientJsonParams";
-import { ListGuildMembersQueryParams } from "./requests/ListGuildMembersQueryParams";
-import { ListJoinedPrivateArchivedThreadsQueryParams } from "./requests/ListJoinedPrivateArchivedThreadsQueryParams";
-import { ListPrivateArchivedThreadsQueryParams } from "./requests/ListPrivateArchivedThreadsQueryParams";
-import { ListPublicArchivedThreadsQueryParams } from "./requests/ListPublicArchivedThreadsQueryParams";
-import { ModifyChannelJsonParams } from "./requests/ModifyChannelJsonParams";
-import { ModifyCurrentUserJsonParams } from "./requests/ModifyCurrentUserJsonParams";
-import { ModifyCurrentUserNickJsonParams } from "./requests/ModifyCurrentUserNickJsonParams";
-import { ModifyGuildChannelPositionsJsonParams } from "./requests/ModifyGuildChannelPositionsJsonParams";
-import { ModifyGuildEmojiJsonParams } from "./requests/ModifyGuildEmojiJsonParams";
-import { ModifyGuildJsonParams } from "./requests/ModifyGuildJsonParams";
-import { ModifyGuildMemberJsonParams } from "./requests/ModifyGuildMemberJsonParams";
-import { ModifyGuildRoleJsonParams } from "./requests/ModifyGuildRoleJsonParams";
-import { ModifyGuildRolePositionsJsonParams } from "./requests/ModifyGuildRolePositionsJsonParams";
-import { ModifyGuildTemplateJsonParams } from "./requests/ModifyGuildTemplateJsonParams";
-import { ModifyWebhookJsonParams } from "./requests/ModifyWebhookJsonParams";
-import { SearchGuildMembersQueryParams } from "./requests/SearchGuildMembersQueryParams";
-import { StartThreadWithMessageJsonParams } from "./requests/StartThreadWithMessageJsonParams";
-import { StartThreadWithoutMessageJsonParams } from "./requests/StartThreadWithoutMessageJsonParams";
-import { UpdateCurrentUserVoiceStateJsonParams } from "./requests/UpdateCurrentUserVoiceStateJsonParams";
-import { UpdateStageInstanceJsonParams } from "./requests/UpdateStageInstanceJsonParams";
-import { UpdateUserVoiceStateJsonParams } from "./requests/UpdateUserVoiceStateJsonParams";
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#applicationcommandoption
+ * 
+ * You can specify a maximum of 25 `choices` per option
+ */
+export interface ApplicationCommandOption {
+    /**
+     * Value of 
+     * [ApplicationCommandOptionType](https://discord.com/developers/docs/interactions/slash/commands#applicationcommandoptiontype).
+     */
+    type: number;
+    /**
+     * 1-32 lowercase character name matching `^[\w-]{1,32}$`.
+     */
+    name: string;
+    /**
+     * 1-100 character description.
+     */
+    description: string;
+    /**
+     * If the parameter is required or optional--default `false`.
+     */
+    required?: boolean;
+    /**
+     * Choices for `string` and `int` types for the user to pick from.
+     */
+    choices?: ApplicationCommandOptionChoice[];
+    /**
+     * If the option is a subcommand or subcommand group type, this nested options will 
+     * be the parameters.
+     */
+    options?: ApplicationCommandOption[];
+}
 
-import { GetCurrentAuthorizationInformationResponse } from "./responses/GetCurrentAuthorizationInformationResponse";
-import { GetGatewayBotResponse } from "./responses/GetGatewayBotResponse";
-import { GetGuildResponse } from "./responses/GetGuildResponse";
-import { ListActiveThreadsResponse } from "./responses/ListActiveThreadsResponse";
-import { ListJoinedPrivateArchivedThreadsResponse } from "./responses/ListJoinedPrivateArchivedThreadsResponse";
-import { ListPrivateArchivedThreadsResponse } from "./responses/ListPrivateArchivedThreadsResponse";
-import { ListPublicArchivedThreadsResponse } from "./responses/ListPublicArchivedThreadsResponse";
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#applicationcommandoptiontype
+ */
+export enum ApplicationCommandOptionType {
+    SUB_COMMAND = 1,
+    SUB_COMMAND_GROUP = 2,
+    STRING = 3,
+    INTEGER = 4,
+    BOOLEAN = 5,
+    USER = 6,
+    CHANNEL = 7,
+    ROLE = 8,
+    MENTIONABLE = 9
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#applicationcommandoptionchoice
+ * 
+ * If you specify `choices` for an option, they are the **only** valid values for a 
+ * user to pick
+ */
+export interface ApplicationCommandOptionChoice {
+    /**
+     * 1-100 character choice name.
+     */
+    name: string;
+    /**
+     * Value of the choice, up to 100 characters if string.
+     */
+    value: string|number;
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#json-params
+ */
+export interface CreateGlobalApplicationCommandJsonParams {
+    /**
+     * 1-32 lowercase character name matching `^[\w-]{1,32}$`.
+     */
+    name: string;
+    /**
+     * 1-100 character description.
+     */
+    description: string;
+    /**
+     * The parameters for the command.
+     */
+    options?: ApplicationCommandOption[];
+    /**
+     * Whether the command is enabled by default when the app is added to a guild.
+     */
+    default_permission?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#json-params
+ */
+export interface EditGlobalApplicationCommandJsonParams {
+    /**
+     * 1-32 lowercase character name matching `^[\w-]{1,32}$`.
+     */
+    name: string;
+    /**
+     * 1-100 character description.
+     */
+    description: string;
+    /**
+     * The parameters for the command.
+     */
+    options: (ApplicationCommandOption|null)[];
+    /**
+     * Whether the command is enabled by default when the app is added to a guild.
+     */
+    default_permission: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#json-params
+ */
+export interface CreateGuildApplicationCommandJsonParams {
+    /**
+     * 1-32 lowercase character name matching `^[\w-]{1,32}$`.
+     */
+    name: string;
+    /**
+     * 1-100 character description.
+     */
+    description: string;
+    /**
+     * The parameters for the command.
+     */
+    options?: ApplicationCommandOption[];
+    /**
+     * Whether the command is enabled by default when the app is added to a guild.
+     */
+    default_permission?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#json-params
+ */
+export interface EditGuildApplicationCommandJsonParams {
+    /**
+     * 1-32 lowercase character name matching `^[\w-]{1,32}$`.
+     */
+    name: string;
+    /**
+     * 1-100 character description.
+     */
+    description: string;
+    /**
+     * The parameters for the command.
+     */
+    options: (ApplicationCommandOption|null)[];
+    /**
+     * Whether the command is enabled by default when the app is added to a guild.
+     */
+    default_permission: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#guildapplicationcommandpermissions
+ * 
+ * Returned when fetching the permissions for a command in a guild.
+ */
+export interface GuildApplicationCommandPermissions {
+    /**
+     * The id of the command.
+     */
+    id: string;
+    /**
+     * The id of the application the command belongs to.
+     */
+    application_id: string;
+    /**
+     * The id of the guild.
+     */
+    guild_id: string;
+    /**
+     * The permissions for the command in the guild.
+     */
+    permissions: ApplicationCommandPermissions[];
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#applicationcommandpermissions
+ * 
+ * Application command permissions allow you to enable or disable commands for 
+ * specific users or roles within a guild.
+ */
+export interface ApplicationCommandPermissions {
+    /**
+     * The id of the role or user.
+     */
+    id: string;
+    /**
+     * Role or user.
+     */
+    type: ApplicationCommandPermissionType;
+    /**
+     * `true` to allow, `false`, to disallow.
+     */
+    permission: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#applicationcommandpermissiontype
+ */
+export enum ApplicationCommandPermissionType {
+    ROLE = 1,
+    USER = 2
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#json-params
+ */
+export interface EditApplicationCommandPermissionsJsonParams {
+    /**
+     * The permissions for the command in the guild.
+     */
+    permissions: ApplicationCommandPermissions[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/audit/log#query-string-params
+ */
+export interface GetGuildAuditLogQueryParams {
+    /**
+     * Filter the log for actions made by a user.
+     */
+    user_id: string;
+    /**
+     * The type of [audit log 
+     * event](https://discord.com/developers/docs/resources/audit/log#audit-log-entry-object-audit-log-events).
+     */
+    action_type: number;
+    /**
+     * Filter the log before a certain entry id.
+     */
+    before: string;
+    /**
+     * How many entries are returned (default 50, minimum 1, maximum 100).
+     */
+    limit: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/audit/log#audit-log-object-audit-log-structure
+ */
+export interface AuditLogStructure {
+    /**
+     * List of webhooks found in the audit log.
+     */
+    webhooks: WebhookStructure[];
+    /**
+     * List of users found in the audit log.
+     */
+    users: UserStructure[];
+    /**
+     * List of audit log entries.
+     */
+    audit_log_entries: AuditLogEntryStructure[];
+    /**
+     * List of partial integration objects.
+     */
+    integrations: Partial<IntegrationStructure>[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure
+ */
+export interface WebhookStructure {
+    /**
+     * The id of the webhook.
+     */
+    id: string;
+    /**
+     * The 
+     * [type](https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types) 
+     * of the webhook.
+     */
+    type: number;
+    /**
+     * The guild id this webhook is for, if any.
+     */
+    guild_id?: string|null;
+    /**
+     * The channel id this webhook is for, if any.
+     */
+    channel_id: string|null;
+    /**
+     * The user this webhook was created by (not returned when getting a webhook with 
+     * its token).
+     */
+    user?: UserStructure;
+    /**
+     * The default name of the webhook.
+     */
+    name: string|null;
+    /**
+     * The default user avatar 
+     * [hash](https://discord.com/developers/docs/reference#image-formatting) of the 
+     * webhook.
+     */
+    avatar: string|null;
+    /**
+     * The secure token of the webhook (returned for Incoming Webhooks).
+     */
+    token?: string;
+    /**
+     * The bot/OAuth2 application that created this webhook.
+     */
+    application_id: string|null;
+    /**
+     * The guild of the channel that this webhook is following (returned for Channel 
+     * Follower Webhooks).
+     */
+    source_guild?: Partial<GuildStructure>;
+    /**
+     * The channel that this webhook is following (returned for Channel Follower 
+     * Webhooks).
+     */
+    source_channel?: Partial<ChannelStructure>;
+    /**
+     * The url used for executing the webhook (returned by the 
+     * [webhooks](https://discord.com/developers/docs/topics/oauth2#webhooks) OAuth2 
+     * flow).
+     */
+    url?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types
+ */
+export enum WebhookTypes {
+    Incoming = 1,
+    ChannelFollower = 2,
+    Application = 3
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#user-object-user-structure
+ */
+export interface UserStructure {
+    /**
+     * The user's id.
+     */
+    id: string;
+    /**
+     * The user's username, not unique across the platform.
+     */
+    username: string;
+    /**
+     * The user's 4-digit discord-tag.
+     */
+    discriminator: string;
+    /**
+     * The user's [avatar 
+     * hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    avatar: string|null;
+    /**
+     * Whether the user belongs to an OAuth2 application.
+     */
+    bot?: boolean;
+    /**
+     * Whether the user is an Official Discord System user (part of the urgent message 
+     * system).
+     */
+    system?: boolean;
+    /**
+     * Whether the user has two factor enabled on their account.
+     */
+    mfa_enabled?: boolean;
+    /**
+     * The user's chosen language option.
+     */
+    locale?: string;
+    /**
+     * Whether the email on this account has been verified.
+     */
+    verified?: boolean;
+    /**
+     * The user's email.
+     */
+    email?: string|null;
+    /**
+     * The 
+     * [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags) 
+     * on a user's account.
+     */
+    flags?: number;
+    /**
+     * The [type of Nitro 
+     * subscription](https://discord.com/developers/docs/resources/user#user-object-premium-types) 
+     * on a user's account.
+     */
+    premium_type?: number;
+    /**
+     * The public 
+     * [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags) 
+     * on a user's account.
+     */
+    public_flags?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#user-object-premium-types
+ * 
+ * Premium types denote the level of premium a user has. Visit the 
+ * [Nitro](https://discord.com/nitro) page to learn more about the premium plans we 
+ * currently offer.
+ */
+export enum PremiumTypes {
+    None = 0,
+    NitroClassic = 1,
+    Nitro = 2
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#guild-object-guild-structure
+ * 
+ * ** \* These fields are only sent within the 
+ * [GUILD_CREATE](#DOCS_TOPICS_GATEWAY/guild-create) event **
+ * ** \*\* These fields are only sent when using the [GET Current User 
+ * Guilds](#DOCS_RESOURCES_USER/get-current-user-guilds) endpoint and are relative 
+ * to the requested user **
+ */
+export interface GuildStructure {
+    /**
+     * Guild id.
+     */
+    id: string;
+    /**
+     * Guild name (2-100 characters, excluding trailing and leading whitespace).
+     */
+    name: string;
+    /**
+     * [icon hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    icon: string|null;
+    /**
+     * [icon hash](https://discord.com/developers/docs/reference#image-formatting), 
+     * returned when in the template object.
+     */
+    icon_hash?: string|null;
+    /**
+     * [splash hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    splash: string|null;
+    /**
+     * [discovery splash 
+     * hash](https://discord.com/developers/docs/reference#image-formatting); only 
+     * present for guilds with the "DISCOVERABLE" feature.
+     */
+    discovery_splash: string|null;
+    /**
+     * True if [the 
+     * user](https://discord.com/developers/docs/resources/user#get-current-user-guilds) 
+     * is the owner of the guild.
+     */
+    owner?: boolean;
+    /**
+     * Id of owner.
+     */
+    owner_id: string;
+    /**
+     * Total permissions for [the 
+     * user](https://discord.com/developers/docs/resources/user#get-current-user-guilds) 
+     * in the guild (excludes overwrites).
+     */
+    permissions?: string;
+    /**
+     * [voice 
+     * region](https://discord.com/developers/docs/resources/voice#voice-region-object) 
+     * id for the guild.
+     */
+    region: string;
+    /**
+     * Id of afk channel.
+     */
+    afk_channel_id: string|null;
+    /**
+     * Afk timeout in seconds.
+     */
+    afk_timeout: number;
+    /**
+     * True if the server widget is enabled.
+     */
+    widget_enabled?: boolean;
+    /**
+     * The channel id that the widget will generate an invite to, or `null` if set to 
+     * no invite.
+     */
+    widget_channel_id?: string|null;
+    /**
+     * [verification 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) 
+     * required for the guild.
+     */
+    verification_level: number;
+    /**
+     * Default [message notifications 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level).
+     */
+    default_message_notifications: number;
+    /**
+     * [explicit content filter 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level).
+     */
+    explicit_content_filter: number;
+    /**
+     * Roles in the guild.
+     */
+    roles: RoleStructure[];
+    /**
+     * Custom guild emojis.
+     */
+    emojis: EmojiStructure[];
+    /**
+     * Enabled guild features.
+     */
+    features: any[];
+    /**
+     * Required [MFA 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) 
+     * for the guild.
+     */
+    mfa_level: number;
+    /**
+     * Application id of the guild creator if it is bot-created.
+     */
+    application_id: string|null;
+    /**
+     * The id of the channel where guild notices such as welcome messages and boost 
+     * events are posted.
+     */
+    system_channel_id: string|null;
+    /**
+     * [system channel 
+     * flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags).
+     */
+    system_channel_flags: number;
+    /**
+     * The id of the channel where Community guilds can display rules and/or 
+     * guidelines.
+     */
+    rules_channel_id: string|null;
+    /**
+     * When this guild was joined at.
+     */
+    joined_at?: string;
+    /**
+     * True if this is considered a large guild.
+     */
+    large?: boolean;
+    /**
+     * True if this guild is unavailable due to an outage.
+     */
+    unavailable?: boolean;
+    /**
+     * Total number of members in this guild.
+     */
+    member_count?: number;
+    /**
+     * States of members currently in voice channels; lacks the `guild_id` key.
+     */
+    voice_states?: Partial<VoiceStateStructure>[];
+    /**
+     * Users in the guild.
+     */
+    members?: GuildMemberStructure[];
+    /**
+     * Channels in the guild.
+     */
+    channels?: ChannelStructure[];
+    /**
+     * All active threads in the guild that current user has permission to view.
+     */
+    threads?: ChannelStructure[];
+    /**
+     * Presences of the members in the guild, will only include non-offline members if 
+     * the size is greater than `large threshold`.
+     */
+    presences?: Partial<PresenceUpdateEventFields>[];
+    /**
+     * The maximum number of presences for the guild (the default value, currently 
+     * 25000, is in effect when `null` is returned).
+     */
+    max_presences?: number|null;
+    /**
+     * The maximum number of members for the guild.
+     */
+    max_members?: number;
+    /**
+     * The vanity url code for the guild.
+     */
+    vanity_url_code: string|null;
+    /**
+     * The description of a Community guild.
+     */
+    description: string|null;
+    /**
+     * [banner hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    banner: string|null;
+    /**
+     * [premium 
+     * tier](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) 
+     * (Server Boost level).
+     */
+    premium_tier: number;
+    /**
+     * The number of boosts this guild currently has.
+     */
+    premium_subscription_count?: number;
+    /**
+     * The preferred locale of a Community guild; used in server discovery and notices 
+     * from Discord; defaults to "en-US".
+     */
+    preferred_locale: string;
+    /**
+     * The id of the channel where admins and moderators of Community guilds receive 
+     * notices from Discord.
+     */
+    public_updates_channel_id: string|null;
+    /**
+     * The maximum amount of users in a video channel.
+     */
+    max_video_channel_users?: number;
+    /**
+     * Approximate number of members in this guild, returned from the `GET 
+     * /guilds/<id>` endpoint when `with_counts` is `true`.
+     */
+    approximate_member_count?: number;
+    /**
+     * Approximate number of non-offline members in this guild, returned from the `GET 
+     * /guilds/<id>` endpoint when `with_counts` is `true`.
+     */
+    approximate_presence_count?: number;
+    /**
+     * The welcome screen of a Community guild, shown to new members, returned in an 
+     * [Invite](https://discord.com/developers/docs/resources/invite#invite-object)'s 
+     * guild object.
+     */
+    welcome_screen?: WelcomeScreenStructure;
+    /**
+     * [guild NSFW 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level).
+     */
+    nsfw_level: number;
+    /**
+     * Stage instances in the guild.
+     */
+    stage_instances?: StageInstanceStructure[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure
+ */
+export interface VoiceRegionStructure {
+    /**
+     * Unique ID for the region.
+     */
+    id: string;
+    /**
+     * Name of the region.
+     */
+    name: string;
+    /**
+     * True if this is a vip-only server.
+     */
+    vip: boolean;
+    /**
+     * True for a single server that is closest to the current user's client.
+     */
+    optimal: boolean;
+    /**
+     * Whether this is a deprecated voice region (avoid switching to these).
+     */
+    deprecated: boolean;
+    /**
+     * Whether this is a custom voice region (used for events/etc).
+     */
+    custom: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/permissions#role-object-role-structure
+ * 
+ * Roles without colors (`color == 0`) do not count towards the final computed 
+ * color in the user list.
+ */
+export interface RoleStructure {
+    /**
+     * Role id.
+     */
+    id: string;
+    /**
+     * Role name.
+     */
+    name: string;
+    /**
+     * Integer representation of hexadecimal color code.
+     */
+    color: number;
+    /**
+     * If this role is pinned in the user listing.
+     */
+    hoist: boolean;
+    /**
+     * Position of this role.
+     */
+    position: number;
+    /**
+     * Permission bit set.
+     */
+    permissions: string;
+    /**
+     * Whether this role is managed by an integration.
+     */
+    managed: boolean;
+    /**
+     * Whether this role is mentionable.
+     */
+    mentionable: boolean;
+    /**
+     * The tags this role has.
+     */
+    tags?: RoleTagsStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure
+ */
+export interface RoleTagsStructure {
+    /**
+     * The id of the bot this role belongs to.
+     */
+    bot_id?: string;
+    /**
+     * The id of the integration this role belongs to.
+     */
+    integration_id?: string;
+    /**
+     * Whether this is the guild's premium subscriber role.
+     */
+    premium_subscriber?: null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure
+ */
+export interface EmojiStructure {
+    /**
+     * [emoji id](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    id: string|null;
+    /**
+     * Emoji name.
+     */
+    name: string|null;
+    /**
+     * Roles allowed to use this emoji.
+     */
+    roles?: RoleStructure[];
+    /**
+     * User that created this emoji.
+     */
+    user?: UserStructure;
+    /**
+     * Whether this emoji must be wrapped in colons.
+     */
+    require_colons?: boolean;
+    /**
+     * Whether this emoji is managed.
+     */
+    managed?: boolean;
+    /**
+     * Whether this emoji is animated.
+     */
+    animated?: boolean;
+    /**
+     * Whether this emoji can be used, may be false due to loss of Server Boosts.
+     */
+    available?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
+ */
+export enum SystemChannelFlags {
+    SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0,
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1,
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2
+}
+
+/**
+ * https://discord.com/developers/docs/resources/voice#voice-state-object-voice-state-structure
+ */
+export interface VoiceStateStructure {
+    /**
+     * The guild id this voice state is for.
+     */
+    guild_id?: string;
+    /**
+     * The channel id this user is connected to.
+     */
+    channel_id: string|null;
+    /**
+     * The user id this voice state is for.
+     */
+    user_id: string;
+    /**
+     * The guild member this voice state is for.
+     */
+    member?: GuildMemberStructure;
+    /**
+     * The session id for this voice state.
+     */
+    session_id: string;
+    /**
+     * Whether this user is deafened by the server.
+     */
+    deaf: boolean;
+    /**
+     * Whether this user is muted by the server.
+     */
+    mute: boolean;
+    /**
+     * Whether this user is locally deafened.
+     */
+    self_deaf: boolean;
+    /**
+     * Whether this user is locally muted.
+     */
+    self_mute: boolean;
+    /**
+     * Whether this user is streaming using "Go Live".
+     */
+    self_stream?: boolean;
+    /**
+     * Whether this user's camera is enabled.
+     */
+    self_video: boolean;
+    /**
+     * Whether this user is muted by the current user.
+     */
+    suppress: boolean;
+    /**
+     * The time at which the user requested to speak.
+     */
+    request_to_speak_timestamp: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-structure
+ * 
+ * The field `user` won't be included in the member object attached to 
+ * `MESSAGE_CREATE` and `MESSAGE_UPDATE` gateway events.
+ * 
+ * In `GUILD_` events, `pending` will always be included as true or false. In non 
+ * `GUILD_` events which can only be triggered by non-`pending` users, `pending` 
+ * will not be included.
+ */
+export interface GuildMemberStructure {
+    /**
+     * The user this guild member represents.
+     */
+    user?: UserStructure;
+    /**
+     * This users guild nickname.
+     */
+    nick?: string|null;
+    /**
+     * Array of 
+     * [role](https://discord.com/developers/docs/topics/permissions#role-object) 
+     * object ids.
+     */
+    roles: string[];
+    /**
+     * When the user joined the guild.
+     */
+    joined_at: string;
+    /**
+     * When the user started 
+     * [boosting](https://discord.com/developers/ttps:##support.discord.com#hc#en-us#articles#360028038352-server-boosting-) 
+     * the guild.
+     */
+    premium_since?: string|null;
+    /**
+     * Whether the user is deafened in voice channels.
+     */
+    deaf: boolean;
+    /**
+     * Whether the user is muted in voice channels.
+     */
+    mute: boolean;
+    /**
+     * Whether the user has not yet passed the guild's [Membership 
+     * Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) 
+     * requirements.
+     */
+    pending?: boolean;
+    /**
+     * Total permissions of the member in the channel, including overwrites, returned 
+     * when in the interaction object.
+     */
+    permissions?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#channel-object-channel-structure
+ */
+export interface ChannelStructure {
+    /**
+     * The id of this channel.
+     */
+    id: string;
+    /**
+     * The [type of 
+     * channel](https://discord.com/developers/docs/resources/channel#channel-object-channel-types).
+     */
+    type: number;
+    /**
+     * The id of the guild (may be missing for some channel objects received over 
+     * gateway guild dispatches).
+     */
+    guild_id?: string;
+    /**
+     * Sorting position of the channel.
+     */
+    position?: number;
+    /**
+     * Explicit permission overwrites for members and roles.
+     */
+    permission_overwrites?: OverwriteStructure[];
+    /**
+     * The name of the channel (2-100 characters).
+     */
+    name?: string;
+    /**
+     * The channel topic (0-1024 characters).
+     */
+    topic?: string|null;
+    /**
+     * Whether the channel is nsfw.
+     */
+    nsfw?: boolean;
+    /**
+     * The id of the last message sent in this channel (may not point to an existing or 
+     * valid message).
+     */
+    last_message_id?: string|null;
+    /**
+     * The bitrate (in bits) of the voice channel.
+     */
+    bitrate?: number;
+    /**
+     * The user limit of the voice channel.
+     */
+    user_limit?: number;
+    /**
+     * Amount of seconds a user has to wait before sending another message (0-21600); 
+     * bots, as well as users with the permission `manage_messages` or 
+     * `manage_channel`, are unaffected.
+     */
+    rate_limit_per_user?: number;
+    /**
+     * The recipients of the DM.
+     */
+    recipients?: UserStructure[];
+    /**
+     * Icon hash.
+     */
+    icon?: string|null;
+    /**
+     * Id of the creator of the group DM or thread.
+     */
+    owner_id?: string;
+    /**
+     * Application id of the group DM creator if it is bot-created.
+     */
+    application_id?: string;
+    /**
+     * For guild channels: id of the parent category for a channel (each parent 
+     * category can contain up to 50 channels), for threads: id of the text channel 
+     * this thread was created.
+     */
+    parent_id?: string|null;
+    /**
+     * When the last pinned message was pinned. This may be `null` in events such as 
+     * `GUILD_CREATE` when a message is not pinned.
+     */
+    last_pin_timestamp?: string|null;
+    /**
+     * [voice 
+     * region](https://discord.com/developers/docs/resources/voice#voice-region-object) 
+     * id for the voice channel, automatic when set to null.
+     */
+    rtc_region?: string|null;
+    /**
+     * The camera [video quality 
+     * mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) 
+     * of the voice channel, 1 when not present.
+     */
+    video_quality_mode?: number;
+    /**
+     * An approximate count of messages in a thread, stops counting at 50.
+     */
+    message_count?: number;
+    /**
+     * An approximate count of users in a thread, stops counting at 50.
+     */
+    member_count?: number;
+    /**
+     * Thread-specific fields not needed by other channels.
+     */
+    thread_metadata?: ThreadMetadataStructure;
+    /**
+     * Thread member object for the current user, if they have joined the thread, only 
+     * included on certain API endpoints.
+     */
+    member?: ThreadMemberStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#overwrite-object-overwrite-structure
+ */
+export interface OverwriteStructure {
+    /**
+     * Role or user id.
+     */
+    id: string;
+    /**
+     * Either 0 (role) or 1 (member).
+     */
+    type: number;
+    /**
+     * Permission bit set.
+     */
+    allow: string;
+    /**
+     * Permission bit set.
+     */
+    deny: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure
+ */
+export interface ThreadMetadataStructure {
+    /**
+     * Whether the thread is archived.
+     */
+    archived: boolean;
+    /**
+     * Id of the user that last archived or unarchived the thread.
+     */
+    archiver_id?: string;
+    /**
+     * Duration in minutes to automatically archive the thread after recent activity, 
+     * can be set to: 60, 1440, 4320, 10080.
+     */
+    auto_archive_duration: number;
+    /**
+     * Timestamp when the thread's archive status was last changed, used for 
+     * calculating recent activity.
+     */
+    archive_timestamp: string;
+    /**
+     * When a thread is locked, only users with MANAGE_THREADS can unarchive it.
+     */
+    locked?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#thread-member-object-thread-member-structure
+ */
+export interface ThreadMemberStructure {
+    /**
+     * The id of the thread.
+     */
+    id: string;
+    /**
+     * The id of the user.
+     */
+    user_id: string;
+    /**
+     * The time the current user last joined the thread.
+     */
+    join_timestamp: string;
+    /**
+     * Any user-thread settings, currently only used for notifications.
+     */
+    flags: number;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#presence-update-presence-update-event-fields
+ */
+export interface PresenceUpdateEventFields {
+    /**
+     * The user presence is being updated for.
+     */
+    user: UserStructure;
+    /**
+     * Id of the guild.
+     */
+    guild_id: string;
+    /**
+     * Either "idle", "dnd", "online", or "offline".
+     */
+    status: string;
+    /**
+     * User's current activities.
+     */
+    activities: ActivityStructure[];
+    /**
+     * User's platform-dependent status.
+     */
+    client_status: ClientStatusObject;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-structure
+ * 
+ * Bots are only able to send `name`, `type`, and optionally `url`.
+ */
+export interface ActivityStructure {
+    /**
+     * The activity's name.
+     */
+    name: string;
+    /**
+     * [activity 
+     * type](https://discord.com/developers/docs/topics/gateway#activity-object-activity-types).
+     */
+    type: number;
+    /**
+     * Stream url, is validated when type is 1.
+     */
+    url?: string|null;
+    /**
+     * Unix timestamp of when the activity was added to the user's session.
+     */
+    created_at: number;
+    /**
+     * Unix timestamps for start and/or end of the game.
+     */
+    timestamps?: ActivityTimestamps;
+    /**
+     * Application id for the game.
+     */
+    application_id?: string;
+    /**
+     * What the player is currently doing.
+     */
+    details?: string|null;
+    /**
+     * The user's current party status.
+     */
+    state?: string|null;
+    /**
+     * The emoji used for a custom status.
+     */
+    emoji?: ActivityEmoji|null;
+    /**
+     * Information for the current party of the player.
+     */
+    party?: ActivityParty;
+    /**
+     * Images for the presence and their hover texts.
+     */
+    assets?: ActivityAssets;
+    /**
+     * Secrets for Rich Presence joining and spectating.
+     */
+    secrets?: ActivitySecrets;
+    /**
+     * Whether or not the activity is an instanced game session.
+     */
+    instance?: boolean;
+    /**
+     * [activity 
+     * flags](https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags) 
+     * `OR`d together, describes what the payload includes.
+     */
+    flags?: number;
+    /**
+     * The custom buttons shown in the Rich Presence (max 2).
+     */
+    buttons?: ActivityButtons[];
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-timestamps
+ */
+export interface ActivityTimestamps {
+    /**
+     * Unix time (in milliseconds) of when the activity started.
+     */
+    start?: number;
+    /**
+     * Unix time (in milliseconds) of when the activity ends.
+     */
+    end?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-emoji
+ */
+export interface ActivityEmoji {
+    /**
+     * The name of the emoji.
+     */
+    name: string;
+    /**
+     * The id of the emoji.
+     */
+    id?: string;
+    /**
+     * Whether this emoji is animated.
+     */
+    animated?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-party
+ */
+export interface ActivityParty {
+    /**
+     * The id of the party.
+     */
+    id?: string;
+    /**
+     * Used to show the party's current and maximum size.
+     */
+    size?: any[];
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-assets
+ */
+export interface ActivityAssets {
+    /**
+     * The id for a large asset of the activity, usually a snowflake.
+     */
+    large_image?: string;
+    /**
+     * Text displayed when hovering over the large image of the activity.
+     */
+    large_text?: string;
+    /**
+     * The id for a small asset of the activity, usually a snowflake.
+     */
+    small_image?: string;
+    /**
+     * Text displayed when hovering over the small image of the activity.
+     */
+    small_text?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-secrets
+ */
+export interface ActivitySecrets {
+    /**
+     * The secret for joining a party.
+     */
+    join?: string;
+    /**
+     * The secret for spectating a game.
+     */
+    spectate?: string;
+    /**
+     * The secret for a specific instanced match.
+     */
+    match?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags
+ */
+export enum ActivityFlags {
+    INSTANCE = 1 << 0,
+    JOIN = 1 << 1,
+    SPECTATE = 1 << 2,
+    JOIN_REQUEST = 1 << 3,
+    SYNC = 1 << 4,
+    PLAY = 1 << 5
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#activity-object-activity-buttons
+ * 
+ * When received over the gateway, the `buttons` field is an array of strings, 
+ * which are the button labels. Bots cannot access a user's activity button URLs. 
+ * When sending, the `buttons` field must be an array of the below object:
+ */
+export interface ActivityButtons {
+    /**
+     * The text shown on the button (1-32 characters).
+     */
+    label: string;
+    /**
+     * The url opened when clicking the button (1-512 characters).
+     */
+    url: string;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#client-status-object
+ * 
+ * Active sessions are indicated with an "online", "idle", or "dnd" string per 
+ * platform. If a user is offline or invisible, the corresponding field is not 
+ * present.
+ */
+export interface ClientStatusObject {
+    /**
+     * The user's status set for an active desktop (Windows, Linux, Mac) application 
+     * session.
+     */
+    desktop?: string;
+    /**
+     * The user's status set for an active mobile (iOS, Android) application session.
+     */
+    mobile?: string;
+    /**
+     * The user's status set for an active web (browser, bot account) application 
+     * session.
+     */
+    web?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure
+ */
+export interface WelcomeScreenStructure {
+    /**
+     * The server description shown in the welcome screen.
+     */
+    description: string|null;
+    /**
+     * The channels shown in the welcome screen, up to 5.
+     */
+    welcome_channels: WelcomeScreenChannelStructure[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
+ */
+export interface WelcomeScreenChannelStructure {
+    /**
+     * The channel's id.
+     */
+    channel_id: string;
+    /**
+     * The description shown for the channel.
+     */
+    description: string;
+    /**
+     * The [emoji id](https://discord.com/developers/docs/reference#image-formatting), 
+     * if the emoji is custom.
+     */
+    emoji_id: string|null;
+    /**
+     * The emoji name if custom, the unicode character if standard, or `null` if no 
+     * emoji is set.
+     */
+    emoji_name: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/invite#invite-object-invite-structure
+ */
+export interface InviteStructure {
+    /**
+     * The invite code (unique ID).
+     */
+    code: string;
+    /**
+     * The guild this invite is for.
+     */
+    guild?: Partial<GuildStructure>;
+    /**
+     * The channel this invite is for.
+     */
+    channel: Partial<ChannelStructure>;
+    /**
+     * The user who created the invite.
+     */
+    inviter?: UserStructure;
+    /**
+     * The [type of 
+     * target](https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types) 
+     * for this voice channel invite.
+     */
+    target_type?: number;
+    /**
+     * The user whose stream to display for this voice channel stream invite.
+     */
+    target_user?: UserStructure;
+    /**
+     * The embedded application to open for this voice channel embedded application 
+     * invite.
+     */
+    target_application?: Partial<ApplicationStructure>;
+    /**
+     * Approximate count of online members, returned from the `GET /invites/<code>` 
+     * endpoint when `with_counts` is `true`.
+     */
+    approximate_presence_count?: number;
+    /**
+     * Approximate count of total members, returned from the `GET /invites/<code>` 
+     * endpoint when `with_counts` is `true`.
+     */
+    approximate_member_count?: number;
+    /**
+     * The expiration date of this invite, returned from the `GET /invites/<code>` 
+     * endpoint when `with_expiration` is `true`.
+     */
+    expires_at?: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/application#application-object-application-structure
+ */
+export interface ApplicationStructure {
+    /**
+     * The id of the app.
+     */
+    id: string;
+    /**
+     * The name of the app.
+     */
+    name: string;
+    /**
+     * The [icon hash](https://discord.com/developers/docs/reference#image-formatting) 
+     * of the app.
+     */
+    icon: string|null;
+    /**
+     * The description of the app.
+     */
+    description: string;
+    /**
+     * An array of rpc origin urls, if rpc is enabled.
+     */
+    rpc_origins?: string[];
+    /**
+     * When false only app owner can join the app's bot to guilds.
+     */
+    bot_public: boolean;
+    /**
+     * When true the app's bot will only join upon completion of the full oauth2 code 
+     * grant flow.
+     */
+    bot_require_code_grant: boolean;
+    /**
+     * The url of the app's terms of service.
+     */
+    terms_of_service_url?: string;
+    /**
+     * The url of the app's privacy policy.
+     */
+    privacy_policy_url?: string;
+    /**
+     * Partial user object containing info on the owner of the application.
+     */
+    owner: Partial<UserStructure>;
+    /**
+     * If this application is a game sold on Discord, this field will be the summary 
+     * field for the store page of its primary sku.
+     */
+    summary: string;
+    /**
+     * The hex encoded key for verification in interactions and the GameSDK's 
+     * [GetTicket](https://discord.com/developers/docs/game/sdk/applications#getticket).
+     */
+    verify_key: string;
+    /**
+     * If the application belongs to a team, this will be a list of the members of that 
+     * team.
+     */
+    team: any|null;
+    /**
+     * If this application is a game sold on Discord, this field will be the guild to 
+     * which it has been linked.
+     */
+    guild_id?: string;
+    /**
+     * If this application is a game sold on Discord, this field will be the id of the 
+     * "Game SKU" that is created, if exists.
+     */
+    primary_sku_id?: string;
+    /**
+     * If this application is a game sold on Discord, this field will be the URL slug 
+     * that links to the store page.
+     */
+    slug?: string;
+    /**
+     * The application's default rich presence invite [cover image 
+     * hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    cover_image?: string;
+    /**
+     * The application's public 
+     * [flags](https://discord.com/developers/docs/resources/application#application-application-flags).
+     */
+    flags: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/stage/instance#stage-instance-object-stage-instance-structure
+ */
+export interface StageInstanceStructure {
+    /**
+     * The id of this Stage instance.
+     */
+    id: string;
+    /**
+     * The guild id of the associated Stage channel.
+     */
+    guild_id: string;
+    /**
+     * The id of the associated Stage channel.
+     */
+    channel_id: string;
+    /**
+     * The topic of the Stage instance (1-120 characters).
+     */
+    topic: string;
+    /**
+     * The [privacy 
+     * level](https://discord.com/developers/docs/resources/stage/instance#stage-instance-object-privacy-level) 
+     * of the Stage instance.
+     */
+    privacy_level: number;
+    /**
+     * Whether or not Stage discovery is disabled.
+     */
+    discoverable_disabled: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/audit/log#audit-log-entry-object-audit-log-entry-structure
+ */
+export interface AuditLogEntryStructure {
+    /**
+     * Id of the affected entity (webhook, user, role, etc.).
+     */
+    target_id: string|null;
+    /**
+     * Changes made to the target_id.
+     */
+    changes?: AuditLogChangeStructure[];
+    /**
+     * The user who made the changes.
+     */
+    user_id: string|null;
+    /**
+     * Id of the entry.
+     */
+    id: string;
+    /**
+     * Type of action that occurred.
+     */
+    action_type: any;
+    /**
+     * Additional info for certain action types.
+     */
+    options?: OptionalAuditEntryInfo;
+    /**
+     * The reason for the change (0-512 characters).
+     */
+    reason?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/audit/log#audit-log-change-object-audit-log-change-structure
+ * 
+ * If `new_value` is not present in the change object, while `old_value` is, that 
+ * means the property that was changed has been reset, or set to `null`
+ */
+export interface AuditLogChangeStructure {
+    /**
+     * New value of the key.
+     */
+    new_value?: any;
+    /**
+     * Old value of the key.
+     */
+    old_value?: any;
+    /**
+     * Name of audit log [change 
+     * key](https://discord.com/developers/docs/resources/audit/log#audit-log-change-object-audit-log-change-key).
+     */
+    key: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/audit/log#audit-log-entry-object-optional-audit-entry-info
+ */
+export interface OptionalAuditEntryInfo {
+    /**
+     * Number of days after which inactive members were kicked.
+     */
+    delete_member_days: string;
+    /**
+     * Number of members removed by the prune.
+     */
+    members_removed: string;
+    /**
+     * Channel in which the entities were targeted.
+     */
+    channel_id: string;
+    /**
+     * Id of the message that was targeted.
+     */
+    message_id: string;
+    /**
+     * Number of entities that were targeted.
+     */
+    count: string;
+    /**
+     * Id of the overwritten entity.
+     */
+    id: string;
+    /**
+     * Type of overwritten entity - "0" for "role" or "1" for "member".
+     */
+    type: string;
+    /**
+     * Name of the role if type is "0" (not present if type is "1").
+     */
+    role_name: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#integration-object-integration-structure
+ * 
+ * ** \* These fields are not provided for discord bot integrations. **
+ */
+export interface IntegrationStructure {
+    /**
+     * Integration id.
+     */
+    id: string;
+    /**
+     * Integration name.
+     */
+    name: string;
+    /**
+     * Integration type (twitch, youtube, or discord).
+     */
+    type: string;
+    /**
+     * Is this integration enabled.
+     */
+    enabled: boolean;
+    /**
+     * Is this integration syncing.
+     */
+    syncing?: boolean;
+    /**
+     * Id that this integration uses for "subscribers".
+     */
+    role_id?: string;
+    /**
+     * Whether emoticons should be synced for this integration (twitch only currently).
+     */
+    enable_emoticons?: boolean;
+    /**
+     * The behavior of expiring subscribers.
+     */
+    expire_behavior?: IntegrationExpireBehaviors;
+    /**
+     * The grace period (in days) before expiring subscribers.
+     */
+    expire_grace_period?: number;
+    /**
+     * User for this integration.
+     */
+    user?: UserStructure;
+    /**
+     * Integration account information.
+     */
+    account: IntegrationAccountStructure;
+    /**
+     * When this integration was last synced.
+     */
+    synced_at?: string;
+    /**
+     * How many subscribers this integration has.
+     */
+    subscriber_count?: number;
+    /**
+     * Has this integration been revoked.
+     */
+    revoked?: boolean;
+    /**
+     * The bot/OAuth2 application for discord integrations.
+     */
+    application?: IntegrationApplicationStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors
+ */
+export enum IntegrationExpireBehaviors {
+    RemoveRole = 0,
+    Kick = 1
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure
+ */
+export interface IntegrationAccountStructure {
+    /**
+     * Id of the account.
+     */
+    id: string;
+    /**
+     * Name of the account.
+     */
+    name: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#integration-application-object-integration-application-structure
+ */
+export interface IntegrationApplicationStructure {
+    /**
+     * The id of the app.
+     */
+    id: string;
+    /**
+     * The name of the app.
+     */
+    name: string;
+    /**
+     * The [icon hash](https://discord.com/developers/docs/reference#image-formatting) 
+     * of the app.
+     */
+    icon: string|null;
+    /**
+     * The description of the app.
+     */
+    description: string;
+    /**
+     * The description of the app.
+     */
+    summary: string;
+    /**
+     * The bot associated with this application.
+     */
+    bot?: UserStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params-(group-dm)
+ * 
+ * Fires a [Channel Update](#DOCS_TOPICS_GATEWAY/channel-update) Gateway event.
+ */
+export interface ModifyChannelJsonParams {
+    /**
+     * 2-100 character channel name.
+     */
+    name: string;
+    /**
+     * Base64 encoded icon.
+     */
+    icon: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface GetChannelMessagesQueryParams {
+    /**
+     * Get messages around this message ID.
+     */
+    around: string;
+    /**
+     * Get messages before this message ID.
+     */
+    before: string;
+    /**
+     * Get messages after this message ID.
+     */
+    after: string;
+    /**
+     * Max number of messages to return (1-100).
+     */
+    limit: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#message-object-message-structure
+ * 
+ * \* The author object follows the structure of the user object, but is only a 
+ * valid user in the case where the message is generated by a user or bot user. If 
+ * the message is generated by a webhook, the author object corresponds to the 
+ * webhook's id, username, and avatar. You can tell if a message is generated by a 
+ * webhook by checking for the `webhook_id` on the message object.
+ * \*\* The member object exists in 
+ * [MESSAGE_CREATE](#DOCS_TOPICS_GATEWAY/message-create) and 
+ * [MESSAGE_UPDATE](#DOCS_TOPICS_GATEWAY/message-update) events from text-based 
+ * guild channels. This allows bots to obtain real-time member data without 
+ * requiring bots to store member state in memory.
+ * \*\*\* The user objects in the mentions array will only have the partial 
+ * `member` field present in [MESSAGE_CREATE](#DOCS_TOPICS_GATEWAY/message-create) 
+ * and [MESSAGE_UPDATE](#DOCS_TOPICS_GATEWAY/message-update) events from text-based 
+ * guild channels.
+ * \*\*\*\* Not all channel mentions in a message will appear in 
+ * `mention_channels`. Only textual channels that are visible to everyone in a 
+ * lurkable guild will ever be included. Only crossposted messages (via Channel 
+ * Following) currently include `mention_channels` at all. If no mentions in the 
+ * message meet these requirements, this field will not be sent.
+ * \*\*\*\*\* This field is only returned for messages with a `type` of `19` 
+ * (REPLY) or `21` (THREAD_STARTER_MESSAGE). If the message is a reply but the 
+ * `referenced_message` field is not present, the backend did not attempt to fetch 
+ * the message that was being replied to, so its state is unknown. If the field 
+ * exists but is null, the referenced message was deleted.
+ */
+export interface MessageStructure {
+    /**
+     * Id of the message.
+     */
+    id: string;
+    /**
+     * Id of the channel the message was sent in.
+     */
+    channel_id: string;
+    /**
+     * Id of the guild the message was sent in.
+     */
+    guild_id?: string;
+    /**
+     * The author of this message (not guaranteed to be a valid user, see below).
+     */
+    author: UserStructure;
+    /**
+     * Member properties for this message's author.
+     */
+    member?: Partial<GuildMemberStructure>;
+    /**
+     * Contents of the message.
+     */
+    content: string;
+    /**
+     * When this message was sent.
+     */
+    timestamp: string;
+    /**
+     * When this message was edited (or null if never).
+     */
+    edited_timestamp: string|null;
+    /**
+     * Whether this was a TTS message.
+     */
+    tts: boolean;
+    /**
+     * Whether this message mentions everyone.
+     */
+    mention_everyone: boolean;
+    /**
+     * Users specifically mentioned in the message.
+     */
+    mentions: Partial<UserStructure>[];
+    /**
+     * Roles specifically mentioned in this message.
+     */
+    mention_roles: RoleStructure[];
+    /**
+     * Channels specifically mentioned in this message.
+     */
+    mention_channels?: ChannelMentionStructure[];
+    /**
+     * Any attached files.
+     */
+    attachments: AttachmentStructure[];
+    /**
+     * Any embedded content.
+     */
+    embeds: EmbedStructure[];
+    /**
+     * Reactions to the message.
+     */
+    reactions?: ReactionStructure[];
+    /**
+     * Used for validating a message was sent.
+     */
+    nonce?: number|string;
+    /**
+     * Whether this message is pinned.
+     */
+    pinned: boolean;
+    /**
+     * If the message is generated by a webhook, this is the webhook's id.
+     */
+    webhook_id?: string;
+    /**
+     * [type of 
+     * message](https://discord.com/developers/docs/resources/channel#message-object-message-types).
+     */
+    type: number;
+    /**
+     * Sent with Rich Presence-related chat embeds.
+     */
+    activity?: MessageActivityStructure;
+    /**
+     * Sent with Rich Presence-related chat embeds.
+     */
+    application?: Partial<ApplicationStructure>;
+    /**
+     * If the message is a response to an 
+     * [Interaction](https://discord.com/developers/docs/interactions/slash/commands#), 
+     * this is the id of the interaction's application.
+     */
+    application_id?: string;
+    /**
+     * Data showing the source of a crosspost, channel follow add, pin, or reply 
+     * message.
+     */
+    message_reference?: MessageReferenceStructure;
+    /**
+     * [message 
+     * flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) 
+     * combined as a 
+     * [bitfield](https://discord.com/developers/ttps:##en.wikipedia.org#wiki#bit/field).
+     */
+    flags?: number;
+    /**
+     * The stickers sent with the message (bots currently can only receive messages 
+     * with stickers, not send).
+     */
+    stickers?: MessageStickerStructure[];
+    /**
+     * The message associated with the message_reference.
+     */
+    referenced_message?: MessageStructure|null;
+    /**
+     * Sent if the message is a response to an 
+     * [Interaction](https://discord.com/developers/docs/interactions/slash/commands#).
+     */
+    interaction?: MessageInteraction;
+    /**
+     * The thread that was started from this message, includes [thread 
+     * member](https://discord.com/developers/docs/resources/channel#thread-member-object) 
+     * object.
+     */
+    thread?: any;
+    /**
+     * Sent if the message contains components like buttons, action rows, or other 
+     * interactive components.
+     */
+    components?: any;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#channel-mention-object-channel-mention-structure
+ */
+export interface ChannelMentionStructure {
+    /**
+     * Id of the channel.
+     */
+    id: string;
+    /**
+     * Id of the guild containing the channel.
+     */
+    guild_id: string;
+    /**
+     * The [type of 
+     * channel](https://discord.com/developers/docs/resources/channel#channel-object-channel-types).
+     */
+    type: number;
+    /**
+     * The name of the channel.
+     */
+    name: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#attachment-object-attachment-structure
+ */
+export interface AttachmentStructure {
+    /**
+     * Attachment id.
+     */
+    id: string;
+    /**
+     * Name of file attached.
+     */
+    filename: string;
+    /**
+     * The attachment's [media 
+     * type](https://discord.com/developers/ttps:##en.wikipedia.org#wiki#media/type).
+     */
+    content_type?: string;
+    /**
+     * Size of file in bytes.
+     */
+    size: number;
+    /**
+     * Source url of file.
+     */
+    url: string;
+    /**
+     * A proxied url of file.
+     */
+    proxy_url: string;
+    /**
+     * Height of file (if image).
+     */
+    height?: number|null;
+    /**
+     * Width of file (if image).
+     */
+    width?: number|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-structure
+ */
+export interface EmbedStructure {
+    /**
+     * Title of embed.
+     */
+    title?: string;
+    /**
+     * [type of 
+     * embed](https://discord.com/developers/docs/resources/channel#embed-object-embed-types) 
+     * (always "rich" for webhook embeds).
+     */
+    type?: string;
+    /**
+     * Description of embed.
+     */
+    description?: string;
+    /**
+     * Url of embed.
+     */
+    url?: string;
+    /**
+     * Timestamp of embed content.
+     */
+    timestamp?: string;
+    /**
+     * Color code of the embed.
+     */
+    color?: number;
+    /**
+     * Footer information.
+     */
+    footer?: EmbedFooterStructure;
+    /**
+     * Image information.
+     */
+    image?: EmbedImageStructure;
+    /**
+     * Thumbnail information.
+     */
+    thumbnail?: EmbedThumbnailStructure;
+    /**
+     * Video information.
+     */
+    video?: EmbedVideoStructure;
+    /**
+     * Provider information.
+     */
+    provider?: EmbedProviderStructure;
+    /**
+     * Author information.
+     */
+    author?: EmbedAuthorStructure;
+    /**
+     * Fields information.
+     */
+    fields?: EmbedFieldStructure[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure
+ */
+export interface EmbedFooterStructure {
+    /**
+     * Footer text.
+     */
+    text: string;
+    /**
+     * Url of footer icon (only supports http(s) and attachments).
+     */
+    icon_url?: string;
+    /**
+     * A proxied url of footer icon.
+     */
+    proxy_icon_url?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure
+ */
+export interface EmbedImageStructure {
+    /**
+     * Source url of image (only supports http(s) and attachments).
+     */
+    url?: string;
+    /**
+     * A proxied url of the image.
+     */
+    proxy_url?: string;
+    /**
+     * Height of image.
+     */
+    height?: number;
+    /**
+     * Width of image.
+     */
+    width?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure
+ */
+export interface EmbedThumbnailStructure {
+    /**
+     * Source url of thumbnail (only supports http(s) and attachments).
+     */
+    url?: string;
+    /**
+     * A proxied url of the thumbnail.
+     */
+    proxy_url?: string;
+    /**
+     * Height of thumbnail.
+     */
+    height?: number;
+    /**
+     * Width of thumbnail.
+     */
+    width?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure
+ */
+export interface EmbedVideoStructure {
+    /**
+     * Source url of video.
+     */
+    url?: string;
+    /**
+     * A proxied url of the video.
+     */
+    proxy_url?: string;
+    /**
+     * Height of video.
+     */
+    height?: number;
+    /**
+     * Width of video.
+     */
+    width?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-provider-structure
+ */
+export interface EmbedProviderStructure {
+    /**
+     * Name of provider.
+     */
+    name?: string;
+    /**
+     * Url of provider.
+     */
+    url?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure
+ */
+export interface EmbedAuthorStructure {
+    /**
+     * Name of author.
+     */
+    name?: string;
+    /**
+     * Url of author.
+     */
+    url?: string;
+    /**
+     * Url of author icon (only supports http(s) and attachments).
+     */
+    icon_url?: string;
+    /**
+     * A proxied url of author icon.
+     */
+    proxy_icon_url?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
+ */
+export interface EmbedFieldStructure {
+    /**
+     * Name of the field.
+     */
+    name: string;
+    /**
+     * Value of the field.
+     */
+    value: string;
+    /**
+     * Whether or not this field should display inline.
+     */
+    inline?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#reaction-object-reaction-structure
+ */
+export interface ReactionStructure {
+    /**
+     * Times this emoji has been used to react.
+     */
+    count: number;
+    /**
+     * Whether the current user reacted using this emoji.
+     */
+    me: boolean;
+    /**
+     * Emoji information.
+     */
+    emoji: Partial<EmojiStructure>;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure
+ */
+export interface MessageActivityStructure {
+    /**
+     * [type of message 
+     * activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-types).
+     */
+    type: number;
+    /**
+     * Party_id from a [Rich Presence 
+     * event](https://discord.com/developers/docs/rich/presence/how/to#updating-presence-update-presence-payload-fields).
+     */
+    party_id?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure
+ * 
+ * \* `channel_id` is optional when creating a reply, but will always be present 
+ * when receiving an event/response that includes this data model.
+ */
+export interface MessageReferenceStructure {
+    /**
+     * Id of the originating message.
+     */
+    message_id?: string;
+    /**
+     * Id of the originating message's channel.
+     */
+    channel_id?: string;
+    /**
+     * Id of the originating message's guild.
+     */
+    guild_id?: string;
+    /**
+     * When sending, whether to error if the referenced message doesn't exist instead 
+     * of sending as a normal (non-reply) message, default true.
+     */
+    fail_if_not_exists?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#message-object-message-flags
+ */
+export enum MessageFlags {
+    CROSSPOSTED = 1 << 0,
+    IS_CROSSPOST = 1 << 1,
+    SUPPRESS_EMBEDS = 1 << 2,
+    SOURCE_MESSAGE_DELETED = 1 << 3,
+    URGENT = 1 << 4,
+    HAS_THREAD = 1 << 5,
+    EPHEMERAL = 1 << 6,
+    LOADING = 1 << 7
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#message-object-message-sticker-structure
+ * 
+ * \* The URL for fetching sticker assets is currently private.
+ */
+export interface MessageStickerStructure {
+    /**
+     * Id of the sticker.
+     */
+    id: string;
+    /**
+     * Id of the pack the sticker is from.
+     */
+    pack_id: string;
+    /**
+     * Name of the sticker.
+     */
+    name: string;
+    /**
+     * Description of the sticker.
+     */
+    description: string;
+    /**
+     * A comma-separated list of tags for the sticker.
+     */
+    tags?: string;
+    /**
+     * Sticker asset hash.
+     */
+    asset: string;
+    /**
+     * [type of sticker 
+     * format](https://discord.com/developers/docs/resources/channel#message-object-message-sticker-format-types).
+     */
+    format_type: number;
+}
+
+/**
+ * https://discord.com/developers/docs/interactions/slash/commands#messageinteraction
+ * 
+ * This is sent on the [message object](#DOCS_RESOURCES_CHANNEL/message-object) 
+ * when the message is a response to an Interaction.
+ */
+export enum MessageInteraction {
+    Id = snowflake,
+    Type = InteractionType,
+    Name = string,
+    User = [user object](#DOCS_RESOURCES_USER/user-object)
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json#form-params
+ */
+export interface CreateMessageJsonParams {
+    /**
+     * The message contents (up to 2000 characters).
+     */
+    content: string;
+    /**
+     * True if this is a TTS message.
+     */
+    tts: boolean;
+    /**
+     * The contents of the file being sent.
+     */
+    file: string;
+    /**
+     * Embedded `rich` content.
+     */
+    embed: EmbedStructure;
+    /**
+     * JSON encoded body of non-file params.
+     */
+    payload_json: string;
+    /**
+     * Allowed mentions for the message.
+     */
+    allowed_mentions: AllowedMentionsStructure;
+    /**
+     * Include to make your message a reply.
+     */
+    message_reference: MessageReferenceStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure
+ */
+export interface AllowedMentionsStructure {
+    /**
+     * An array of [allowed mention 
+     * types](https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types) 
+     * to parse from the content.
+     */
+    parse: any[];
+    /**
+     * Array of role_ids to mention (Max size of 100).
+     */
+    roles: string[];
+    /**
+     * Array of user_ids to mention (Max size of 100).
+     */
+    users: string[];
+    /**
+     * For replies, whether to mention the author of the message being replied to 
+     * (default false).
+     */
+    replied_user: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface GetReactionsQueryParams {
+    /**
+     * Get users after this user ID.
+     */
+    after: string;
+    /**
+     * Max number of users to return (1-100).
+     */
+    limit: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json#form-params
+ */
+export interface EditMessageJsonParams {
+    /**
+     * The message contents (up to 2000 characters).
+     */
+    content: string;
+    /**
+     * Embedded `rich` content.
+     */
+    embed: EmbedStructure;
+    /**
+     * Edit the 
+     * [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) 
+     * of a message (only `SUPPRESS_EMBEDS` can currently be set/unset).
+     */
+    flags: number;
+    /**
+     * The contents of the file being sent/edited.
+     */
+    file: string;
+    /**
+     * JSON encoded body of non-file params (multipart/form-data only).
+     */
+    payload_json: string;
+    /**
+     * Allowed mentions for the message.
+     */
+    allowed_mentions: AllowedMentionsStructure;
+    /**
+     * Attached files to keep.
+     */
+    attachments: AttachmentStructure[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params
+ */
+export interface BulkDeleteMessagesJsonParams {
+    /**
+     * An array of message ids to delete (2-100).
+     */
+    messages: string[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params
+ */
+export interface EditChannelPermissionsJsonParams {
+    /**
+     * The bitwise value of all allowed permissions.
+     */
+    allow: string;
+    /**
+     * The bitwise value of all disallowed permissions.
+     */
+    deny: string;
+    /**
+     * 0 for a role or 1 for a member.
+     */
+    type: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params
+ */
+export interface CreateChannelInviteJsonParams {
+    /**
+     * Duration of invite in seconds before expiry, or 0 for never. between 0 and 
+     * 604800 (7 days).
+     */
+    max_age: number;
+    /**
+     * Max number of uses or 0 for unlimited. between 0 and 100.
+     */
+    max_uses: number;
+    /**
+     * Whether this invite only grants temporary membership.
+     */
+    temporary: boolean;
+    /**
+     * If true, don't try to reuse a similar invite (useful for creating many unique 
+     * one time use invites).
+     */
+    unique: boolean;
+    /**
+     * The [type of 
+     * target](https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types) 
+     * for this voice channel invite.
+     */
+    target_type: number;
+    /**
+     * The id of the user whose stream to display for this invite, required if 
+     * `target_type` is 1, the user must be streaming in the channel.
+     */
+    target_user_id: string;
+    /**
+     * The id of the embedded application to open for this invite, required if 
+     * `target_type` is 2, the application must have the `EMBEDDED` flag.
+     */
+    target_application_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params
+ */
+export interface FollowNewsChannelJsonParams {
+    /**
+     * Id of target channel.
+     */
+    webhook_channel_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#followed-channel-object-followed-channel-structure
+ */
+export interface FollowedChannelStructure {
+    /**
+     * Source channel id.
+     */
+    channel_id: string;
+    /**
+     * Created target webhook id.
+     */
+    webhook_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params
+ */
+export interface GroupDMAddRecipientJsonParams {
+    /**
+     * Access token of a user that has granted your app the `gdm.join` scope.
+     */
+    access_token: string;
+    /**
+     * Nickname of the user being added.
+     */
+    nick: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params
+ */
+export interface StartThreadWithMessageJsonParams {
+    /**
+     * 2-100 character channel name.
+     */
+    name: string;
+    /**
+     * Duration in minutes to automatically archive the thread after recent activity, 
+     * can be set to: 60, 1440, 4320, 10080.
+     */
+    auto_archive_duration: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#json-params
+ */
+export interface StartThreadWithoutMessageJsonParams {
+    /**
+     * 2-100 character channel name.
+     */
+    name: string;
+    /**
+     * Duration in minutes to automatically archive the thread after recent activity, 
+     * can be set to: 60, 1440, 4320, 10080.
+     */
+    auto_archive_duration: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#response-body
+ */
+export interface ListActiveThreadsResponse {
+    /**
+     * The active threads.
+     */
+    threads: ChannelStructure[];
+    /**
+     * A thread member object for each returned thread the current user has joined.
+     */
+    members: ThreadMemberStructure[];
+    /**
+     * Whether there are potentially additional threads that could be returned on a 
+     * subsequent call.
+     */
+    has_more: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface ListPublicArchivedThreadsQueryParams {
+    /**
+     * Returns threads before this timestamp.
+     */
+    before?: string;
+    /**
+     * Optional maximum number of threads to return.
+     */
+    limit?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface ListPublicArchivedThreadsResponse {
+    /**
+     * Returns threads before this timestamp.
+     */
+    before?: string;
+    /**
+     * Optional maximum number of threads to return.
+     */
+    limit?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface ListPrivateArchivedThreadsQueryParams {
+    /**
+     * Returns threads before this timestamp.
+     */
+    before?: string;
+    /**
+     * Optional maximum number of threads to return.
+     */
+    limit?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface ListPrivateArchivedThreadsResponse {
+    /**
+     * Returns threads before this timestamp.
+     */
+    before?: string;
+    /**
+     * Optional maximum number of threads to return.
+     */
+    limit?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface ListJoinedPrivateArchivedThreadsQueryParams {
+    /**
+     * Returns threads before this id.
+     */
+    before?: string;
+    /**
+     * Optional maximum number of threads to return.
+     */
+    limit?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/channel#query-string-params
+ */
+export interface ListJoinedPrivateArchivedThreadsResponse {
+    /**
+     * Returns threads before this id.
+     */
+    before?: string;
+    /**
+     * Optional maximum number of threads to return.
+     */
+    limit?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/emoji#json-params
+ */
+export interface CreateGuildEmojiJsonParams {
+    /**
+     * Name of the emoji.
+     */
+    name: string;
+    /**
+     * The 128x128 emoji image.
+     */
+    image: string;
+    /**
+     * Roles allowed to use this emoji.
+     */
+    roles: string[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/emoji#json-params
+ */
+export interface ModifyGuildEmojiJsonParams {
+    /**
+     * Name of the emoji.
+     */
+    name: string;
+    /**
+     * Roles allowed to use this emoji.
+     */
+    roles: (string|null)[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ * 
+ * When using the `roles` parameter, the first member of the array is used to 
+ * change properties of the guild's `@everyone` role. If you are trying to 
+ * bootstrap a guild with additional roles, keep this in mind.
+ * 
+ * When using the `roles` parameter, the required `id` field within each role 
+ * object is an integer placeholder, and will be replaced by the API upon 
+ * consumption. Its purpose is to allow you to 
+ * [overwrite](#DOCS_RESOURCES_CHANNEL/overwrite-object) a role's permissions in a 
+ * channel when also passing in channels with the channels array.
+ * 
+ * When using the `channels` parameter, the `position` field is ignored, and none 
+ * of the default channels are created.
+ * 
+ * When using the `channels` parameter, the `id` field within each channel object 
+ * may be set to an integer placeholder, and will be replaced by the API upon 
+ * consumption. Its purpose is to allow you to create `GUILD_CATEGORY` channels by 
+ * setting the `parent_id` field on any children to the category's `id` field. 
+ * Category channels must be listed before any children.
+ */
+export interface CreateGuildJsonParams {
+    /**
+     * Name of the guild (2-100 characters).
+     */
+    name: string;
+    /**
+     * [voice 
+     * region](https://discord.com/developers/docs/resources/voice#voice-region-object) 
+     * id.
+     */
+    region?: string;
+    /**
+     * Base64 128x128 image for the guild icon.
+     */
+    icon?: string;
+    /**
+     * [verification 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level).
+     */
+    verification_level?: number;
+    /**
+     * Default [message notification 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level).
+     */
+    default_message_notifications?: number;
+    /**
+     * [explicit content filter 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level).
+     */
+    explicit_content_filter?: number;
+    /**
+     * New guild roles.
+     */
+    roles?: RoleStructure[];
+    /**
+     * New guild's channels.
+     */
+    channels?: Partial<ChannelStructure>[];
+    /**
+     * Id for afk channel.
+     */
+    afk_channel_id?: string;
+    /**
+     * Afk timeout in seconds.
+     */
+    afk_timeout?: number;
+    /**
+     * The id of the channel where guild notices such as welcome messages and boost 
+     * events are posted.
+     */
+    system_channel_id?: string;
+    /**
+     * [system channel 
+     * flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags).
+     */
+    system_channel_flags?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#query-string-params
+ */
+export interface GetGuildQueryParams {
+    /**
+     * When `true`, will return approximate member and presence counts for the guild.
+     */
+    with_counts?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#query-string-params
+ */
+export interface GetGuildResponse {
+    /**
+     * When `true`, will return approximate member and presence counts for the guild.
+     */
+    with_counts?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#guild-preview-object-guild-preview-structure
+ */
+export interface GuildPreviewStructure {
+    /**
+     * Guild id.
+     */
+    id: string;
+    /**
+     * Guild name (2-100 characters).
+     */
+    name: string;
+    /**
+     * [icon hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    icon: string|null;
+    /**
+     * [splash hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    splash: string|null;
+    /**
+     * [discovery splash 
+     * hash](https://discord.com/developers/docs/reference#image-formatting).
+     */
+    discovery_splash: string|null;
+    /**
+     * Custom guild emojis.
+     */
+    emojis: EmojiStructure[];
+    /**
+     * Enabled guild features.
+     */
+    features: any[];
+    /**
+     * Approximate number of members in this guild.
+     */
+    approximate_member_count: number;
+    /**
+     * Approximate number of online members in this guild.
+     */
+    approximate_presence_count: number;
+    /**
+     * The description for the guild, if the guild is discoverable.
+     */
+    description: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface ModifyGuildJsonParams {
+    /**
+     * Guild name.
+     */
+    name: string;
+    /**
+     * Guild [voice 
+     * region](https://discord.com/developers/docs/resources/voice#voice-region-object) 
+     * id.
+     */
+    region: string|null;
+    /**
+     * [verification 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level).
+     */
+    verification_level: number|null;
+    /**
+     * Default [message notification 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level).
+     */
+    default_message_notifications: number|null;
+    /**
+     * [explicit content filter 
+     * level](https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level).
+     */
+    explicit_content_filter: number|null;
+    /**
+     * Id for afk channel.
+     */
+    afk_channel_id: string|null;
+    /**
+     * Afk timeout in seconds.
+     */
+    afk_timeout: number;
+    /**
+     * Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when 
+     * the server has the `ANIMATED_ICON` feature).
+     */
+    icon: string|null;
+    /**
+     * User id to transfer guild ownership to (must be owner).
+     */
+    owner_id: string;
+    /**
+     * Base64 16:9 png/jpeg image for the guild splash (when the server has the 
+     * `INVITE_SPLASH` feature).
+     */
+    splash: string|null;
+    /**
+     * Base64 16:9 png/jpeg image for the guild discovery splash (when the server has 
+     * the `DISCOVERABLE` feature).
+     */
+    discovery_splash: string|null;
+    /**
+     * Base64 16:9 png/jpeg image for the guild banner (when the server has the 
+     * `BANNER` feature).
+     */
+    banner: string|null;
+    /**
+     * The id of the channel where guild notices such as welcome messages and boost 
+     * events are posted.
+     */
+    system_channel_id: string|null;
+    /**
+     * [system channel 
+     * flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags).
+     */
+    system_channel_flags: number;
+    /**
+     * The id of the channel where Community guilds display rules and/or guidelines.
+     */
+    rules_channel_id: string|null;
+    /**
+     * The id of the channel where admins and moderators of Community guilds receive 
+     * notices from Discord.
+     */
+    public_updates_channel_id: string|null;
+    /**
+     * The preferred locale of a Community guild used in server discovery and notices 
+     * from Discord; defaults to "en-US".
+     */
+    preferred_locale: string|null;
+    /**
+     * Enabled guild features.
+     */
+    features: any[];
+    /**
+     * The description for the guild, if the guild is discoverable.
+     */
+    description: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface CreateGuildChannelJsonParams {
+    /**
+     * Channel name (2-100 characters).
+     */
+    name: string;
+    /**
+     * The [type of 
+     * channel](https://discord.com/developers/docs/resources/channel#channel-object-channel-types).
+     */
+    type: number;
+    /**
+     * Channel topic (0-1024 characters).
+     */
+    topic: string;
+    /**
+     * The bitrate (in bits) of the voice channel (voice only).
+     */
+    bitrate: number;
+    /**
+     * The user limit of the voice channel (voice only).
+     */
+    user_limit: number;
+    /**
+     * Amount of seconds a user has to wait before sending another message (0-21600); 
+     * bots, as well as users with the permission `manage_messages` or 
+     * `manage_channel`, are unaffected.
+     */
+    rate_limit_per_user: number;
+    /**
+     * Sorting position of the channel.
+     */
+    position: number;
+    /**
+     * The channel's permission overwrites.
+     */
+    permission_overwrites: OverwriteStructure[];
+    /**
+     * Id of the parent category for a channel.
+     */
+    parent_id: string;
+    /**
+     * Whether the channel is nsfw.
+     */
+    nsfw: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface ModifyGuildChannelPositionsJsonParams {
+    /**
+     * Channel id.
+     */
+    id: string;
+    /**
+     * Sorting position of the channel.
+     */
+    position: number|null;
+    /**
+     * Syncs the permission overwrites with the new parent, if moving to a new 
+     * category.
+     */
+    lock_permissions: boolean|null;
+    /**
+     * The new parent ID for the channel that is moved.
+     */
+    parent_id: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#query-string-params
+ */
+export interface ListGuildMembersQueryParams {
+    /**
+     * Max number of members to return (1-1000).
+     */
+    limit: number;
+    /**
+     * The highest user id in the previous page.
+     */
+    after: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#query-string-params
+ */
+export interface SearchGuildMembersQueryParams {
+    /**
+     * Query string to match username(s) and nickname(s) against.
+     */
+    query: string;
+    /**
+     * Max number of members to return (1-1000).
+     */
+    limit: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ * 
+ * For guilds with Membership Screening enabled, assigning a role using the `roles` 
+ * parameter will add the user to the guild as a full member (`pending` is false in 
+ * the [member object](#DOCS_RESOURCES_GUILD/guild-member-object)). A member with a 
+ * role will bypass membership screening and the guild's verification level, and 
+ * get immediate access to chat. Therefore, instead of assigning a role when the 
+ * member joins, it is recommended to grant roles only after the user completes 
+ * screening.
+ */
+export interface AddGuildMemberJsonParams {
+    /**
+     * An oauth2 access token granted with the `guilds.join` to the bot's application 
+     * for the user you want to add to the guild.
+     */
+    access_token: string;
+    /**
+     * Value to set users nickname to.
+     */
+    nick: string;
+    /**
+     * Array of role ids the member is assigned.
+     */
+    roles: string[];
+    /**
+     * Whether the user is muted in voice channels.
+     */
+    mute: boolean;
+    /**
+     * Whether the user is deafened in voice channels.
+     */
+    deaf: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface ModifyGuildMemberJsonParams {
+    /**
+     * Value to set users nickname to.
+     */
+    nick: string;
+    /**
+     * Array of role ids the member is assigned.
+     */
+    roles: string[];
+    /**
+     * Whether the user is muted in voice channels. Will throw a 400 if the user is not 
+     * in a voice channel.
+     */
+    mute: boolean;
+    /**
+     * Whether the user is deafened in voice channels. Will throw a 400 if the user is 
+     * not in a voice channel.
+     */
+    deaf: boolean;
+    /**
+     * Id of channel to move user to (if they are connected to voice).
+     */
+    channel_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface ModifyCurrentUserNickJsonParams {
+    /**
+     * Value to set users nickname to.
+     */
+    nick?: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#ban-object-ban-structure
+ */
+export interface BanStructure {
+    /**
+     * The reason for the ban.
+     */
+    reason: string|null;
+    /**
+     * The banned user.
+     */
+    user: UserStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface CreateGuildBanJsonParams {
+    /**
+     * Number of days to delete messages for (0-7).
+     */
+    delete_message_days?: number;
+    /**
+     * Reason for the ban.
+     */
+    reason?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface CreateGuildRoleJsonParams {
+    /**
+     * Name of the role.
+     */
+    name: string;
+    /**
+     * Bitwise value of the enabled/disabled permissions.
+     */
+    permissions: string;
+    /**
+     * RGB color value.
+     */
+    color: number;
+    /**
+     * Whether the role should be displayed separately in the sidebar.
+     */
+    hoist: boolean;
+    /**
+     * Whether the role should be mentionable.
+     */
+    mentionable: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface ModifyGuildRolePositionsJsonParams {
+    /**
+     * Role.
+     */
+    id: string;
+    /**
+     * Sorting position of the role.
+     */
+    position?: number|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface ModifyGuildRoleJsonParams {
+    /**
+     * Name of the role.
+     */
+    name: string;
+    /**
+     * Bitwise value of the enabled/disabled permissions.
+     */
+    permissions: string;
+    /**
+     * RGB color value.
+     */
+    color: number;
+    /**
+     * Whether the role should be displayed separately in the sidebar.
+     */
+    hoist: boolean;
+    /**
+     * Whether the role should be mentionable.
+     */
+    mentionable: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#query-string-params
+ */
+export interface GetGuildPruneCountQueryParams {
+    /**
+     * Number of days to count prune for (1-30).
+     */
+    days: number;
+    /**
+     * Role(s) to include.
+     */
+    include_roles: any[];
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface BeginGuildPruneJsonParams {
+    /**
+     * Number of days to prune (1-30).
+     */
+    days: number;
+    /**
+     * Whether 'pruned' is returned, discouraged for large guilds.
+     */
+    compute_prune_count: boolean;
+    /**
+     * Role(s) to include.
+     */
+    include_roles: string[];
+    /**
+     * Reason for the prune.
+     */
+    reason?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#guild-widget-object-guild-widget-structure
+ */
+export interface GuildWidgetStructure {
+    /**
+     * Whether the widget is enabled.
+     */
+    enabled: boolean;
+    /**
+     * The widget channel id.
+     */
+    channel_id: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#query-string-params
+ */
+export interface GetGuildWidgetImageQueryParams {
+    /**
+     * Style of the widget image returned (see below).
+     */
+    style: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface ModifyGuildWelcomeScreenJsonParams {
+    /**
+     * Whether the welcome screen is enabled.
+     */
+    enabled: boolean;
+    /**
+     * Channels linked in the welcome screen and their display options.
+     */
+    welcome_channels: WelcomeScreenChannelStructure[];
+    /**
+     * The server description to show in the welcome screen.
+     */
+    description: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface UpdateCurrentUserVoiceStateJsonParams {
+    /**
+     * The id of the channel the user is currently in.
+     */
+    channel_id: string;
+    /**
+     * Toggles the user's suppress state.
+     */
+    suppress?: boolean;
+    /**
+     * Sets the user's request to speak.
+     */
+    request_to_speak_timestamp?: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild#json-params
+ */
+export interface UpdateUserVoiceStateJsonParams {
+    /**
+     * The id of the channel the user is currently in.
+     */
+    channel_id: string;
+    /**
+     * Toggles the user's suppress state.
+     */
+    suppress?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild/template#guild-template-object-guild-template-structure
+ */
+export interface GuildTemplateStructure {
+    /**
+     * The template code (unique ID).
+     */
+    code: string;
+    /**
+     * Template name.
+     */
+    name: string;
+    /**
+     * The description for the template.
+     */
+    description: string|null;
+    /**
+     * Number of times this template has been used.
+     */
+    usage_count: number;
+    /**
+     * The ID of the user who created the template.
+     */
+    creator_id: string;
+    /**
+     * The user who created the template.
+     */
+    creator: UserStructure;
+    /**
+     * When this template was created.
+     */
+    created_at: string;
+    /**
+     * When this template was last synced to the source guild.
+     */
+    updated_at: string;
+    /**
+     * The ID of the guild this template is based on.
+     */
+    source_guild_id: string;
+    /**
+     * The guild snapshot this template contains.
+     */
+    serialized_source_guild: Partial<GuildStructure>;
+    /**
+     * Whether the template has unsynced changes.
+     */
+    is_dirty: boolean|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild/template#json-params
+ */
+export interface CreateGuildFromGuildTemplateJsonParams {
+    /**
+     * Name of the guild (2-100 characters).
+     */
+    name: string;
+    /**
+     * Base64 128x128 image for the guild icon.
+     */
+    icon?: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild/template#json-params
+ */
+export interface CreateGuildTemplateJsonParams {
+    /**
+     * Name of the template (1-100 characters).
+     */
+    name: string;
+    /**
+     * Description for the template (0-120 characters).
+     */
+    description?: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/guild/template#json-params
+ */
+export interface ModifyGuildTemplateJsonParams {
+    /**
+     * Name of the template (1-100 characters).
+     */
+    name?: string;
+    /**
+     * Description for the template (0-120 characters).
+     */
+    description?: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/invite#query-string-params
+ */
+export interface GetInviteQueryParams {
+    /**
+     * Whether the invite should contain approximate member counts.
+     */
+    with_counts?: boolean;
+    /**
+     * Whether the invite should contain the expiration date.
+     */
+    with_expiration?: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/stage/instance#json-params
+ */
+export interface CreateStageInstanceJsonParams {
+    /**
+     * The id of the Stage channel.
+     */
+    channel_id: string;
+    /**
+     * The topic of the Stage instance (1-120 characters).
+     */
+    topic: string;
+    /**
+     * The [privacy 
+     * level](https://discord.com/developers/docs/resources/stage/instance#stage-instance-object-privacy-level) 
+     * of the Stage instance (default GUILD_ONLY).
+     */
+    privacy_level?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/stage/instance#json-params
+ */
+export interface UpdateStageInstanceJsonParams {
+    /**
+     * The topic of the Stage instance (1-120 characters).
+     */
+    topic?: string;
+    /**
+     * The [privacy 
+     * level](https://discord.com/developers/docs/resources/stage/instance#stage-instance-object-privacy-level) 
+     * of the Stage instance.
+     */
+    privacy_level?: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#json-params
+ */
+export interface ModifyCurrentUserJsonParams {
+    /**
+     * User's username, if changed may cause the user's discriminator to be randomized.
+     */
+    username: string;
+    /**
+     * If passed, modifies the user's avatar.
+     */
+    avatar: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#query-string-params
+ */
+export interface GetCurrentUserGuildsQueryParams {
+    /**
+     * Get guilds before this guild ID.
+     */
+    before: string;
+    /**
+     * Get guilds after this guild ID.
+     */
+    after: string;
+    /**
+     * Max number of guilds to return (1-200).
+     */
+    limit: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#json-params
+ */
+export interface CreateDMJsonParams {
+    /**
+     * The recipient to open a DM channel with.
+     */
+    recipient_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#json-params
+ */
+export interface CreateGroupDMJsonParams {
+    /**
+     * Access tokens of users that have granted your app the `gdm.join` scope.
+     */
+    access_tokens: string[];
+    /**
+     * A dictionary of user ids to their respective nicknames.
+     */
+    nicks: Record<string, string>;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#connection-object-connection-structure
+ */
+export interface ConnectionStructure {
+    /**
+     * Id of the connection account.
+     */
+    id: string;
+    /**
+     * The username of the connection account.
+     */
+    name: string;
+    /**
+     * The service of the connection (twitch, youtube).
+     */
+    type: string;
+    /**
+     * Whether the connection is revoked.
+     */
+    revoked?: boolean;
+    /**
+     * An array of partial [server 
+     * integrations](https://discord.com/developers/docs/resources/guild#integration-object).
+     */
+    integrations?: any;
+    /**
+     * Whether the connection is verified.
+     */
+    verified: boolean;
+    /**
+     * Whether friend sync is enabled for this connection.
+     */
+    friend_sync: boolean;
+    /**
+     * Whether activities related to this connection will be shown in presence updates.
+     */
+    show_activity: boolean;
+    /**
+     * [visibility](https://discord.com/developers/docs/resources/user#connection-object-visibility-types) 
+     * of this connection.
+     */
+    visibility: number;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/user#connection-object-visibility-types
+ */
+export enum VisibilityTypes {
+    None = 0,
+    Everyone = 1
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#json-params
+ */
+export interface CreateWebhookJsonParams {
+    /**
+     * Name of the webhook (1-80 characters).
+     */
+    name: string;
+    /**
+     * Image for the default webhook avatar.
+     */
+    avatar?: string|null;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#json-params
+ */
+export interface ModifyWebhookJsonParams {
+    /**
+     * The default name of the webhook.
+     */
+    name: string;
+    /**
+     * Image for the default webhook avatar.
+     */
+    avatar: string|null;
+    /**
+     * The new channel id this webhook should be moved to.
+     */
+    channel_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#query-string-params
+ */
+export interface ExecuteWebhookJsonParams {
+    /**
+     * Waits for server confirmation of message send before response, and returns the 
+     * created message body (defaults to `false`; when `false` a message that is not 
+     * saved does not return an error).
+     */
+    wait: boolean;
+    /**
+     * Send a message to the specified thread within a webhook's channel. The thread 
+     * will automatically be unarchived.
+     */
+    thread_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#query-string-params
+ */
+export interface ExecuteWebhookQueryParams {
+    /**
+     * Waits for server confirmation of message send before response, and returns the 
+     * created message body (defaults to `false`; when `false` a message that is not 
+     * saved does not return an error).
+     */
+    wait: boolean;
+    /**
+     * Send a message to the specified thread within a webhook's channel. The thread 
+     * will automatically be unarchived.
+     */
+    thread_id: string;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#query-string-params
+ */
+export interface ExecuteSlackCompatibleWebhookQueryParams {
+    /**
+     * Waits for server confirmation of message send before response (defaults to 
+     * `true`; when `false` a message that is not saved does not return an error).
+     */
+    wait: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#query-string-params
+ */
+export interface ExecuteGitHubCompatibleWebhookQueryParams {
+    /**
+     * Waits for server confirmation of message send before response (defaults to 
+     * `true`; when `false` a message that is not saved does not return an error).
+     */
+    wait: boolean;
+}
+
+/**
+ * https://discord.com/developers/docs/resources/webhook#json#form-params
+ */
+export interface EditWebhookMessageJsonParams {
+    /**
+     * The message contents (up to 2000 characters).
+     */
+    content: string;
+    /**
+     * Embedded `rich` content.
+     */
+    embeds: EmbedStructure[];
+    /**
+     * The contents of the file being sent/edited.
+     */
+    file: string;
+    /**
+     * JSON encoded body of non-file params (multipart/form-data only).
+     */
+    payload_json: string;
+    /**
+     * Allowed mentions for the message.
+     */
+    allowed_mentions: AllowedMentionsStructure;
+    /**
+     * Attached files to keep.
+     */
+    attachments: AttachmentStructure[];
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#json-response
+ */
+export interface GetGatewayBotJsonParams {
+    /**
+     * The WSS URL that can be used for connecting to the gateway.
+     */
+    url: string;
+    /**
+     * The recommended number of 
+     * [shards](https://discord.com/developers/docs/topics/gateway#sharding) to use 
+     * when connecting.
+     */
+    shards: number;
+    /**
+     * Information on the current session start limit.
+     */
+    session_start_limit: SessionStartLimitStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#session-start-limit-structure
+ */
+export interface SessionStartLimitStructure {
+    /**
+     * The total number of session starts the current user is allowed.
+     */
+    total: number;
+    /**
+     * The remaining number of session starts the current user is allowed.
+     */
+    remaining: number;
+    /**
+     * The number of milliseconds after which the limit resets.
+     */
+    reset_after: number;
+    /**
+     * The number of identify requests allowed per 5 seconds.
+     */
+    max_concurrency: number;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/gateway#json-response
+ */
+export interface GetGatewayBotResponse {
+    /**
+     * The WSS URL that can be used for connecting to the gateway.
+     */
+    url: string;
+    /**
+     * The recommended number of 
+     * [shards](https://discord.com/developers/docs/topics/gateway#sharding) to use 
+     * when connecting.
+     */
+    shards: number;
+    /**
+     * Information on the current session start limit.
+     */
+    session_start_limit: SessionStartLimitStructure;
+}
+
+/**
+ * https://discord.com/developers/docs/topics/oauth2#response-structure
+ */
+export interface GetCurrentAuthorizationInformationResponse {
+    /**
+     * The current application.
+     */
+    application: Partial<ApplicationStructure>;
+    /**
+     * The scopes the user has authorized the application for.
+     */
+    scopes: string[];
+    /**
+     * When the access token expires.
+     */
+    expires: string;
+    /**
+     * The user who has authorized, if the user has authorized with the `identify` 
+     * scope.
+     */
+    user?: UserStructure;
+}
 
 type DeclareEndpoint<
     JSONParams extends Record<string, any> = {},
@@ -1836,7 +5572,7 @@ export const ApiEndpoints = {
      */
     ModifyGuildWelcomeScreen: ((
         guildid: string
-    ) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<{}, {}, WelcomeScreenStructure>,
+    ) => `/guilds/${guildid}/welcome-screen`) as DeclareEndpoint<ModifyGuildWelcomeScreenJsonParams, {}, WelcomeScreenStructure>,
     /**
      * https://discord.com/developers/docs/resources/guild#update-current-user-voice-state-%-patch-#guilds#{guild.id#docs/resources/guild#guild-object}#voice-states#@me
      * 
@@ -2187,6 +5923,10 @@ export const ApiEndpoints = {
     ) => `/webhooks/${webhookid}/${webhooktoken}`) as DeclareEndpoint<ExecuteWebhookJsonParams, ExecuteWebhookQueryParams, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#execute-slack-compatible-webhook-%-post-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}#slack
+     * 
+     * Refer to [Slack's documentation](https://api.slack.com/incoming-webhooks) for 
+     * more information. We do not support Slack's `channel`, `icon_emoji`, `mrkdwn`, 
+     * or `mrkdwn_in` properties.
      */
     ExecuteSlackCompatibleWebhook: ((
         webhookid: string,
@@ -2194,6 +5934,11 @@ export const ApiEndpoints = {
     ) => `/webhooks/${webhookid}/${webhooktoken}/slack`) as DeclareEndpoint<{}, ExecuteSlackCompatibleWebhookQueryParams, {}>,
     /**
      * https://discord.com/developers/docs/resources/webhook#execute-github-compatible-webhook-%-post-#webhooks#{webhook.id#docs/resources/webhook#webhook-object}#{webhook.token#docs/resources/webhook#webhook-object}#github
+     * 
+     * Add a new webhook to your GitHub repo (in the repo's settings), and use this 
+     * endpoint as the "Payload URL." You can choose what events your Discord channel 
+     * receives by choosing the "Let me select individual events" option and selecting 
+     * individual events for the new webhook you're configuring.
      */
     ExecuteGitHubCompatibleWebhook: ((
         webhookid: string,

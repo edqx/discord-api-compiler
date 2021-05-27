@@ -14,9 +14,7 @@ export class OutputFile {
     }
 
     static resolve(compiler: Compiler, file: OutputFile) {
-        return compiler.options.output.single_file
-            ? file.filename
-            : path.resolve(compiler.options.output.output_dir, file.filename);
+        return path.resolve(compiler.options.output.output_dir, file.filename);
     }
 
     getRelativeImport(file: OutputFile) {

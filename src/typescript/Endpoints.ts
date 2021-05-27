@@ -109,7 +109,10 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("requests/" + this.getCodeFriendlyName() + "JsonParams");
+                const file = this.compiler.createFile(
+                    this.compiler.options.output.requests_output
+                        .replace("%s", this.getCodeFriendlyName() + "JsonParams")
+                );
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -138,7 +141,10 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("requests/" + this.getCodeFriendlyName() + "QueryParams");
+                const file = this.compiler.createFile(
+                    this.compiler.options.output.requests_output
+                        .replace("%s", this.getCodeFriendlyName() + "QueryParams")
+                );
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,
@@ -167,7 +173,10 @@ export class DocumentedRequest {
 
             if (resolvedInterface) {
                 const [ resolvedSection, table ] = resolvedInterface;
-                const file = this.compiler.createFile("responses/" + this.getCodeFriendlyName() + "Response");
+                const file = this.compiler.createFile(
+                    this.compiler.options.output.responses_output
+                        .replace("%s", this.getCodeFriendlyName() + "Response")
+                );
     
                 const interfaceStructure = new InterfaceStructure(
                     this.compiler,

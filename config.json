@@ -1,7 +1,8 @@
 {
     "$schema": "./misc/config.schema.json",
     "output": {
-        "output_dir": "output"
+        "single_file": "index.ts",
+        "output_dir": "okay"
     },
     "typings": true,
     "comments": true

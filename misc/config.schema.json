@@ -5,7 +5,7 @@
             "type": "object",
             "properties": {
                 "single_file": {
-                    "type": "boolean",
+                    "type": "string",
                     "description": "Whether to output all enums and structures to a single file."
                 },
                 "output_dir": {

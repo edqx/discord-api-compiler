@@ -1,18 +1,18 @@
 export interface OutputOptions {
     /**
-     * Whether to output all enums and structures to a single file.
-     * @default false
+     * File to output all enums and structures to.
+     * @default ""
      */
-    single_file: boolean;
+    single_file: string;
 
     /**
-     * Directory to emit all files to, or file if single_file is set to true.
+     * Directory to emit all files to.
      * @default "output"
      */
     output_dir: string;
 
     /**
-     * Directory to emit all enums to, relative to the base output directory.
+     * File to emit each enum to, use %s to replace with the enum name
      * @default "enums"
      */
     enums_output: string;
