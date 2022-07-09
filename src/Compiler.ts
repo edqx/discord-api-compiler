@@ -54,7 +54,7 @@ export class Compiler {
                 structures_output: "interfaces/%s.ts",
                 requests_output: "requests/%s.ts",
                 responses_output: "responses/%s.ts",
-                endpoints_output: "endpoints",
+                endpoints_output: "endpoints.ts",
                 ...options.output
             }
         };

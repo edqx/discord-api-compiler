@@ -53,6 +53,7 @@ export class OutputFile {
             return 0;
         });
 
+        const duplicateImports = new Set;
         for (let i = 0; i < imports.length; i++) {
             const imp = imports[i];
             const last = imports[i - 1];
@@ -61,6 +62,11 @@ export class OutputFile {
                     out += "\n";
                 }
             }
+
+            if (duplicateImports.has(imp.name))
+                continue;
+
+            duplicateImports.add(imp.name);
             out += `import { ${imp.name} } from "${this.getRelativeImport(imp.file)}";\n`;
         }
 

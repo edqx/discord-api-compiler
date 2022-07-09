@@ -282,6 +282,7 @@ export class EndpointStructure extends BaseStructure {
         super(compiler, file, null, name);
 
         if (this.compiler.options.typings) {
+            const duplicateCheck = new Set;
             for (let i = 0; i < this.requests.length; i++) {
                 const request = this.requests[i];
 
@@ -338,7 +339,18 @@ export type ExtractResponseType<
 > = T extends DeclareEndpoint<any, any, infer X> ? X: never\n\n`;
 
         endpointText += "export const ApiEndpoints = {\n";
-        endpointText += this.requests.map(request => request.serialize()).join(",\n");
+        
+        const dupeCheck = new Set;
+        endpointText += this.requests[0].serialize();
+        for (let i = 1; i < this.requests.length; i++) {
+            const request = this.requests[i];
+
+            if (dupeCheck.has(request.name))
+                continue;
+
+            dupeCheck.add(request.name);
+            endpointText += ",\n" + request.serialize();
+        }
         endpointText += "\n}";
 
         return endpointText;

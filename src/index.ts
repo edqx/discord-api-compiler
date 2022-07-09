@@ -63,10 +63,10 @@ async function crawlFiles(entrypoint: string) {
     process.stdout.cursorTo(0); 
     console.log("Parse Markdown Files - " + tookParse + "s.");
 
-    const optionsData = await fs.readFile(path.resolve(process.cwd(), "./config.json"), "utf8");
-    const options = JSON.parse(optionsData)
+    const configData = await fs.readFile(path.resolve(process.cwd(), "./config.json"), "utf8");
+    const config = JSON.parse(configData)
 
-    const compiler = new Compiler(options, sections);
+    const compiler = new Compiler(config, sections);
 
     process.stdout.write("Generate Section Links - 0.000s.");
     const beginLinks = Date.now();
@@ -119,7 +119,7 @@ async function crawlFiles(entrypoint: string) {
         const serialized = file.serialize();
         await fs.writeFile(OutputFile.resolve(compiler, file), serialized, "utf8");
     }
-    await fs.writeFile(path.resolve(process.cwd(), "output.json"), JSON.stringify(sections, null, 4), "utf8");
+    await fs.writeFile(path.resolve(process.cwd(), compiler.options.output.output_dir, "output.json"), JSON.stringify(sections, null, 4), "utf8");
     const tookWrite = ((Date.now() - beginWrite) / 1000).toFixed(3);
     process.stdout.clearLine(0);
     process.stdout.cursorTo(0); 
