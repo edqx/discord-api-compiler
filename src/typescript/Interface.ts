@@ -10,6 +10,7 @@ import { BaseStructure } from "./Structure";
 
 export class InterfaceStructureEntry {
     constructor(
+        protected readonly compiler: Compiler,
         public readonly key: string,
         public readonly type: string,
         public readonly description?: string
@@ -21,7 +22,7 @@ export class InterfaceStructureEntry {
 
     serialize() {
         let out = "";
-        if (this.description) {
+        if (this.description && this.compiler.options.comments) {
             out += "    /**\n";
             out += wordWrap(sentencify(maskedLinkToUrl(this.description)), { width: 80, indent: "     * " });
             out += "\n     */\n";
@@ -59,6 +60,7 @@ export class InterfaceStructure extends BaseStructure {
 
             this.entries.push(
                 new InterfaceStructureEntry(
+                    this.compiler,
                     row.field,
                     resolved.serialize(),
                     row.description
