@@ -27,7 +27,11 @@ export class InterfaceStructureEntry {
             out += wordWrap(sentencify(maskedLinkToUrl(this.description)), { width: 80, indent: "     * " });
             out += "\n     */\n";
         }
-        out += "    " + this.key.replace(/\\?\*/g, "").trim() + ": " + this.type;
+        if (this.key.includes("[n]")) {
+            out += "    " + this.key.replace(/(\\?\*)|(\[n\])/g, "").trim() + ": " + this.type + "[]";
+        } else {
+            out += "    " + this.key.replace(/\\?\*/g, "").trim() + ": " + this.type;
+        }
 
         return out;
     }
