@@ -240,9 +240,13 @@ export class DocumentedRequest {
         const params = this.getEndpointParams();
 
         if (params.length) {
-            endpointText += "(\n        "
-                + (this.getEndpointParams().map(param => param.name + (this.compiler.options.typings ? ": string" : "")).join(",\n        "))
-                + "\n    ) => ";
+            if (this.compiler.options.typings) {
+                endpointText += "(\n        "
+                    + (this.getEndpointParams().map(param => param.name + ": string").join(",\n        "))
+                    + "\n    ) => ";
+            } else {
+                endpointText += "(" + (this.getEndpointParams().map(param => param.name).join(", ")) + ") => ";
+            }
         } else {
             endpointText += "() => ";
         }
